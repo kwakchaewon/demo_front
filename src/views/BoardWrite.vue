@@ -60,8 +60,7 @@ export default {
 
       this.requestBody.idx = idx
       this.$router.push({
-        path: '/board/'+idx,
-        query: this.requestBody
+        path: '/board/'+idx
       })
     },
     fnSave() {
