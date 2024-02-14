@@ -58,7 +58,7 @@ export default {
     fnSave() {
       let apiUrl = this.$serverUrl + '/board/write'
       this.form = {
-        "idx": this.idx,
+        "contents": this.contents,
         "title": this.title,
       }
 
