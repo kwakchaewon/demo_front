@@ -3,6 +3,7 @@ import PageHome from '@/views/PageHome.vue'
 import BoardList from '@/views/BoardList.vue'
 import BoardDetail from '@/views/BoardDetail.vue'
 import BoardWrite from '@/views/BoardWrite.vue'
+import BoardUpdate from '@/views/BoardUpdate.vue'
 
 const routes = [
   {
@@ -33,6 +34,12 @@ const routes = [
         name: 'BoardWrite',
         component: BoardWrite
       },
+    {
+            path: '/board/:id/update/',
+            name: 'BoardUpdate',
+            component: BoardUpdate
+    },
+
 ]
 
 const router = createRouter({

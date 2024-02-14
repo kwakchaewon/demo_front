@@ -51,7 +51,7 @@ export default {
     fnUpdate() {
       const id = this.$route.params.id
       this.$router.push({
-        path: './write/'+id,
+        path: './'+id+'/update',
       })
     },
     fnDelete() {
