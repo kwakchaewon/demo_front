@@ -56,8 +56,8 @@ export default {
     },
     fnDelete() {
       if (!confirm("삭제하시겠습니까?")) return
-
-      this.$axios.delete(this.$serverUrl + '/board/' + this.id, {})
+      const id = this.$route.params.id
+      this.$axios.delete(this.$serverUrl + '/board/' + id)
           .then(() => {
             alert('삭제되었습니다.')
             this.fnList();
