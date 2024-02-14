@@ -60,8 +60,6 @@ export default {
       this.form = {
         "idx": this.idx,
         "title": this.title,
-        "contents": this.contents,
-        "author": this.author
       }
 
       // 생성

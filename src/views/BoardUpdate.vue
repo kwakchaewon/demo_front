@@ -19,6 +19,54 @@
 </template>
 
 <script>
+export default {
+  data() { //변수생성
+    return {
+      title: '',
+      content: ''
+    }
+  },
+  mounted() {
+    this.fnGetView()
+  },
+  methods: {
+      fnGetView() {
+      // URL 에서 게시글 ID 가져옴
+      let postId = this.$route.params.id;
+      this.postId = postId;
+
+      // 해당 게시글 불러오기
+      this.$axios.get(this.$serverUrl + `/board/${postId}`)
+            .then(response => {
+              this.title = response.data.title;
+              this.content = response.data.content;
+            })
+            .catch(error => {
+              console.error('Error fetching post:', error);
+            });
+      },
+
+      fnSave() {
+      let postId = this.$route.params.id;
+      this.form = {
+              "title": this.title,
+              "contents": this.contents
+      }
+
+      this.$axios.put(this.$serverUrl + `/board/${postId}`, this.form)
+      .then((res) => {
+                alert('글이 수정되었습니다.')
+                console.log(res.data.id)
+                this.$router.push(`/board/${postId}`)
+              }).catch((err) => {
+                if (err.message.indexOf('Network Error') > -1) {
+                  alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
+                }
+              })
+      },
+    }
+}
+
 </script>
 <style scoped>
 
