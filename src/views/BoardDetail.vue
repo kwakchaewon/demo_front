@@ -49,9 +49,9 @@ export default {
       })
     },
     fnUpdate() {
+      const id = this.$route.params.id
       this.$router.push({
-        path: './write',
-        query: this.requestBody
+        path: './write/'+id,
       })
     },
     fnDelete() {

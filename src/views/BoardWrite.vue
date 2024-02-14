@@ -22,13 +22,8 @@
 export default {
   data() { //변수생성
     return {
-      requestBody: this.$route.query,
-      idx: this.$route.query.idx,
-
       title: '',
-      author: '',
       contents: '',
-      created_at: ''
     }
   },
   mounted() {
@@ -41,9 +36,7 @@ export default {
           params: this.requestBody
         }).then((res) => {
           this.title = res.data.title
-          this.author = res.data.author
           this.contents = res.data.contents
-          this.created_at = res.data.created_at
         }).catch((err) => {
           console.log(err)
         })
@@ -57,7 +50,6 @@ export default {
       })
     },
     fnView(idx) {
-
       this.requestBody.idx = idx
       this.$router.push({
         path: '/board/'+idx
@@ -65,7 +57,6 @@ export default {
     },
     fnSave() {
       let apiUrl = this.$serverUrl + '/board/write'
-      console.log(apiUrl)
       this.form = {
         "idx": this.idx,
         "title": this.title,
@@ -74,30 +65,17 @@ export default {
       }
 
       // 생성
-      if (this.idx === undefined) {
-        //INSERT
+      //INSERT
         this.$axios.post(apiUrl, this.form)
         .then((res) => {
           alert('글이 저장되었습니다.')
-          this.fnView(res.data.id)
           console.log(res.data.id)
+          this.$router.push(''+res.data.id)
         }).catch((err) => {
           if (err.message.indexOf('Network Error') > -1) {
             alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
           }
         })
-      } else {
-        //UPDATE
-        this.$axios.patch(apiUrl, this.form)
-        .then((res) => {
-          alert('글이 저장되었습니다.')
-          this.fnView(res.data.idx)
-        }).catch((err) => {
-          if (err.message.indexOf('Network Error') > -1) {
-            alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
-          }
-        })
-      }
     }
   }
 }

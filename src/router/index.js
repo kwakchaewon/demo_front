@@ -29,7 +29,7 @@ const routes = [
         component: BoardDetail
     },
     {
-        path: '/board/write',
+        path: '/board/write/',
         name: 'BoardWrite',
         component: BoardWrite
       },
