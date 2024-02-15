@@ -11,6 +11,9 @@
     <div class="board-contents">
       <span>{{ contents }}</span>
     </div>
+    <div class="board-contents">
+          <span>{{ createdAt }}</span>
+    </div>
     <div class="common-buttons">
       <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnUpdate">수정</button>&nbsp;
       <button type="button" class="w3-button w3-round w3-red" v-on:click="fnDelete">삭제</button>&nbsp;
@@ -24,7 +27,8 @@ export default {
   data() { //변수생성
     return {
       title: '', // 제목
-      contents:'' // 내용
+      contents:'', // 내용
+      createdAt:'' // 작성일
     }
   },
   mounted() {
@@ -37,6 +41,7 @@ export default {
       .then((res) => {
         this.title = res.data.title
         this.contents = res.data.contents
+        this.createdAt = res.data.createdAt
       }).catch((err) => {
         if (err.message.indexOf('Network Error') > -1) {
           alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
