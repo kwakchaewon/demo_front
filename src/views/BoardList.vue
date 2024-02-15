@@ -8,12 +8,14 @@
       <tr>
         <th>No</th>
         <th>제목</th>
+        <th>작성일</th>
       </tr>
       </thead>
       <tbody>
       <tr v-for="(row, id) in list" :key="id">
         <td>{{ row.id }}</td>
         <td><a v-on:click="fnView(`${row.id}`)">{{ row.title }}</a></td>
+        <td>{{ row.createdAt }}</td>
       </tr>
       </tbody>
     </table>
