@@ -1,8 +1,7 @@
 <template>
+<main>
+<section class = "jumbotron text-center">
   <div class="board-list">
-    <div class="common-buttons">
-      <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnWrite">등록</button>
-    </div>
     <table class="w3-table-all">
       <thead>
       <tr>
@@ -19,6 +18,9 @@
       </tr>
       </tbody>
     </table>
+    <div class="common-buttons">
+          <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnWrite">등록</button>
+    </div>
     <div class="pagination w3-bar w3-padding-16 w3-small" v-if="paging.total_list_cnt > 0">
       <span class="pg">
       <a href="javascript:;" @click="fnPage(1)" class="first w3-button w3-border">&lt;&lt;</a>
@@ -38,6 +40,8 @@
       </span>
     </div>
   </div>
+  </section>
+</main>
 </template>
 
 <script>
@@ -115,3 +119,7 @@ export default {
   }
 }
 </script>
+<style scoped>
+article,aside,details,figcaption,figure,footer,header,main,menu,nav,section{display:block}summary{display:list-item}
+section{background-color: #fff}
+</style>
