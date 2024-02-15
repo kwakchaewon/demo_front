@@ -1,23 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import PageHome from '@/views/PageHome.vue'
-import BoardList from '@/views/BoardList.vue'
-import BoardDetail from '@/views/BoardDetail.vue'
-import BoardWrite from '@/views/BoardWrite.vue'
-import BoardUpdate from '@/views/BoardUpdate.vue'
+import PageHome from '@/views/Board/PageHome.vue'
+import BoardList from '@/views/Board/BoardList.vue'
+import BoardDetail from '@/views/Board/BoardDetail.vue'
+import BoardWrite from '@/views/Board/BoardWrite.vue'
+import BoardUpdate from '@/views/Board/BoardUpdate.vue'
 
 const routes = [
   {
     path: '/',
     name: 'PageHome',
     component: PageHome
-  },
-  {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/PageAbout.vue')
   },
    {
       path: '/board/list',
