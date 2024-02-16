@@ -4,6 +4,7 @@ import BoardList from '@/views/Board/BoardList.vue'
 import BoardDetail from '@/views/Board/BoardDetail.vue'
 import BoardWrite from '@/views/Board/BoardWrite.vue'
 import BoardUpdate from '@/views/Board/BoardUpdate.vue'
+import Login from "@/views/common/Login"
 
 const routes = [
   {
@@ -32,6 +33,11 @@ const routes = [
             component: BoardUpdate
     },
 
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login  //로그인 컴포넌트 추가
+  },
 ]
 
 const router = createRouter({
