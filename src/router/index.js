@@ -34,7 +34,7 @@ const routes = [
     },
 
   {
-    path: '/login',
+    path: '/member/login',
     name: 'Login',
     component: Login  //로그인 컴포넌트 추가
   },
