@@ -59,7 +59,6 @@
         }
       },
       goToPages() {
-        console.log("?")
         this.$router.push({
           name: 'BoardList'
         })
