@@ -13,7 +13,7 @@ const requireAuth = () => (from, to, next) => {
     store.state.isLogin = true
     return next()
   } // isLogin === true면 페이지 이동
-  next('/login') // isLogin === false면 다시 로그인 화면으로 이동
+  next('/member/login') // isLogin === false면 다시 로그인 화면으로 이동
 }
 
 const routes = [

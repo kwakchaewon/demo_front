@@ -31,12 +31,17 @@
 
 <script>
     export default{
-        name: 'Header'
+        name: 'Header',
+        methods:{
+            fnLogout(){
+                console.log("ddd")
+                localStorage.clear()
+                location.reload()
+            }
+        }
     }
 
 </script>
-methods:{
-}
 <style scoped>
     article,aside,details,figcaption,figure,footer,header,main,menu,section{display:block}summary{display:list-item}
     section{background-color: #fff}
