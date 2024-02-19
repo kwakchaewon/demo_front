@@ -9,7 +9,8 @@
         <div class="collapse navbar-collapse" id="navbarCollapse">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-              <a class="nav-link" href="/login">로그인<span class="sr-only">(current)</span></a>
+              <a v-if="!this.$store.state.isLogin" class="nav-link" href="/member/login">로그인<span class="sr-only">(current)</span></a>
+              <a v-if="this.$store.state.isLogin" class="nav-link" @click="fnLogout">로그아웃</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#"></a>
