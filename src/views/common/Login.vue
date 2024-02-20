@@ -13,8 +13,9 @@
             <input name="password" class="w3-input" placeholder="Enter your password" v-model="user_pw" type="password">
           </p>
           <p>
-            <button type="submit" class="w3-button w3-green w3-round">Login</button>
+            <button type="submit" class="w3-button w3-green w3-round">로그인</button>
           </p>
+
         </form>
       </div>
     </div>
