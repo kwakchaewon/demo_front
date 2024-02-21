@@ -15,7 +15,7 @@
           <span>{{ createdAt }}</span>
     </div>
     <div class="common-buttons">
-      <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnUpdate">수정</button>&nbsp;
+      <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnCheckUpdate">수정</button>&nbsp;
       <button type="button" class="w3-button w3-round w3-red" v-on:click="fnDelete">삭제</button>&nbsp;
       <button type="button" class="w3-button w3-round w3-gray" v-on:click="fnList">목록</button>
     </div>
@@ -58,6 +58,18 @@ export default {
       this.$router.push({
         path: './'+id+'/update',
       })
+      },
+    fnCheckUpdate(){
+       const id = this.$route.params.id
+       this.$axios.get(this.$serverUrl + '/board/' + id + '/updatecheck')
+          .then(() => {
+            this.$router.push({path: './'+id+'/update',})
+          }).catch((err) => {
+          if (err.response.status === 400) {
+          alert('수정 권한이 없습니다.'); // 400 응답 코드에 대한 알림 메시지
+          } else {
+          console.err('에러:', err); // 기타 에러 처리
+          }})
     },
     async fnDelete() {
       if (!confirm("삭제하시겠습니까?")) return
