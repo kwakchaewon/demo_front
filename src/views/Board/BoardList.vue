@@ -8,6 +8,7 @@
         <th>No</th>
         <th>제목</th>
         <th>작성일</th>
+          <th>작성자</th>
       </tr>
       </thead>
       <tbody>
@@ -15,6 +16,7 @@
         <td>{{ row.id }}</td>
         <td><a v-on:click="fnView(`${row.id}`)">{{ row.title }}</a></td>
         <td>{{ row.createdAt }}</td>
+          <td>{{ row.author.userName }}</td>
       </tr>
       </tbody>
     </table>
