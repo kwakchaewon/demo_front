@@ -59,7 +59,7 @@ export default {
         path: './'+id+'/update',
       })
     },
-    fnDelete() {
+    async fnDelete() {
       if (!confirm("삭제하시겠습니까?")) return
       const id = this.$route.params.id
       this.$axios.delete(this.$serverUrl + '/board/' + id)
@@ -67,7 +67,9 @@ export default {
             alert('삭제되었습니다.')
             this.fnList();
           }).catch((err) => {
-        console.log(err);
+          if(err.response.status === 400)
+            {alert('삭제 권한이 없습니다.');}
+          else{console.log(err.response);}
       })
     }
   }
