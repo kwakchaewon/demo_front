@@ -20,26 +20,14 @@
                         <a class="nav-link disabled" href="#"></a>
                     </li>
                 </ul>
-                <p id="userId">환영합니다! {{userId}} 님</p>
+<!--                <p id="userId">환영합니다! {{userId}} 님</p>-->
             </div>
         </nav>
     </header>
 </template>
 
 <script>
-    import VueJwtDecode from "vue-jwt-decode";
-
     export default{
-        data(){
-            return {
-                userId: null,
-            };
-        },
-        created(){
-            const token = localStorage.getItem('user_token');
-            const decodedToken = VueJwtDecode.decode(token);
-            this.userId = decodedToken.userId;
-        },
         name: 'Header',
         methods:{
             fnLogout(){
