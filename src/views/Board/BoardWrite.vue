@@ -74,7 +74,9 @@ export default {
         })
         .then((res) => {
           alert('글이 저장되었습니다.')
-          this.$router.push(''+res.data.id)
+          var boardId = parseInt(res.data)
+          console.log(res.data)
+          this.$router.push(''+boardId)
         }).catch((err) => {
           if(err.response.status === 400){
             alert(err.response.data);
