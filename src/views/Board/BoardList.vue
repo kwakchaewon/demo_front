@@ -16,7 +16,7 @@
         <td>{{ row.id }}</td>
         <td><a v-on:click="fnView(`${row.id}`)">{{ row.title }}</a></td>
         <td>{{ row.createdAt }}</td>
-          <td>{{ row.author.userName }}</td>
+          <td>{{ row.author.userId }}</td>
       </tr>
       </tbody>
     </table>
