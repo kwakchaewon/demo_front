@@ -13,7 +13,7 @@
       </thead>
       <tbody>
       <tr v-for="(row, id) in list" :key="id">
-        <td>{{ row.id }}</td>
+        <td>{{paging.totalListCnt - (paging.page * paging.pageSize) - id + 10}}</td>
         <td><a v-on:click="fnView(`${row.id}`)">{{ row.title }}</a></td>
         <td>{{ row.createdAt }}</td>
           <td>{{ row.author.userId }}</td>
