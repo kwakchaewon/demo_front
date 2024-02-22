@@ -23,7 +23,7 @@ export default {
   data() { //변수생성
     return {
       title: '',
-      contents: '',
+      contents: ''
     }
   },
   mounted() {
@@ -62,17 +62,25 @@ export default {
         "title": this.title,
       }
 
+      const token =  localStorage.getItem('user_token');
+      console.log(token)
+
       // 생성
       //INSERT
-        this.$axios.post(apiUrl, this.form)
+        this.$axios.post(apiUrl, this.form, {
+          headers: {
+          'Authorization': `Bearer ${token}` // JWT를 헤더에 포함하여 전송
+        }
+        })
         .then((res) => {
           alert('글이 저장되었습니다.')
-          console.log(res.data.id)
           this.$router.push(''+res.data.id)
         }).catch((err) => {
-          if (err.message.indexOf('Network Error') > -1) {
-            alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
-          }
+          if(err.response.status === 400){
+            alert(err.response.data);
+            } else {
+             alert(err.response.data);
+            }
         })
     }
   }
