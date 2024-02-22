@@ -20,17 +20,26 @@
                         <a class="nav-link disabled" href="#"></a>
                     </li>
                 </ul>
-                <form class="form-inline mt-2 mt-md-0">
-                    <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                </form>
+                <p id="userId">환영합니다! {{userId}} 님</p>
             </div>
         </nav>
     </header>
 </template>
 
 <script>
+    import VueJwtDecode from "vue-jwt-decode";
+
     export default{
+        data(){
+            return {
+                userId: null,
+            };
+        },
+        created(){
+            const token = localStorage.getItem('user_token');
+            const decodedToken = VueJwtDecode.decode(token);
+            this.userId = decodedToken.userId;
+        },
         name: 'Header',
         methods:{
             fnLogout(){
@@ -45,4 +54,5 @@
 <style scoped>
     article,aside,details,figcaption,figure,footer,header,main,menu,section{display:block}summary{display:list-item}
     section{background-color: #fff}
+    #userId{color:#fff}
 </style>
