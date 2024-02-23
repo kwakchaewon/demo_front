@@ -31,7 +31,8 @@ export default {
   name: 'Header',
   methods: {
     fnLogout() {
-      localStorage.clear()
+      localStorage.removeItem('user_token')
+      localStorage.removeItem('user_role')
       location.reload()
     }
   }
