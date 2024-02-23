@@ -12,7 +12,7 @@
       <span>{{ contents }}</span>
     </div>
     <div class="board-contents">
-          <span>{{ createdAt }}</span>
+      <span>{{ createdAt }}</span>
     </div>
     <div class="common-buttons">
       <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnCheckUpdate">수정</button>&nbsp;
@@ -27,8 +27,8 @@ export default {
   data() { //변수생성
     return {
       title: '', // 제목
-      contents:'', // 내용
-      createdAt:'' // 작성일
+      contents: '', // 내용
+      createdAt: '' // 작성일
     }
   },
   mounted() {
@@ -36,13 +36,13 @@ export default {
   },
   methods: {
     fnGetView() {
-    const id = this.$route.params.id
-    this.$axios.get(this.$serverUrl + '/board/'+id)
-      .then((res) => {
-        this.title = res.data.title
-        this.contents = res.data.contents
-        this.createdAt = res.data.createdAt
-      }).catch((err) => {
+      const id = this.$route.params.id
+      this.$axios.get(this.$serverUrl + '/board/' + id)
+          .then((res) => {
+            this.title = res.data.title
+            this.contents = res.data.contents
+            this.createdAt = res.data.createdAt
+          }).catch((err) => {
         if (err.message.indexOf('Network Error') > -1) {
           alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
         }
@@ -56,20 +56,21 @@ export default {
     fnUpdate() {
       const id = this.$route.params.id
       this.$router.push({
-        path: './'+id+'/update',
+        path: './' + id + '/update',
       })
-      },
-    fnCheckUpdate(){
-       const id = this.$route.params.id
-       this.$axios.get(this.$serverUrl + '/board/' + id + '/updatecheck')
+    },
+    fnCheckUpdate() {
+      const id = this.$route.params.id
+      this.$axios.get(this.$serverUrl + '/board/' + id + '/updatecheck')
           .then(() => {
-            this.$router.push({path: './'+id+'/update',})
+            this.$router.push({path: './' + id + '/update',})
           }).catch((err) => {
-          if (err.response.status === 400) {
+        if (err.response.status === 400) {
           alert('수정 권한이 없습니다.'); // 400 응답 코드에 대한 알림 메시지
-          } else {
+        } else {
           console.err('에러:', err); // 기타 에러 처리
-          }})
+        }
+      })
     },
     async fnDelete() {
       if (!confirm("삭제하시겠습니까?")) return
@@ -79,9 +80,11 @@ export default {
             alert('삭제되었습니다.')
             this.fnList();
           }).catch((err) => {
-          if(err.response.status === 400)
-            {alert('삭제 권한이 없습니다.');}
-          else{console.log(err.response);}
+        if (err.response.status === 400) {
+          alert('삭제 권한이 없습니다.');
+        } else {
+          console.log(err.response);
+        }
       })
     }
   }

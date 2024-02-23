@@ -8,7 +8,8 @@
       <input type="text" v-model="title" class="w3-input w3-border" placeholder="제목을 입력해주세요.">
     </div>
     <div class="board-contents">
-      <textarea id="" cols="30" rows="10" v-model="contents" class="w3-input w3-border" style="resize: none;" placeholder="내용을 입력해주세요.">
+      <textarea id="" cols="30" rows="10" v-model="contents" class="w3-input w3-border" style="resize: none;"
+                placeholder="내용을 입력해주세요.">
       </textarea>
     </div>
     <div class="common-buttons">
@@ -52,7 +53,7 @@ export default {
     fnView(idx) {
       this.requestBody.idx = idx
       this.$router.push({
-        path: '/board/'+idx
+        path: '/board/' + idx
       })
     },
     fnSave() {
@@ -62,28 +63,28 @@ export default {
         "title": this.title,
       }
 
-      const token =  localStorage.getItem('user_token');
+      const token = localStorage.getItem('user_token');
       console.log(token)
 
       // 생성
       //INSERT
-        this.$axios.post(apiUrl, this.form, {
-          headers: {
+      this.$axios.post(apiUrl, this.form, {
+        headers: {
           'Authorization': `Bearer ${token}` // JWT를 헤더에 포함하여 전송
         }
-        })
-        .then((res) => {
-          alert('글이 저장되었습니다.')
-          var boardId = parseInt(res.data)
-          console.log(res.data)
-          this.$router.push(''+boardId)
-        }).catch((err) => {
-          if(err.response.status === 400){
-            alert(err.response.data);
-            } else {
-             alert(err.response.data);
-            }
-        })
+      })
+          .then((res) => {
+            alert('글이 저장되었습니다.')
+            var boardId = parseInt(res.data)
+            console.log(res.data)
+            this.$router.push('' + boardId)
+          }).catch((err) => {
+        if (err.response.status === 400) {
+          alert(err.response.data);
+        } else {
+          alert(err.response.data);
+        }
+      })
     }
   }
 }

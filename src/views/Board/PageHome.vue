@@ -9,7 +9,6 @@
 
 export default {
   name: 'PageHome',
-  components: {
-  }
+  components: {}
 }
 </script>

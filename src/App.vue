@@ -1,7 +1,7 @@
 <template>
-    <Header/>
-    <router-view/>
-    <Footer/>
+  <Header/>
+  <router-view/>
+  <Footer/>
 </template>
 
 <script>
@@ -21,10 +21,12 @@ html {
   position: relative;
   min-height: 100%;
 }
+
 body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
 }
+
 .footer {
   position: absolute;
   bottom: 0;

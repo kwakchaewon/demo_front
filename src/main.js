@@ -1,4 +1,4 @@
-import { createApp } from 'vue'
+import {createApp} from 'vue'
 import App from './App.vue'
 import router from './router'
 import axios from './utils/axios'
@@ -12,6 +12,6 @@ app.config.globalProperties.$axios = axios; // 전역변수로 설정 컴포넌�
 app.config.globalProperties.$serverUrl = '//localhost:8080' // API 서버
 app.config.globalProperties.$store = store
 app
-   .use(router)
-   .use(store)
-   .mount('#app')
+    .use(router)
+    .use(store)
+    .mount('#app')

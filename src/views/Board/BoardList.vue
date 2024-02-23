@@ -1,27 +1,27 @@
 <template>
-<main>
-<section class = "jumbotron text-center">
-  <div class="board-list">
-    <table class="w3-table-all">
-      <thead>
-      <tr>
-        <th>No</th>
-        <th>제목</th>
-        <th>작성일</th>
-          <th>작성자</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr v-for="(row, id) in list" :key="id">
-        <td>{{paging.totalListCnt - (paging.page * paging.pageSize) - id + 10}}</td>
-        <td><a v-on:click="fnView(`${row.id}`)">{{ row.title }}</a></td>
-        <td>{{ row.createdAt }}</td>
-          <td>{{ row.author.userId }}</td>
-      </tr>
-      </tbody>
-    </table>
+  <main>
+    <section class="jumbotron text-center">
+      <div class="board-list">
+        <table class="w3-table-all">
+          <thead>
+          <tr>
+            <th>No</th>
+            <th>제목</th>
+            <th>작성일</th>
+            <th>작성자</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="(row, id) in list" :key="id">
+            <td>{{ paging.totalListCnt - (paging.page * paging.pageSize) - id + 10 }}</td>
+            <td><a v-on:click="fnView(`${row.id}`)">{{ row.title }}</a></td>
+            <td>{{ row.createdAt }}</td>
+            <td>{{ row.author.userId }}</td>
+          </tr>
+          </tbody>
+        </table>
 
-    <div class="pagination w3-bar w3-padding-16 w3-small" v-if="paging.totalListCnt > 0">
+        <div class="pagination w3-bar w3-padding-16 w3-small" v-if="paging.totalListCnt > 0">
           <span class="pg">
           <a href="javascript:;" @click="fnPage(1)" class="first w3-button w3-border">&lt;&lt;</a>
           <a href="javascript:;" v-if="paging.startPage > 10" @click="fnPage(`${paging.startPage-1}`)"
@@ -38,14 +38,14 @@
              @click="fnPage(`${paging.endPage+1}`)" class="next w3-button w3-border">&gt;</a>
           <a href="javascript:;" @click="fnPage(`${paging.totalPageCnt}`)" class="last w3-button w3-border">&gt;&gt;</a>
           </span>
-    </div>
+        </div>
 
-    <div class="common-buttons">
+        <div class="common-buttons">
           <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnWrite">등록</button>
-    </div>
-  </div>
-  </section>
-</main>
+        </div>
+      </div>
+    </section>
+  </main>
 </template>
 
 <script>
@@ -113,7 +113,7 @@ export default {
     },
     fnView(id) {
       this.$router.push({
-        path: '/board/'+id,
+        path: '/board/' + id,
       })
     },
     fnWrite() {
@@ -131,6 +131,15 @@ export default {
 }
 </script>
 <style scoped>
-article,aside,details,figcaption,figure,footer,header,main,menu,nav,section{display:block}summary{display:list-item}
-section{background-color: #fff}
+article, aside, details, figcaption, figure, footer, header, main, menu, nav, section {
+  display: block
+}
+
+summary {
+  display: list-item
+}
+
+section {
+  background-color: #fff
+}
 </style>
