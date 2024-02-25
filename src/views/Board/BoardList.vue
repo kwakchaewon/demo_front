@@ -90,7 +90,6 @@ export default {
         page: this.page,
         size: this.size
       }
-
       this.$axios.get(this.$serverUrl + "/board/list", {
         params: this.requestBody,
         headers: {}
@@ -99,33 +98,32 @@ export default {
           this.list = res.data.data
           this.paging = res.data.pagination
           this.no = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize)
-
-          console.log(this.paging.page)
-          console.log(this.paging.pageSize)
-          console.log(this.paging.totalListCnt)
         }
-
       }).catch((err) => {
         if (err.message.indexOf('Network Error') > -1) {
           alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
         }
       })
     },
+
     fnView(id) {
       this.$router.push({
         path: '/board/' + id,
       })
     },
+
     fnWrite() {
       this.$router.push({
         path: './write'
       })
     },
+
     fnPage(n) {
       if (this.page !== n) {
         this.page = n
         this.fnGetList()
       }
+
     }
   }
 }
