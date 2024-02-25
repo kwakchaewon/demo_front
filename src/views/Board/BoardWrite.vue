@@ -43,19 +43,20 @@ export default {
         })
       }
     },
+
     fnList() {
-      delete this.requestBody.idx
       this.$router.push({
-        path: './list',
-        query: this.requestBody
+        path: '/board/list',
       })
     },
+
     fnView(idx) {
       this.requestBody.idx = idx
       this.$router.push({
         path: '/board/' + idx
       })
     },
+
     fnSave() {
       let apiUrl = this.$serverUrl + '/board/write'
       this.form = {
