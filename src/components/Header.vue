@@ -20,7 +20,6 @@
             <a class="nav-link disabled" href="#"></a>
           </li>
         </ul>
-        <!--                <p id="userId">환영합니다! {{userId}} 님</p>-->
       </div>
     </nav>
   </header>
@@ -31,7 +30,8 @@ export default {
   name: 'Header',
   methods: {
     fnLogout() {
-      localStorage.removeItem('user_token')
+      localStorage.removeItem('ACCESS_TOKEN')
+      localStorage.removeItem('REFRESH_TOKEN')
       localStorage.removeItem('user_role')
       location.reload()
     }

@@ -9,7 +9,7 @@ import store from '@/vuex/store'
 import Regist from '@/views/common/Regist'
 
 const requireAuth = () => (from, to, next) => {
-    const token = localStorage.getItem('user_token')
+    const token = localStorage.getItem('ACCESS_TOKEN')
     if (token) {
         store.state.isLogin = true
         return next()

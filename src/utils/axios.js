@@ -1,8 +1,12 @@
 import axios from 'axios';
 
 axios.interceptors.request.use(function (config) {
-    const token = localStorage.getItem('user_token');
-    config.headers.Authorization = "Bearer " + token;
+    const access = localStorage.getItem('ACCESS_TOKEN');
+    const refresh = localStorage.getItem('REFRESH_TOKEN');
+
+    config.headers.ACCESS_TOKEN = "Bearer " + access;
+    config.headers.REFRESH_TOKEN = "Bearer " + refresh;
+
     return config;
 });
 

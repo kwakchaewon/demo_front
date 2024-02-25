@@ -3,13 +3,13 @@ import axios from 'axios'
 
 const getUserInfo = (userId, userPw) => {
     const reqData = {
-        'user_id': userId,
-        'user_pw': userPw
+        'userId': userId,
+        'userPw': userPw
     }
 
     let serverUrl = '//localhost:8080'
 
-    return axios.post(serverUrl + '/member/login', reqData, {
+    return axios.post(serverUrl + '/member/login2', reqData, {
         headers: {
             'Content-type': 'application/json'
         }
@@ -24,8 +24,10 @@ export default {
             if (userInfoResponse.data.length === 0) {
                 return 'notFound'
             } else {
-                localStorage.setItem('user_token', userInfoResponse.data.user_token)
                 localStorage.setItem('user_role', userInfoResponse.data.user_role)
+                localStorage.setItem('ACCESS_TOKEN', userInfoResponse.data.ACCESS_TOKEN)
+                localStorage.setItem('REFRESH_TOKEN', userInfoResponse.data.REFRESH_TOKEN)
+
                 return userInfoResponse
             }
         } catch (err) {
