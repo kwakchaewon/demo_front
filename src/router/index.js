@@ -5,7 +5,7 @@ import BoardWrite from '@/views/Board/BoardWrite.vue'
 import BoardUpdate from '@/views/Board/BoardUpdate.vue'
 import Login from '@/views/common/Login'
 import store from '@/vuex/store'
-import Regist from '@/views/common/Regist'
+import SignUp from "@/views/common/SignUp.vue";
 
 const requireAuth = () => (from, to, next) => {
     const token = localStorage.getItem('ACCESS_TOKEN')
@@ -54,9 +54,9 @@ const routes = [
         component: Login  //로그인 컴포넌트 추가
     },
     {
-        path: '/member/regist',
-        name: 'Regist',
-        component: Regist  //로그인 컴포넌트 추가
+        path: '/member/signup',
+        name: 'SignUp',
+        component: SignUp  //로그인 컴포넌트 추가
     }
 ]
 

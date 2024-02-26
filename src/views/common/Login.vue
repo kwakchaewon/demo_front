@@ -13,7 +13,7 @@
                 <input name="password" class="w3-input" placeholder="Enter your password" v-model="user_pw"
                        type="password">
               </p>
-              <router-link to="/member/regist">회원가입</router-link>
+              <router-link to="/member/signup">회원가입</router-link>
               <p>
                 <button type="submit" class="w3-button w3-green w3-round">로그인</button>
               </p>

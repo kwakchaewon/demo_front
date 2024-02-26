@@ -32,7 +32,7 @@
 </template>
 <script>
 export default {
-  name: 'Regist',
+  name: 'SingUp',
   components: {},
 
   data() {
@@ -51,10 +51,7 @@ export default {
         "email": this.email
       }
 
-      console.log(this.$serverUrl+'/member/regist')
-
-
-      this.$axios.post(this.$serverUrl+'/member/regist',this.form)
+      this.$axios.post(this.$serverUrl+'/member/signup',this.form)
           .then(() => {
             alert('회원가입이 완료되었습니다. 로그인 화면으로 이동합니다.')
             this.$router.push('/member/login')
