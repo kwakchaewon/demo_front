@@ -9,7 +9,7 @@ const getUserInfo = (userId, userPw) => {
 
     let serverUrl = '//localhost:8080'
 
-    return axios.post(serverUrl + '/member/login2', reqData, {
+    return axios.post(serverUrl + '/member/login', reqData, {
         headers: {
             'Content-type': 'application/json'
         }
