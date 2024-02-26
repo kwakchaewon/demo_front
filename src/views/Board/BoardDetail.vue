@@ -61,7 +61,7 @@ export default {
     },
     fnCheckUpdate() {
       const id = this.$route.params.id
-      this.$axios.get(this.$serverUrl + '/board/' + id + '/updatecheck')
+      this.$axios.get(this.$serverUrl + '/board/' + id + '/check')
           .then(() => {
             this.$router.push({path: './' + id + '/update',})
           }).catch((err) => {
