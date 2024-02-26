@@ -46,7 +46,7 @@ export default {
 
     fnList() {
       this.$router.push({
-        path: '/board/list',
+        path: '/board',
       })
     },
 
@@ -58,7 +58,7 @@ export default {
     },
 
     fnSave() {
-      let apiUrl = this.$serverUrl + '/board/write'
+      let apiUrl = this.$serverUrl + '/board'
       this.form = {
         "contents": this.contents,
         "title": this.title,

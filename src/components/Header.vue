@@ -20,6 +20,7 @@
             <a class="nav-link disabled" href="#"></a>
           </li>
         </ul>
+<!--        <p id="userId">환영합니다! {{ this.$store.state }} 님</p>-->
       </div>
     </nav>
   </header>

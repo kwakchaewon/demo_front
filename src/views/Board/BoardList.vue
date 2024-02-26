@@ -90,7 +90,7 @@ export default {
         page: this.page,
         size: this.size
       }
-      this.$axios.get(this.$serverUrl + "/board/list", {
+      this.$axios.get(this.$serverUrl + "/board", {
         params: this.requestBody,
         headers: {}
       }).then((res) => {
@@ -114,7 +114,7 @@ export default {
 
     fnWrite() {
       this.$router.push({
-        path: './write'
+        path: './board/writeform'
       })
     },
 

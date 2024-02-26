@@ -1,5 +1,4 @@
 import {createRouter, createWebHistory} from 'vue-router'
-import PageHome from '@/views/Board/PageHome.vue'
 import BoardList from '@/views/Board/BoardList.vue'
 import BoardDetail from '@/views/Board/BoardDetail.vue'
 import BoardWrite from '@/views/Board/BoardWrite.vue'
@@ -19,16 +18,17 @@ const requireAuth = () => (from, to, next) => {
 
 const routes = [
     {
-        path: '/',
-        name: 'PageHome',
-        component: PageHome
-    },
-    {
-        path: '/board/list',
+        path: '/board',
         name: 'BoardList',
         component: BoardList,
         beforeEnter: requireAuth()
     },
+    // {
+    //     path: '/board/list',
+    //     name: 'BoardList',
+    //     component: ,
+    //     beforeEnter: requireAuth()
+    // },
     {
         path: '/board/:id',
         name: 'BoardDetail',
@@ -36,13 +36,13 @@ const routes = [
         beforeEnter: requireAuth()
     },
     {
-        path: '/board/write/',
+        path: '/board/writeform',
         name: 'BoardWrite',
         component: BoardWrite,
         beforeEnter: requireAuth()
     },
     {
-        path: '/board/:id/update/',
+        path: '/board/:id/update',
         name: 'BoardUpdate',
         component: BoardUpdate,
         beforeEnter: requireAuth()

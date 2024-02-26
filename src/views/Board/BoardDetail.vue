@@ -50,7 +50,7 @@ export default {
     },
     fnList() {
       this.$router.push({
-        path: '/board/list',
+        path: '/board',
       })
     },
     fnUpdate() {
