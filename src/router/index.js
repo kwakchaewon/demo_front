@@ -8,8 +8,10 @@ import store from '@/vuex/store'
 import SignUp from "@/views/common/SignUp.vue";
 
 const requireAuth = () => (from, to, next) => {
-    const token = localStorage.getItem('ACCESS_TOKEN')
-    if (token) {
+    const token1 = localStorage.getItem('ACCESS_TOKEN')
+    const token2 = localStorage.getItem('REFRESH_TOKEN')
+
+    if (token1 && token2) {
         store.state.isLogin = true
         return next()
     } // isLogin === true면 페이지 이동
