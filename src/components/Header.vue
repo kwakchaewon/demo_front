@@ -27,13 +27,19 @@
 </template>
 
 <script>
+import Cookies from 'js-cookie';
 export default {
   name: 'Header',
   methods: {
     fnLogout() {
-      localStorage.removeItem('ACCESS_TOKEN')
-      localStorage.removeItem('REFRESH_TOKEN')
-      localStorage.removeItem('user_role')
+      Cookies.remove('ACCESS_TOKEN')
+      Cookies.remove('REFRESH_TOKEN')
+      Cookies.remove('user_role')
+
+      // localStorage.removeItem('ACCESS_TOKEN')
+      // localStorage.removeItem('REFRESH_TOKEN')
+      // localStorage.removeItem('user_role')
+
       location.reload()
     }
   }

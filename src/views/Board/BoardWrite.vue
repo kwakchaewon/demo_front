@@ -20,6 +20,8 @@
 </template>
 
 <script>
+import Cookies from 'js-cookie';
+
 export default {
   data() { //변수생성
     return {
@@ -64,7 +66,7 @@ export default {
         "title": this.title,
       }
 
-      const token = localStorage.getItem('user_token');
+      const token = Cookies.get('ACCESS_TOKEN');
 
       // 생성
       //INSERT

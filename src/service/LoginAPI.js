@@ -1,5 +1,7 @@
 // src/service/loginAPI.js
 import axios from 'axios'
+import Cookies from 'js-cookie';
+
 
 const getUserInfo = (userId, userPw) => {
     const reqData = {
@@ -24,9 +26,12 @@ export default {
             if (userInfoResponse.data.length === 0) {
                 return 'notFound'
             } else {
-                localStorage.setItem('user_role', userInfoResponse.data.user_role)
-                localStorage.setItem('ACCESS_TOKEN', userInfoResponse.data.ACCESS_TOKEN)
-                localStorage.setItem('REFRESH_TOKEN', userInfoResponse.data.REFRESH_TOKEN)
+                Cookies.set('user_role', userInfoResponse.data.user_role, {expires: 1/24})
+                Cookies.set('ACCESS_TOKEN', userInfoResponse.data.ACCESS_TOKEN, {expires: 1/24})
+                Cookies.set('REFRESH_TOKEN', userInfoResponse.data.REFRESH_TOKEN, {expires: 1/24})
+
+                // localStorage.setItem('ACCESS_TOKEN', userInfoResponse.data.ACCESS_TOKEN)
+                // localStorage.setItem('REFRESH_TOKEN', userInfoResponse.data.REFRESH_TOKEN)
 
                 return userInfoResponse
             }
