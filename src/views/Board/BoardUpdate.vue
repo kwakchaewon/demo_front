@@ -57,7 +57,6 @@ export default {
       this.$axios.put(this.$serverUrl + `/board/${postId}`, this.form)
           .then((res) => {
             alert('글이 수정되었습니다.')
-            console.log(res.data.id)
             this.$router.push(`/board/${postId}`)
           }).catch((err) => {
         if (err.message.indexOf('Network Error') > -1) {

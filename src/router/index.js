@@ -10,8 +10,7 @@ import Cookies from 'js-cookie';
 
 const requireAuth = () => (from, to, next) => {
     const token1 = Cookies.get('ACCESS_TOKEN')
-    const token2 = Cookies.get('REFRESH_TOKEN')
-
+    // const token2 = Cookies.get('REFRESH_TOKEN')
 
     // const token1 = localStorage.getItem('ACCESS_TOKEN')
     // const token2 = localStorage.getItem('REFRESH_TOKEN')
