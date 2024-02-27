@@ -11,7 +11,7 @@
               </p>
               <p>
                 <input name="userPw" class="w3-input" placeholder="비밀번호를 입력하세요." id="userPw" v-model="userPw"
-                       type="userPw">
+                       type="password">
               </p>
               <p>
                 <input name="password2" class="w3-input" placeholder="비밀번호를 확인하세요." type="password" id="userPwCk" v-model="userPwCk">
@@ -58,20 +58,29 @@ export default {
     // @을 기준으로 뒷 구간에서 . 뒷 구간이 알파벳 or 숫자 조합으로 이루어져 있는지 체크
 
       // eslint-disable-next-line
-      const pattern = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-za-z0-9\-]+/
+      let emailPattern = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-za-z0-9\-]+/ // 이메일 유효성 검사:
+      let idCheckPattern = /^[a-zA-Z0-9]*$/ // 아이디 유효성 검사: 영어 또는 숫자만 허용
+      let passwordCheck = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/ // 비밀번호 유효성 검사: 8글자 이상, 영문, 숫자, 특수문자 사용 비밀번호
 
       if(this.userId === ''){
         alert('ID를 입력하세요.')
         return
-      } else if (this.user_pw === ''){
+      } else if(!idCheckPattern.test(this.userId)){
+        alert('올바르지 못한 ID 입니다. \n(영문과 숫자만 가능합니다)')
+        return;
+      }
+      else if (this.userPw === ''){
         alert('비밀번호를 입력하세요.')
         return
       }
+      else if(!passwordCheck.test(this.userPw)){
+        alert('올바르지 못한 비밀번호 양식입니다. \n (비밀번호는 8글자 이상 영문, 숫자, 특수문자를 포함해야 합니다')
+      }
         else if (this.userPwCk !== this.userPw){
-        alert('비밀번호를 확인하세요.')
+        alert('비밀번호와 비밀번호 확인이 다릅니다.')
         return
-      } else if(!this.email || !pattern.test(this.email)) {
-        alert('올바른 이메일 주소를 입력해주세요')
+      } else if(!this.email || !emailPattern.test(this.email)) {
+        alert('이메일 주소가 올바르지 않습니다.')
         return
       } else {
         this.$axios.post(this.$serverUrl+'/member/signup',this.form)
