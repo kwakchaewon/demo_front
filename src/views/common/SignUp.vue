@@ -25,11 +25,15 @@
                 <!--                                <button type="submit" class="w3-button w3-green w3-round">취소</button>-->
               </p>
             </form>
-            <div class="alert alert-danger" role="alert" id="errorMessages" v-if="valid_userId || valid_userPw || valid_passwordConfirmed ||  valid_email">
+            <div class="alert alert-danger" role="alert" id="errorMessages" v-if="valid_userId || valid_userPw || valid_passwordConfirmed ||  valid_email || duplicate_userId || duplicate_email">
               <div v-html="valid_userId" v-if="valid_userId"></div>
               <div v-html="valid_userPw" v-if="valid_userPw"></div>
               <div v-html="valid_passwordConfirmed" v-if="valid_passwordConfirmed"></div>
               <div v-html="valid_email" v-if="valid_email"></div>
+              <div v-html="duplicate_userId" v-if="duplicate_userId"></div>
+              <div v-html="duplicate_email" v-if="duplicate_email"></div>
+              <div v-html="valid_else" v-if="valid_else"></div>
+
             </div>
           </div>
         </div>
@@ -51,7 +55,10 @@ export default {
       valid_userId: null,
       valid_userPw: null,
       valid_email: null,
-      valid_passwordConfirmed: null
+      valid_passwordConfirmed: null,
+      duplicate_userId: null,
+      duplicate_email: null,
+      valid_else:null
     }
   },
 
@@ -104,15 +111,19 @@ export default {
             alert('회원가입이 완료되었습니다. 로그인 화면으로 이동합니다.')
             this.$router.push('/member/login')
           }).catch((err) => {
-            console.log(typeof err.response.data.errorMessages)
         if (err.response.status === 400 && err.response.data.errorMessages && typeof err.response.data.errorMessages === 'object') {
           this.valid_userId = err.response.data.errorMessages.valid_userId
           this.valid_userPw = err.response.data.errorMessages.valid_userPw
           this.valid_passwordConfirmed = err.response.data.errorMessages.valid_passwordConfirmed
-          this.valid_email = err.response.data.errorMessages.valid_email
-          console.log(err.response.data.errorMessages)
+          this.duplicate_userId = err.response.data.errorMessages.duplicate_userId
+          this.duplicate_email = err.response.data.errorMessages.duplicate_email
         } else {
-          this.errorMessages = '알 수 없는 오류가 발생했습니다.'
+          this.valid_userId = null
+          this.valid_userPw = null
+          this.valid_passwordConfirmed = null
+          this.duplicate_userId = null
+          this.duplicate_email = null
+          this.valid_else = "알 수 없는 에러가 발생했습니다."
         }
         // if (err.message.indexOf('Network Error') > -1) {
         //   alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
