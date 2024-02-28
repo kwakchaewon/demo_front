@@ -26,21 +26,10 @@
               </p>
             </form>
             <div class="alert alert-danger" role="alert" id="errorMessages" v-if="valid_userId || valid_userPw || valid_passwordConfirmed ||  valid_email">
-<!--            <div class="alert alert-danger" role="alert" v-if="errorMessages" id="errorMessages">-->
               <div v-html="valid_userId" v-if="valid_userId"></div>
               <div v-html="valid_userPw" v-if="valid_userPw"></div>
               <div v-html="valid_passwordConfirmed" v-if="valid_passwordConfirmed"></div>
               <div v-html="valid_email" v-if="valid_email"></div>
-<!--              <span v-html="valid_passwordConfirmed"></span>-->
-<!--              <span v-html="valid_email"></span>-->
-
-<!--              <ul>-->
-<!--                <li v-for="(value, key) in errorMessages" :key="key">-->
-<!--                <li v-for="errorMessage in errorMessages" :key="errorMessage.id">-->
-<!--                <li v-for="(errorMessage, index) in errorMessages" :key="index">-->
-<!--                  <span v-html="errorMessage"></span>-->
-<!--                </li>-->
-<!--              </ul>-->
             </div>
           </div>
         </div>
