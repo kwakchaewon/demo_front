@@ -27,6 +27,7 @@
 
 <script>
 import {mapActions, mapGetters} from 'vuex'
+import Cookies from "js-cookie";
 
 export default {
   data() {
@@ -35,10 +36,19 @@ export default {
       user_pw: ''
     }
   },
+  mounted() {
+    this.removeCookies()
+  },
   methods: {
     ...mapActions(['login']),
+    removeCookies(){
+      Cookies.remove('ACCESS_TOKEN')
+      Cookies.remove('REFRESH_TOKEN')
+      Cookies.remove('user_role')
+    },
 
     async fnLogin() {
+
       if (this.user_id === '') {
         alert('ID를 입력하세요.')
         return

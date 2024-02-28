@@ -33,7 +33,6 @@
               <div v-html="duplicate_userId" v-if="duplicate_userId"></div>
               <div v-html="duplicate_email" v-if="duplicate_email"></div>
               <div v-html="valid_else" v-if="valid_else"></div>
-
             </div>
           </div>
         </div>
@@ -42,6 +41,8 @@
   </main>
 </template>
 <script>
+import Cookies from "js-cookie";
+
 export default {
   name: 'SingUp',
   components: {},
@@ -62,7 +63,16 @@ export default {
     }
   },
 
+  mounted() {
+    this.removeCookies()
+  },
+
   methods: {
+    removeCookies(){
+      Cookies.remove('ACCESS_TOKEN')
+      Cookies.remove('REFRESH_TOKEN')
+      Cookies.remove('user_role')
+    },
     submitForm() {
       this.form = {
         "userId": this.userId,
