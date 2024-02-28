@@ -40,7 +40,7 @@ export default {
       this.$axios.get(this.$serverUrl + `/board/${postId}`)
           .then(response => {
             this.title = response.data.title;
-            this.content = response.data.content;
+            this.contents = response.data.contents;
           })
           .catch(error => {
             console.error('Error fetching post:', error);
@@ -55,7 +55,7 @@ export default {
       }
 
       this.$axios.put(this.$serverUrl + `/board/${postId}`, this.form)
-          .then((res) => {
+          .then(() => {
             alert('글이 수정되었습니다.')
             this.$router.push(`/board/${postId}`)
           }).catch((err) => {
