@@ -28,7 +28,8 @@ export default {
     return {
       title: '', // 제목
       contents: '', // 내용
-      createdAt: '' // 작성일
+      createdAt: '', // 작성일
+      userId:'' // 작성자
     }
   },
   mounted() {
@@ -42,6 +43,7 @@ export default {
             this.title = res.data.title
             this.contents = res.data.contents
             this.createdAt = res.data.createdAt
+            this.userId = res.data.memberDto.userId;
           }).catch((err) => {
         if (err.message.indexOf('Network Error') > -1) {
           alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')

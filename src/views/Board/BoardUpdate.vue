@@ -59,9 +59,11 @@ export default {
             alert('글이 수정되었습니다.')
             this.$router.push(`/board/${postId}`)
           }).catch((err) => {
-        if (err.message.indexOf('Network Error') > -1) {
-          alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
-        }
+            if(err.response.status === 400 && err.response.data.errMsg){
+              alert(err.response.data.errMsg);
+            } else{
+              alert('알 수 없는 오류가 발생했습니다.')
+            }
       })
     },
 
