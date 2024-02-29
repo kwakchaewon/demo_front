@@ -79,11 +79,13 @@ export default {
             alert('글이 저장되었습니다.')
             var boardId = parseInt(res.data.id)
             this.$router.push('' + boardId)
+            console.log(res.data)
           }).catch((err) => {
-        if (err.response.status === 400) {
-          alert(err.response.data);
+        if (err.response.status === 400 && err.response.data.errMsg) {
+          console.log(err.response);
+          alert(err.response.data.errMsg);
         } else {
-          alert(err.response.data);
+          alert("알 수 없는 오류가 발생했습니다.");
         }
       })
     }
