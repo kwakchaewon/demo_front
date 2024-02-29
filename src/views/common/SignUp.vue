@@ -122,9 +122,11 @@ export default {
             this.$router.push('/member/login')
           }).catch((err) => {
         if (err.response.status === 400 && err.response.data.errorMessages && typeof err.response.data.errorMessages === 'object') {
+          console.log(err.response.data.errorMessages)
           this.valid_userId = err.response.data.errorMessages.valid_userId
           this.valid_userPw = err.response.data.errorMessages.valid_userPw
           this.valid_passwordConfirmed = err.response.data.errorMessages.valid_passwordConfirmed
+          this.valid_email = err.response.data.errorMessages.valid_email
           this.duplicate_userId = err.response.data.errorMessages.duplicate_userId
           this.duplicate_email = err.response.data.errorMessages.duplicate_email
         } else {
