@@ -5,10 +5,10 @@
       <button type="button" class="w3-button w3-round w3-gray" v-on:click="fnList">목록</button>
     </div>
     <div class="board-contents">
-      <input type="text" v-model="title" class="w3-input w3-border" placeholder="제목을 입력해주세요.">
+      <input type="text" id="title" v-model="title" class="w3-input w3-border" placeholder="제목을 입력해주세요.">
     </div>
     <div class="board-contents">
-      <textarea id="" cols="30" rows="10" v-model="contents" class="w3-input w3-border" style="resize: none;"
+      <textarea id="contents" cols="30" rows="10" v-model="contents" class="w3-input w3-border" style="resize: none;"
                 placeholder="내용을 입력해주세요.">
       </textarea>
     </div>
@@ -54,18 +54,28 @@ export default {
         "contents": this.contents
       }
 
-      this.$axios.put(this.$serverUrl + `/board/${postId}`, this.form)
-          .then(() => {
-            alert('글이 수정되었습니다.')
-            this.$router.push(`/board/${postId}`)
-          }).catch((err) => {
-            console.log(err)
-            if(err.response.data.status === "400" && err.response.data.message){
-              alert(err.response.data.message);
-            } else{
-              alert('알 수 없는 오류가 발생했습니다.')
-            }
-      })
+      var blankPattern = /^\s*$/ // 공백 유효성 검사
+
+      if (blankPattern.test(this.title)) {
+        alert("빈 제목은 사용할 수 없습니다.")
+      } else if (blankPattern.test(this.contents)) {
+        alert("빈 내용은 입력할 수 없습니다.")
+      } else {
+        this.$axios.put(this.$serverUrl + `/board/${postId}`, this.form)
+            .then(() => {
+              alert('글이 수정되었습니다.')
+              this.$router.push(`/board/${postId}`)
+            }).catch((err) => {
+          console.log(err)
+          if (err.response.data.status === "400" && err.response.data.message) {
+            alert(err.response.data.message);
+          } else {
+            alert('알 수 없는 오류가 발생했습니다.')
+          }
+        })
+      }
+
+
     },
 
     fnList() {
