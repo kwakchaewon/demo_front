@@ -1,5 +1,6 @@
 <template>
   <div class="container my-3">
+    <h5 class="border-bottom my-3 py-2">댓글</h5>
     <div class="card my-3" v-for="(row, id) in list" :key="id">
       <div class="card-body">
         <div class="card-text" style="white-space: pre-line;">{{ row.contents }}</div>

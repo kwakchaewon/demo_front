@@ -4,9 +4,15 @@
     margin: auto;
 }
 
-.board-detail {
+.board-detail{
     width: 768px;
     margin: auto;
+    text-align: left;
+}
+
+.container my-3 {
+    margin: auto;
+    margin-top: 40px;
     text-align: left;
 }
 

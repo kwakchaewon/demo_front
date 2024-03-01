@@ -1,23 +1,28 @@
 <template>
-  <div class="board-detail">
+  <div class="container my-3">
     <div class="common-buttons">
-      <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnUpdate">수정</button>&nbsp;
-      <button type="button" class="w3-button w3-round w3-red" v-on:click="fnDelete">삭제</button>&nbsp;
-      <button type="button" class="w3-button w3-round w3-gray" v-on:click="fnList">목록</button>
+      <button type="button" class="w3-button w3-round w3-blue-gray"></button>&nbsp;
+      <button type="button" class="w3-button w3-round w3-gray"></button>
     </div>
-    <div class="board-contents">
-      <h3>{{ title }}</h3>
-    </div>
-    <div class="board-contents">
-      <span>{{ contents }}</span>
-    </div>
-    <div class="board-contents">
-      <span>{{ createdAt }}</span>
-    </div>
-    <div class="common-buttons">
-      <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnCheckUpdate">수정</button>&nbsp;
-      <button type="button" class="w3-button w3-round w3-red" v-on:click="fnDelete">삭제</button>&nbsp;
-      <button type="button" class="w3-button w3-round w3-gray" v-on:click="fnList">목록</button>
+
+    <h2 class="border-bottom py-2">{{ title }}</h2>
+    <div class="card my-3">
+      <div class="card-body">
+        <div class="card-text" style="white-space: pre-line;">{{ contents }}</div>
+        <div class="d-flex justify-content-end">
+          <div class="badge bg-light text-dark p-2 text-start">
+            <div class="mb-2">
+              <span>{{ userId }}</span>
+            </div>
+            <div>{{ createdAt }}</div>
+          </div>
+        </div>
+        <div class="my-3">
+          <button class="btn btn-sm btn-outline-secondary" v-on:click="fnUpdate">수정</button>
+          <button class="btn btn-sm btn-outline-secondary" v-on:click="fnDelete">삭제</button>
+          <button class="btn btn-sm btn-outline-secondary" v-on:click="fnList">목록</button>
+        </div>
+      </div>
     </div>
   </div>
   <Comment/>
@@ -35,7 +40,7 @@ export default {
       title: '', // 제목
       contents: '', // 내용
       createdAt: '', // 작성일
-      userId:'' // 작성자
+      userId: '' // 작성자
     }
   },
   mounted() {
