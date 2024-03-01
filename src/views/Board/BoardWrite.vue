@@ -52,13 +52,6 @@ export default {
       })
     },
 
-    fnView(idx) {
-      this.requestBody.idx = idx
-      this.$router.push({
-        path: '/board/' + idx
-      })
-    },
-
     fnSave() {
       let apiUrl = this.$serverUrl + '/board'
       this.form = {

@@ -38,6 +38,7 @@ export default {
     this.fnGetview()
   },
   methods: {
+    // 댓글 리스트
     fnGetview() {
       const id = this.$route.params.id
       console.log(this.$serverUrl + "/board/" + id + "/comment")
@@ -50,6 +51,8 @@ export default {
         }
       })
     },
+
+    // 댓글 저장
     fnSave() {
 
     }

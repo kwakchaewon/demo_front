@@ -16,7 +16,7 @@
             <td>{{ paging.totalListCnt - (paging.page * paging.pageSize) - id + 10 }}</td>
             <td><a v-on:click="fnView(`${row.id}`)">{{ row.title }}</a></td>
             <td>{{ row.createdAt }}</td>
-            <td>{{ row.memberDto.userId }}</td>
+            <td>{{ row.memberId }}</td>
           </tr>
           </tbody>
         </table>
