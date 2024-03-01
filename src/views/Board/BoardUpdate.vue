@@ -48,7 +48,6 @@ export default {
     },
 
     fnSave() {
-      console.log(1)
       let postId = this.$route.params.id;
       this.form = {
         "title": this.title,

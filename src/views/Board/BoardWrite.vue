@@ -5,10 +5,10 @@
       <button type="button" class="w3-button w3-round w3-gray" v-on:click="fnList">목록</button>
     </div>
     <div class="board-contents">
-      <input type="text" v-model="title" class="w3-input w3-border" placeholder="제목을 입력해주세요.">
+      <input type="text" id="title" v-model="title" name='title' class="w3-input w3-border" placeholder="제목을 입력해주세요.">
     </div>
     <div class="board-contents">
-      <textarea id="" cols="30" rows="10" v-model="contents" class="w3-input w3-border" style="resize: none;"
+      <textarea id="contents" name='contents' cols="30" rows="10" v-model="contents" class="w3-input w3-border" style="resize: none;"
                 placeholder="내용을 입력해주세요.">
       </textarea>
     </div>
@@ -58,29 +58,37 @@ export default {
         "contents": this.contents,
         "title": this.title,
       }
+      var blankPattern = /^\s*$/ // 공백 유효성 검사
 
-      const token = Cookies.get('ACCESS_TOKEN');
+      if (blankPattern.test(this.title)) {
+        alert("빈 제목은 사용할 수 없습니다.")
+      } else if (blankPattern.test(this.contents)) {
+        alert("빈 내용은 입력할 수 없습니다.")
+      }
 
-      // 생성
-      //INSERT
-      this.$axios.post(apiUrl, this.form, {
-        headers: {
-          'Authorization': `Bearer ${token}` // JWT를 헤더에 포함하여 전송
-        }
-      })
-          .then((res) => {
-            alert('글이 저장되었습니다.')
-            var boardId = parseInt(res.data.id)
-            this.$router.push('' + boardId)
-            console.log(res.data)
-          }).catch((err) => {
-        if (err.response.status === 400 && err.response.data.errMsg) {
-          console.log(err.response);
-          alert(err.response.data.errMsg);
-        } else {
-          alert("알 수 없는 오류가 발생했습니다.");
-        }
-      })
+      else {
+        const token = Cookies.get('ACCESS_TOKEN');
+
+        // 생성
+        //INSERT
+        this.$axios.post(apiUrl, this.form, {
+          headers: {
+            'Authorization': `Bearer ${token}` // JWT를 헤더에 포함하여 전송
+          }
+        })
+            .then((res) => {
+              alert('글이 저장되었습니다.')
+              var boardId = parseInt(res.data.id)
+              this.$router.push('' + boardId)
+              console.log(res.data)
+            }).catch((err) => {
+          if (err.response.data.status === "400" && err.response.data.message) {
+            alert(err.response.data.message);
+          } else {
+            alert("알 수 없는 오류가 발생했습니다.");
+          }
+        })
+      }
     }
   }
 }

@@ -66,12 +66,6 @@ export default {
         path: '/board',
       })
     },
-    // fnUpdate() {
-    //   const id = this.$route.params.id
-    //   this.$router.push({
-    //     path: './' + id + '/update',
-    //   })
-    // },
 
     fnCheckUpdate() {
       const id = this.$route.params.id
