@@ -25,15 +25,6 @@
                 <!--                                <button type="submit" class="w3-button w3-green w3-round">취소</button>-->
               </p>
             </form>
-            <div class="alert alert-danger" role="alert" id="errorMessages" v-if="valid_userId || valid_userPw || valid_passwordConfirmed ||  valid_email || duplicate_userId || duplicate_email">
-              <div v-html="valid_userId" v-if="valid_userId"></div>
-              <div v-html="valid_userPw" v-if="valid_userPw"></div>
-              <div v-html="valid_passwordConfirmed" v-if="valid_passwordConfirmed"></div>
-              <div v-html="valid_email" v-if="valid_email"></div>
-              <div v-html="duplicate_userId" v-if="duplicate_userId"></div>
-              <div v-html="duplicate_email" v-if="duplicate_email"></div>
-              <div v-html="valid_else" v-if="valid_else"></div>
-            </div>
           </div>
         </div>
       </div>
@@ -52,14 +43,7 @@ export default {
       userId: '',
       userPw: '',
       email: '',
-      userPwCk: '',
-      valid_userId: null,
-      valid_userPw: null,
-      valid_email: null,
-      valid_passwordConfirmed: null,
-      duplicate_userId: null,
-      duplicate_email: null,
-      valid_else:null
+      userPwCk: ''
     }
   },
 
@@ -85,63 +69,49 @@ export default {
       // @을 기준으로 뒷 구간이 알파벳 or 숫자 조합으로 이루어져 있는지 체크
       // @을 기준으로 뒷 구간에서 . 뒷 구간이 알파벳 or 숫자 조합으로 이루어져 있는지 체크
 
-      // eslint-disable-next-line
-      // let emailPattern = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-za-z0-9\-]+/ // 이메일 유효성 검사:
-      // let idCheckPattern = /^[0-9a-zA-Z]{4,12}$/ // 아이디 유효성 검사: 영어 또는 숫자만 허용
-      // let passwordCheck = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/ // 비밀번호 유효성 검사: 8글자 이상 영문, 숫자, 특수문자 사용 비밀번호
+      //eslint-disable-next-line
+      let emailPattern = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-za-z0-9\-]+/ // 이메일 유효성 검사:
+      let idCheckPattern = /^[0-9a-zA-Z]{4,12}$/ // 아이디 유효성 검사: 영어 또는 숫자만 허용
+      let passwordCheck = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/ // 비밀번호 유효성 검사: 8글자 이상 영문, 숫자, 특수문자 사용 비밀번호
 
-      // if(this.userId === ''){
-      //   alert('ID를 입력하세요.')
-      //   return
-      // } else if(!idCheckPattern.test(this.userId)){
-      //   alert('올바르지 못한 ID 입니다. \n4~12자의 숫자,영문으로 생성 가능합니다.')
-      //   return;
-      // }
-      // else if (this.userPw === ''){
-      //   alert('비밀번호를 입력하세요.')
-      //   return
-      // }
-      // else if(this.userPwCk === ''){
-      //   alert('비밀번호 확인을 입력하세요.')
-      //   return
-      // }
-      // else if(!passwordCheck.test(this.userPw)){
-      //   alert('비밀번호가 올바르지 않습니다. \n8자 이상의 영문, 숫자, 특수문자로 생성 가능합니다.')
-      // }
-      //   else if (this.userPwCk !== this.userPw){
-      //   alert('비밀번호와 비밀번호 확인이 다릅니다.')
-      //   return
-      // } else if(!this.email || !emailPattern.test(this.email)) {
-      //   alert('이메일 주소가 올바르지 않습니다.')
-      //   return
-      // } else {
-
-      this.$axios.post(this.$serverUrl + '/member/signup', this.form)
-          .then(() => {
-            alert('회원가입이 완료되었습니다. 로그인 화면으로 이동합니다.')
-            this.$router.push('/member/login')
-          }).catch((err) => {
-        if (err.response.status === 400 && err.response.data.errorMessages && typeof err.response.data.errorMessages === 'object') {
-          console.log(err.response.data.errorMessages)
-          this.valid_userId = err.response.data.errorMessages.valid_userId
-          this.valid_userPw = err.response.data.errorMessages.valid_userPw
-          this.valid_passwordConfirmed = err.response.data.errorMessages.valid_passwordConfirmed
-          this.valid_email = err.response.data.errorMessages.valid_email
-          this.duplicate_userId = err.response.data.errorMessages.duplicate_userId
-          this.duplicate_email = err.response.data.errorMessages.duplicate_email
-        } else {
-          this.valid_userId = null
-          this.valid_userPw = null
-          this.valid_passwordConfirmed = null
-          this.duplicate_userId = null
-          this.duplicate_email = null
-          this.valid_else = "알 수 없는 에러가 발생했습니다."
-        }
-        // if (err.message.indexOf('Network Error') > -1) {
-        //   alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
-        // }
-      })
-      // }
+      if(this.userId === ''){
+        alert('ID를 입력하세요.')
+        return
+      } else if(!idCheckPattern.test(this.userId)){
+        alert('올바르지 못한 ID 입니다. \n4~12자의 영문 또는 숫자로 생성 가능합니다.')
+        return;
+      }
+      else if (this.userPw === ''){
+        alert('비밀번호를 입력하세요.')
+        return
+      }
+      else if(this.userPwCk === ''){
+        alert('비밀번호 확인을 입력하세요.')
+        return
+      }
+      else if(!passwordCheck.test(this.userPw)){
+        alert('비밀번호가 올바르지 않습니다. \n8자 이상 영문,숫자,특수문자 조합으로 생성하세요.')
+      }
+        else if (this.userPwCk !== this.userPw){
+        alert('비밀번호와 비밀번호 확인이 다릅니다.')
+        return
+      } else if(!this.email || !emailPattern.test(this.email)) {
+        alert('이메일 주소가 올바르지 않습니다.')
+        return
+      } else {
+        this.$axios.post(this.$serverUrl + '/member/signup', this.form)
+            .then(() => {
+              alert('회원가입이 완료되었습니다. 로그인 화면으로 이동합니다.')
+              this.$router.push('/member/login')
+            }).catch((err) => {
+              console.log(err)
+          if (err.response.data.status === '400' && err.response.data.message) {
+            alert(err.response.data.message)
+          } else{
+            alert("알 수 없는 오류가 발생했습니다.")
+          }
+        })
+      }
     }
   }
 }
