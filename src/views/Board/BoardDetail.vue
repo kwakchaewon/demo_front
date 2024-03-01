@@ -20,10 +20,16 @@
       <button type="button" class="w3-button w3-round w3-gray" v-on:click="fnList">목록</button>
     </div>
   </div>
+  <Comment/>
 </template>
 
 <script>
+import Comment from "@/components/Comment.vue";
+
 export default {
+  components: {
+    Comment
+  },
   data() { //변수생성
     return {
       title: '', // 제목

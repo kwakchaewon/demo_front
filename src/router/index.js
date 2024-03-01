@@ -38,7 +38,7 @@ const routes = [
     {
         path: '/board/:id',
         name: 'BoardDetail',
-        component: BoardDetail,
+        component: BoardDetail, Comment,
         beforeEnter: requireAuth()
     },
     {
