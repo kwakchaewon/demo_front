@@ -48,6 +48,7 @@ export default {
     },
 
     fnSave() {
+      console.log(1)
       let postId = this.$route.params.id;
       this.form = {
         "title": this.title,
@@ -59,8 +60,9 @@ export default {
             alert('글이 수정되었습니다.')
             this.$router.push(`/board/${postId}`)
           }).catch((err) => {
-            if(err.response.status === 400 && err.response.data.errMsg){
-              alert(err.response.data.errMsg);
+            console.log(err)
+            if(err.response.data.status === "400" && err.response.data.message){
+              alert(err.response.data.message);
             } else{
               alert('알 수 없는 오류가 발생했습니다.')
             }

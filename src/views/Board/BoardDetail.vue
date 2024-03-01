@@ -18,7 +18,7 @@
           </div>
         </div>
         <div class="my-3">
-          <button class="btn btn-sm btn-outline-secondary" v-on:click="fnUpdate">수정</button>
+          <button class="btn btn-sm btn-outline-secondary" v-on:click="fnCheckUpdate">수정</button>
           <button class="btn btn-sm btn-outline-secondary" v-on:click="fnDelete">삭제</button>
           <button class="btn btn-sm btn-outline-secondary" v-on:click="fnList">목록</button>
         </div>
@@ -66,22 +66,23 @@ export default {
         path: '/board',
       })
     },
-    fnUpdate() {
-      const id = this.$route.params.id
-      this.$router.push({
-        path: './' + id + '/update',
-      })
-    },
+    // fnUpdate() {
+    //   const id = this.$route.params.id
+    //   this.$router.push({
+    //     path: './' + id + '/update',
+    //   })
+    // },
+
     fnCheckUpdate() {
       const id = this.$route.params.id
       this.$axios.get(this.$serverUrl + '/board/' + id + '/check')
           .then(() => {
             this.$router.push({path: './' + id + '/update',})
           }).catch((err) => {
-        if (err.response.status === 400) {
+        if (err.response.data.status === "400" && err.response.data.message) {
           alert('수정 권한이 없습니다.'); // 400 응답 코드에 대한 알림 메시지
         } else {
-          console.err('에러:', err); // 기타 에러 처리
+          alert('알 수 없는 오류가 발생했습니다.')
         }
       })
     },
