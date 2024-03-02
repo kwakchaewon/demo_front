@@ -29,12 +29,6 @@ const routes = [
         component: BoardList,
         beforeEnter: requireAuth()
     },
-    // {
-    //     path: '/board/list',
-    //     name: 'BoardList',
-    //     component: ,
-    //     beforeEnter: requireAuth()
-    // },
     {
         path: '/board/:id',
         name: 'BoardDetail',
