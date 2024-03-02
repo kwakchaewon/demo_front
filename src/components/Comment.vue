@@ -14,7 +14,7 @@
 
     <div class="card my-3">
       <div class="board-contents">
-      <textarea id="" cols="30" rows="3" v-model="contents" class="w3-input w3-border" style="resize: none;"
+      <textarea id="contents" cols="30" rows="3" v-model="contents" class="w3-input w3-border" style="resize: none;"
                 placeholder="내용을 입력해주세요.">
       </textarea>
       </div>
@@ -26,12 +26,15 @@
   </div>
 </template>
 <script>
+import Cookies from "js-cookie";
+
 export default {
   name: 'Comment',
 
   data() { //변수생성
     return {
-      list: {}
+      list: {},
+      contents: ''
     }
   },
   mounted() {
@@ -40,10 +43,8 @@ export default {
   methods: {
     // 댓글 리스트
     fnGetview() {
-      const id = this.$route.params.id
-      console.log(this.$serverUrl + "/board/" + id + "/comment")
+      let id = this.$route.params.id
       this.$axios.get(this.$serverUrl + "/board/" + id + "/comment").then((res) => {
-        console.log(res.data)
         this.list = res.data
       }).catch((err) => {
         if (err.message.indexOf('Network Error') > -1) {
@@ -54,7 +55,34 @@ export default {
 
     // 댓글 저장
     fnSave() {
+      var blankPattern = /^\s*$/ // 공백 유효성 검사
+      this.form = {
+        "contents": this.contents
+      }
 
+      if (blankPattern.test(this.contents)) {
+        alert("빈 내용은 입력할 수 없습니다.")
+      } else {
+        const id = this.$route.params.id
+        let apiUrl = this.$serverUrl + '/board/' + id + '/comment'
+        const token = Cookies.get('ACCESS_TOKEN');
+        this.$axios.post(apiUrl, this.form, {
+          headers: {
+            'ACCESS_TOKEN': `Bearer ${token}` // JWT를 헤더에 포함하여 전송
+          }
+        })
+            .then(() => {
+              alert('댓글이 저장되었습니다.')
+              this.contents = ''
+              this.fnGetview()
+            }).catch((err) => {
+          if (err.response.data.status === "400" && err.response.data.message) {
+            alert(err.response.data.message);
+          } else {
+            alert("알 수 없는 오류가 발생했습니다.");
+          }
+        })
+      }
     }
   }
 }
