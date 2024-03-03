@@ -74,7 +74,7 @@ export default {
             this.$router.push({path: './' + id + '/update',})
           }).catch((err) => {
         if (err.response.data.status === "400" && err.response.data.message) {
-          alert('수정 권한이 없습니다.'); // 400 응답 코드에 대한 알림 메시지
+          alert(err.response.data.message) // 400 응답 코드에 대한 알림 메시지
         } else {
           alert('알 수 없는 오류가 발생했습니다.')
         }

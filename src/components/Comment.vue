@@ -9,6 +9,10 @@
             <div>{{ row.createdAt }}</div>
           </div>
         </div>
+        <div class="my-3">
+          <button class="btn btn-sm btn-outline-secondary" v-on:click="fnCheckUpdate">수정</button>
+          <button class="delete btn btn-sm btn-outline-secondary" v-on:click="fnDelete(`${row.id}`)">삭제</button>
+        </div>
       </div>
     </div>
 
@@ -22,7 +26,6 @@
         <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnSave">저장</button>&nbsp;
       </div>
     </div>
-
   </div>
 </template>
 <script>
@@ -83,6 +86,27 @@ export default {
           }
         })
       }
+    },
+
+    // 댓글 수정
+    fnCheckUpdate(){
+
+    },
+
+    // 댓글 삭제
+    fnDelete(id){
+      if (!confirm("삭제하시겠습니까?")) return
+      this.$axios.delete(this.$serverUrl + '/comment/' + id)
+          .then(() => {
+            alert('삭제되었습니다.')
+            this.fnGetview();
+          }).catch((err) => {
+        if (err.response.data.status === "400" && err.response.data.message) {
+          alert(err.response.data.message);
+        } else {
+          alert("알 수 없는 오류가 발생했습니다.");
+        }
+      })
     }
   }
 }
