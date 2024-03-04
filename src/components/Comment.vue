@@ -10,7 +10,7 @@
           </div>
         </div>
         <div class="my-3">
-          <button class="btn btn-sm btn-outline-secondary" v-on:click="fnCheckUpdate">수정</button>
+          <button class="btn btn-sm btn-outline-secondary" v-on:click="fnCheckUpdate(row.id)">수정</button>
           <button class="delete btn btn-sm btn-outline-secondary" v-on:click="fnDelete(`${row.id}`)">삭제</button>
         </div>
       </div>
@@ -88,9 +88,20 @@ export default {
       }
     },
 
-    // 댓글 수정
-    fnCheckUpdate(){
-
+    // 댓글 수정 권한 확인
+    fnCheckUpdate(id){
+      this.$axios.get(this.$serverUrl + '/comment/' + id + '/check')
+          .then(() => {
+            this.$router.push({
+              path: '/comment/' + id+ '/update',
+            })
+          }).catch((err) => {
+        if (err.response.data.status === "400" && err.response.data.message) {
+          alert(err.response.data.message) // 400 응답 코드에 대한 알림 메시지
+        } else {
+          alert('알 수 없는 오류가 발생했습니다.')
+        }
+      })
     },
 
     // 댓글 삭제

@@ -3,6 +3,7 @@ import BoardList from '@/views/Board/BoardList.vue'
 import BoardDetail from '@/views/Board/BoardDetail.vue'
 import BoardWrite from '@/views/Board/BoardWrite.vue'
 import BoardUpdate from '@/views/Board/BoardUpdate.vue'
+import CommentUpdate from '@/views/Board/CommentUpdate.vue'
 import Login from '@/views/common/Login'
 import store from '@/vuex/store'
 import SignUp from "@/views/common/SignUp.vue";
@@ -47,7 +48,12 @@ const routes = [
         component: BoardUpdate,
         beforeEnter: requireAuth()
     },
-
+    {
+        path: '/comment/:id/update',
+        name: 'CommentUpdate',
+        component: CommentUpdate,
+        beforeEnter: requireAuth()
+    },
     {
         path: '/member/login',
         name: 'Login',
