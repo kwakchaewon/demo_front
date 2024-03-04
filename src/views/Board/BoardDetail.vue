@@ -10,12 +10,6 @@
       <div class="card-body">
         <div class="card-text" style="white-space: pre-line;">{{ contents }}</div>
         <div class="d-flex justify-content-end">
-<!--          <div class="badge bg-light text-dark p-2 text-start">-->
-<!--            <div class="mb-2">-->
-<!--              <span>{{ memberId }}</span>-->
-<!--            </div>-->
-<!--            <div>{{ createdAt }}</div>-->
-<!--          </div>-->
           <div class="badge bg-light text-dark p-2 text-start mx-3">
             <div class="mb-2">작성자</div>
             <div>{{ memberId }}</div>
@@ -28,13 +22,6 @@
             <div class="mb-2">수정일</div>
             <div>{{ updatedAt }}</div>
           </div>
-<!--          <div class="badge bg-light text-dark p-2 text-start mx-3">-->
-<!--            <div class="mb-2">작성일</div>-->
-<!--            <div>{{ createdAt }}</div>-->
-<!--            <div class="badge bg-light text-dark p-2 text-start mx-3">-->
-<!--              <div class="mb-2">작성자</div>-->
-<!--              <div>{{ memberId }}</div>-->
-<!--          </div>-->
         </div>
         <div class="my-3">
           <button class="btn btn-sm btn-outline-secondary" v-on:click="fnCheckUpdate">수정</button>
