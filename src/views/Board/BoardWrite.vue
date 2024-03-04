@@ -41,7 +41,13 @@ export default {
           this.title = res.data.title
           this.contents = res.data.contents
         }).catch((err) => {
-          console.log(err)
+          if (err.response.data.status && err.response.data.message) {
+            console.log(err.response.data.message);
+            alert(err.response.data.message);
+          } else {
+            console.log("알 수 없는 오류가 발생했습니다.");
+            alert("알 수 없는 오류가 발생했습니다.");
+          }
         })
       }
     },
@@ -80,11 +86,14 @@ export default {
               alert('글이 저장되었습니다.')
               var boardId = parseInt(res.data.id)
               this.$router.push('' + boardId)
-              console.log(res.data)
             }).catch((err) => {
-          if (err.response.data.status === "400" && err.response.data.message) {
+          // ONLY_BLANk
+          if (err.response.data.status && err.response.data.message) {
+            console.log(err.response.data.message);
             alert(err.response.data.message);
-          } else {
+          }
+          else {
+            console.log("알 수 없는 오류가 발생했습니다.");
             alert("알 수 없는 오류가 발생했습니다.");
           }
         })

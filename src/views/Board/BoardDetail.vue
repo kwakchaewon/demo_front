@@ -64,8 +64,10 @@ export default {
             this.updatedAt = res.data.updatedAt
             this.memberId = res.data.memberId;
           }).catch((err) => {
-        if (err.response.data.status === "400" && err.response.data.message) {
-          alert(err.response.data.message) // 400 응답 코드에 대한 알림 메시지
+        // BOARD_NOTFOUND
+        if (err.response.data.status === "404" && err.response.data.message) {
+          console.log(err.response.data.message)
+          alert(err.response.data.message)
           this.fnList()
         } else {
           alert('알 수 없는 오류가 발생했습니다.')
@@ -85,9 +87,18 @@ export default {
           .then(() => {
             this.$router.push({path: './' + id + '/update',})
           }).catch((err) => {
-        if (err.response.data.status === "400" && err.response.data.message) {
-          alert(err.response.data.message) // 400 응답 코드에 대한 알림 메시지
-        } else {
+
+        // NO_AUTHORIZATION
+        if (err.response.data.status === "403" && err.response.data.message) {
+          alert(err.response.data.message)
+        }
+
+        // BOARD_NOTFOUND
+        else if(err.response.data.status === "404" && err.response.data.message){
+          alert(err.response.data.message)
+          this.fnList()
+        }
+        else {
           alert('알 수 없는 오류가 발생했습니다.')
         }
       })
@@ -100,10 +111,24 @@ export default {
             alert('삭제되었습니다.')
             this.fnList();
           }).catch((err) => {
-        if (err.response.status === 400) {
-          alert('삭제 권한이 없습니다.');
-        } else {
-          console.log(err.response);
+        // NO_AUTHORIZATION
+        if (err.response.data.status === "403" && err.response.data.message){
+          console.log(err.response.data.message)
+          alert(err.response.data.message)
+        }
+        // BOARD_NOTFOUND
+        else if(err.response.data.status === "404" && err.response.data.message){
+          console.log(err.response.data.message)
+          alert(err.response.data.message)
+          this.fnList();
+        }
+        else if(err.response.data.status && err.response.data.message){
+          console.log(err.response.data.message)
+          alert(err.response.data.message)
+        }
+        else {
+          console.log('알 수 없는 오류가 발생했습니다.')
+          alert('알 수 없는 오류가 발생했습니다.')
         }
       })
     },

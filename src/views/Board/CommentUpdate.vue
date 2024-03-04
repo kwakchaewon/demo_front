@@ -32,14 +32,14 @@ export default {
       let commentId = this.$route.params.id;
       this.commentId = commentId;
 
-      // 해당 게시글 불러오기
+      // 해당 댓글 불러오기
       this.$axios.get(this.$serverUrl + `/comment/${commentId}`)
           .then(response => {
             this.contents = response.data.contents;
           })
           .catch(err => {
             console.log(err)
-            if (err.response.data.status === "400" && err.response.data.message) {
+            if (err.response.data.status && err.response.data.message) {
               alert(err.response.data.message);
             } else {
               alert('알 수 없는 오류가 발생했습니다.')
@@ -65,9 +65,11 @@ export default {
               this.$router.push(`/board/${boardId}`)
             }).catch((err) => {
           console.log(err)
-          if (err.response.data.status === "400" && err.response.data.message) {
+          if (err.response.data.status && err.response.data.message) {
+            console.log(err.response.data.message);
             alert(err.response.data.message);
           } else {
+            console.log('알 수 없는 오류가 발생했습니다.')
             alert('알 수 없는 오류가 발생했습니다.')
           }
         })

@@ -43,7 +43,22 @@ export default {
             this.contents = response.data.contents;
           })
           .catch(error => {
-            console.error('Error fetching post:', error);
+            if (error.response.data.status === "400" && error.response.data.message) {
+              console.log(error.response.data.message);
+              alert(error.response.data.message);
+            }
+            // BOARD_NOTFOUND
+            else if(error.response.data.status === "404" && error.response.data.message){
+              console.log(error.response.data.message);
+              alert(error.response.data.message);
+              this.fnList()
+            }
+            else if(error.response.data.status && error.response.data.message){
+              console.log(error.response.data.message);
+              alert(error.response.data.message);
+            } else{
+              alert('알 수 없는 오류가 발생했습니다.')
+            }
           });
     },
 
@@ -66,16 +81,22 @@ export default {
               alert('글이 수정되었습니다.')
               this.$router.push(`/board/${postId}`)
             }).catch((err) => {
-          console.log(err)
-          if (err.response.data.status === "400" && err.response.data.message) {
-            alert(err.response.data.message);
-          } else {
+
+          // NO_AUTHORIZATION
+          if (err.response.data.status === "403" && err.response.data.message) {
+            console.log(err.response.data.message)
+            alert(err.response.data.message)
+          }
+          else if(err.response.data.status && err.response.data.message){
+            console.log(err.response.data.message)
+            alert(err.response.data.message)
+          }
+          else {
+            console.log('알 수 없는 오류가 발생했습니다.')
             alert('알 수 없는 오류가 발생했습니다.')
           }
         })
       }
-
-
     },
 
     fnList() {

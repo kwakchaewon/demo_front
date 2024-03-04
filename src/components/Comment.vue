@@ -53,14 +53,29 @@ export default {
     this.fnGetview()
   },
   methods: {
+
+    fnList() {
+      this.$router.push({
+        path: '/board',
+      })
+    },
+
     // 댓글 리스트
     fnGetview() {
       let id = this.$route.params.id
       this.$axios.get(this.$serverUrl + "/board/" + id + "/comment").then((res) => {
         this.list = res.data
       }).catch((err) => {
-        if (err.message.indexOf('Network Error') > -1) {
-          alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
+        // BOARD_NOTFOUND
+        if (err.response.data.status === "404" && err.response.data.message) {
+          console.log(err.response.data.message);
+        } else if(err.response.data.status && err.response.data.message){
+          console.log(err.response.data.message);
+          alert(err.response.data.message);
+        }
+        else {
+          console.log("알 수 없는 오류가 발생했습니다.")
+          alert('알 수 없는 오류가 발생했습니다.')
         }
       })
     },
@@ -88,9 +103,28 @@ export default {
               this.contents = ''
               this.fnGetview()
             }).catch((err) => {
-          if (err.response.data.status === "400" && err.response.data.message) {
+
+          // NO_AUTHORIZATION
+          if (err.response.data.status === "403" && err.response.data.message) {
+            console.log(err.response.data.message);
             alert(err.response.data.message);
-          } else {
+          }
+          // ONLY_BLANk
+          else if(err.response.data.status === "400" && err.response.data.message){
+            console.log(err.response.data.message);
+            alert(err.response.data.message);
+          }
+          // BOARD_NOTFOUND
+          else if(err.response.data.status === "404" && err.response.data.message){
+            console.log(err.response.data.message);
+            alert(err.response.data.message);
+            this.fnList();
+          }
+          else if(err.response.data.status && err.response.data.message){
+            console.log(err.response.data.message);
+            alert(err.response.data.message);
+          }
+          else {
             alert("알 수 없는 오류가 발생했습니다.");
           }
         })
@@ -98,23 +132,37 @@ export default {
     },
 
     // 댓글 수정 권한 확인
-    fnCheckUpdate(id){
+    fnCheckUpdate(id) {
       this.$axios.get(this.$serverUrl + '/comment/' + id + '/check')
           .then(() => {
             this.$router.push({
-              path: '/comment/' + id+ '/update',
+              path: '/comment/' + id + '/update',
             })
           }).catch((err) => {
-        if (err.response.data.status === "400" && err.response.data.message) {
-          alert(err.response.data.message) // 400 응답 코드에 대한 알림 메시지
-        } else {
+        // NO_AUTHORIZATION
+        if (err.response.data.status === "403" && err.response.data.message) {
+          console.log(err.response.data.message)
+          alert(err.response.data.message)
+        }
+        // COMMENT_NOTFOUND
+        else if(err.response.data.status === "404" && err.response.data.message){
+          console.log(err.response.data.message)
+          alert(err.response.data.message)
+          this.fnGetview()
+        }
+        else if(err.response.data.status && err.response.data.message){
+          console.log(err.response.data.message)
+          alert(err.response.data.message)
+        }
+        else {
+          console.log('알 수 없는 오류가 발생했습니다.')
           alert('알 수 없는 오류가 발생했습니다.')
         }
       })
     },
 
     // 댓글 삭제
-    fnDelete(id){
+    fnDelete(id) {
       if (!confirm("삭제하시겠습니까?")) return
       this.$axios.delete(this.$serverUrl + '/comment/' + id)
           .then(() => {
@@ -122,8 +170,26 @@ export default {
             this.fnGetview();
           }).catch((err) => {
         if (err.response.data.status === "400" && err.response.data.message) {
+          console.log(err.response.data.message);
           alert(err.response.data.message);
-        } else {
+        }
+        // NO_AUTHORIZATION
+        else if(err.response.data.status === "403" && err.response.data.message){
+          console.log(err.response.data.message);
+          alert(err.response.data.message);
+        }
+        // NOT_FOUND
+        else if(err.response.data.status === "404" && err.response.data.message){
+          console.log(err.response.data.message);
+          alert(err.response.data.message);
+          this.fnGetview()
+        }
+        else if (err.response.data.status && err.response.data.message){
+          console.log(err.response.data.message);
+          alert(err.response.data.message);
+        }
+        else {
+          console.log("알 수 없는 오류가 발생했습니다.");
           alert("알 수 없는 오류가 발생했습니다.");
         }
       })
