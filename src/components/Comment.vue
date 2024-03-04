@@ -5,8 +5,17 @@
       <div class="card-body">
         <div class="card-text" style="white-space: pre-line;">{{ row.contents }}</div>
         <div class="d-flex justify-content-end">
-          <div class="badge bg-light text-dark p-2 text-start">
+          <div class="badge bg-light text-dark p-2 text-start mx-3">
+            <div class="mb-2">작성자</div>
+            <div>{{ row.memberId }}</div>
+          </div>
+          <div class="badge bg-light text-dark p-2 text-start mx-3">
+            <div class="mb-2">작성일</div>
             <div>{{ row.createdAt }}</div>
+          </div>
+          <div v-if="row.updatedAt" class="badge bg-light text-dark p-2 text-start mx-3">
+            <div class="mb-2">수정일</div>
+            <div>{{ row.updatedAt }}</div>
           </div>
         </div>
         <div class="my-3">

@@ -58,7 +58,6 @@ export default {
       const id = this.$route.params.id
       this.$axios.get(this.$serverUrl + '/board/' + id)
           .then((res) => {
-            console.log(res.data)
             this.title = res.data.title
             this.contents = res.data.contents
             this.createdAt = res.data.createdAt
