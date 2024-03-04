@@ -10,12 +10,31 @@
       <div class="card-body">
         <div class="card-text" style="white-space: pre-line;">{{ contents }}</div>
         <div class="d-flex justify-content-end">
-          <div class="badge bg-light text-dark p-2 text-start">
-            <div class="mb-2">
-              <span>{{ userId }}</span>
-            </div>
+<!--          <div class="badge bg-light text-dark p-2 text-start">-->
+<!--            <div class="mb-2">-->
+<!--              <span>{{ memberId }}</span>-->
+<!--            </div>-->
+<!--            <div>{{ createdAt }}</div>-->
+<!--          </div>-->
+          <div class="badge bg-light text-dark p-2 text-start mx-3">
+            <div class="mb-2">작성자</div>
+            <div>{{ memberId }}</div>
+          </div>
+          <div class="badge bg-light text-dark p-2 text-start mx-3">
+            <div class="mb-2">작성일</div>
             <div>{{ createdAt }}</div>
           </div>
+          <div v-if="this.updatedAt" class="badge bg-light text-dark p-2 text-start mx-3">
+            <div class="mb-2">수정일</div>
+            <div>{{ updatedAt }}</div>
+          </div>
+<!--          <div class="badge bg-light text-dark p-2 text-start mx-3">-->
+<!--            <div class="mb-2">작성일</div>-->
+<!--            <div>{{ createdAt }}</div>-->
+<!--            <div class="badge bg-light text-dark p-2 text-start mx-3">-->
+<!--              <div class="mb-2">작성자</div>-->
+<!--              <div>{{ memberId }}</div>-->
+<!--          </div>-->
         </div>
         <div class="my-3">
           <button class="btn btn-sm btn-outline-secondary" v-on:click="fnCheckUpdate">수정</button>
@@ -40,7 +59,8 @@ export default {
       title: '', // 제목
       contents: '', // 내용
       createdAt: '', // 작성일
-      userId: '' // 작성자
+      updatedAt: '', // 수정일
+      memberId: '' // 작성자
     }
   },
   mounted() {
@@ -51,10 +71,12 @@ export default {
       const id = this.$route.params.id
       this.$axios.get(this.$serverUrl + '/board/' + id)
           .then((res) => {
+            console.log(res.data)
             this.title = res.data.title
             this.contents = res.data.contents
             this.createdAt = res.data.createdAt
-            this.userId = res.data.memberDto.userId;
+            this.updatedAt = res.data.updatedAt
+            this.memberId = res.data.memberId;
           }).catch((err) => {
         if (err.message.indexOf('Network Error') > -1) {
           alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
