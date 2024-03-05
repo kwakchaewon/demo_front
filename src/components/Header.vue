@@ -11,7 +11,7 @@
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
             <router-link v-if="!this.$store.state.isLogin" class="nav-link" to="/member/login">로그인</router-link>
-            <router-link v-if="this.$store.state.isLogin" class="nav-link" @click="fnLogout" to="">로그아웃</router-link>
+            <router-link v-if="this.$store.state.isLogin" class="nav-link" to="/member/login" @click="fnLogout" >로그아웃</router-link>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#"></a>
@@ -32,15 +32,13 @@ export default {
   name: 'Header',
   methods: {
     fnLogout() {
-      Cookies.remove('ACCESS_TOKEN')
-      Cookies.remove('REFRESH_TOKEN')
-      Cookies.remove('user_role')
+      Cookies.remove('ACCESS_TOKEN');
+      Cookies.remove('REFRESH_TOKEN');
+      Cookies.remove('user_role');
 
       // localStorage.removeItem('ACCESS_TOKEN')
       // localStorage.removeItem('REFRESH_TOKEN')
       // localStorage.removeItem('user_role')
-
-      location.reload()
     }
   }
 }
