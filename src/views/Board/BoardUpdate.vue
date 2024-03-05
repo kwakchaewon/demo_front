@@ -33,7 +33,7 @@ export default {
   methods: {
     fnGetView() {
       // URL 에서 게시글 ID 가져옴
-      let postId = this.$route.params.id;
+      const postId = this.$route.params.id;
       this.postId = postId;
 
       // 해당 게시글 불러오기

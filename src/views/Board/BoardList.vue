@@ -72,9 +72,9 @@ export default {
       size: this.$route.query.size ? this.$route.query.size : 10,
       keyword: this.$route.query.keyword,
       paginavigation: function () { //페이징 처리 for문 커스텀
-        let pageNumber = [] //;
-        let startPage = this.paging.startPage;
-        let endPage = this.paging.endPage;
+        const pageNumber = [] //;
+        const startPage = this.paging.startPage;
+        const endPage = this.paging.endPage;
         for (let i = startPage; i <= endPage; i++) pageNumber.push(i);
         return pageNumber;
       }
