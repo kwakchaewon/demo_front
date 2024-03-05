@@ -51,7 +51,7 @@ export default {
     }
   },
   mounted() {
-    this.fnGetView()
+    this.fnGetView();
   },
   methods: {
     fnGetView() {
@@ -66,12 +66,12 @@ export default {
           }).catch((err) => {
         // BOARD_NOTFOUND
         if (err.response.data.status === "404" && err.response.data.message) {
-          console.log(err.response.data.message)
-          alert(err.response.data.message)
+          console.log(err.response.data.message);
+          alert(err.response.data.message);
           this.fnList()
         } else {
-          alert('알 수 없는 오류가 발생했습니다.')
-          this.fnList()
+          alert('알 수 없는 오류가 발생했습니다.');
+          this.fnList();
         }
       })
     },
@@ -79,74 +79,74 @@ export default {
     fnList() {
       this.$router.push({
         path: '/board',
-      })
+      });
     },
 
     fnCheckUpdate() {
-      const id = this.$route.params.id
+      const id = this.$route.params.id;
       this.$axios.get(this.$serverUrl + '/board/' + id + '/check')
           .then(() => {
-            this.$router.push({path: './' + id + '/update',})
+            this.$router.push({path: './' + id + '/update',});
           }).catch((err) => {
 
         // NO_AUTHORIZATION: 권한 검증 실패시, alert 반환
         if (err.response.data.status === "403" && err.response.data.message) {
-          console.log(err.response.data.message)
-          alert(err.response.data.message)
+          console.log(err.response.data.message);
+          alert(err.response.data.message);
         }
 
         // BOARD_NOTFOUND: 게시글 부재시, alert 반환 및 리스트로
         else if(err.response.data.status === "404" && err.response.data.message){
-          console.log(err.response.data.message)
-          alert(err.response.data.message)
-          this.fnList()
-        }
-
-        // 그 외 Custom Exception 발생시 alert 반환
-        else if(err.response.data.status && err.response.data.message){
-          console.log(err.response.data.message)
-          alert(err.response.data.message)
-        }
-
-        // 기타
-        else {
-          console.log("수정 권한 검증에 실패했습니다.")
-          alert('수정 권한 검증에 실패했습니다.')
-        }
-      })
-    },
-    async fnDelete() {
-      if (!confirm("삭제하시겠습니까?")) return
-      const id = this.$route.params.id
-      this.$axios.delete(this.$serverUrl + '/board/' + id)
-          .then(() => {
-            alert('삭제되었습니다.')
-            this.fnList();
-          }).catch((err) => {
-
-        // NO_AUTHORIZATION: 권한 검증 실패시, alert 반환
-        if (err.response.data.status === "403" && err.response.data.message){
-          console.log(err.response.data.message)
-          alert(err.response.data.message)
-        }
-
-        // BOARD_NOTFOUND: 게시글 부재시, alert 반환 및 리스트로
-        else if(err.response.data.status === "404" && err.response.data.message){
-          console.log(err.response.data.message)
-          alert(err.response.data.message)
+          console.log(err.response.data.message);
+          alert(err.response.data.message);
           this.fnList();
         }
 
         // 그 외 Custom Exception 발생시 alert 반환
         else if(err.response.data.status && err.response.data.message){
-          console.log(err.response.data.message)
-          alert(err.response.data.message)
+          console.log(err.response.data.message);
+          alert(err.response.data.message);
         }
 
         // 기타
         else {
-          console.log('삭제에 실패했습니다.')
-          alert('삭제에 실패했습니다.')
+          console.log("수정 권한 검증에 실패했습니다.");
+          alert('수정 권한 검증에 실패했습니다.');
+        }
+      })
+    },
+    async fnDelete() {
+      if (!confirm("삭제하시겠습니까?")) return
+      const id = this.$route.params.id;
+      this.$axios.delete(this.$serverUrl + '/board/' + id)
+          .then(() => {
+            alert('삭제되었습니다.');
+            this.fnList();
+          }).catch((err) => {
+
+        // NO_AUTHORIZATION: 권한 검증 실패시, alert 반환
+        if (err.response.data.status === "403" && err.response.data.message){
+          console.log(err.response.data.message);
+          alert(err.response.data.message);
+        }
+
+        // BOARD_NOTFOUND: 게시글 부재시, alert 반환 및 리스트로
+        else if(err.response.data.status === "404" && err.response.data.message){
+          console.log(err.response.data.message);
+          alert(err.response.data.message);
+          this.fnList();
+        }
+
+        // 그 외 Custom Exception 발생시 alert 반환
+        else if(err.response.data.status && err.response.data.message){
+          console.log(err.response.data.message);
+          alert(err.response.data.message);
+        }
+
+        // 기타
+        else {
+          console.log('삭제에 실패했습니다.');
+          alert('삭제에 실패했습니다.');
         }
       })
     },

@@ -99,36 +99,32 @@ export default {
         params: this.requestBody,
         headers: {}
       }).then((res) => {
-          this.list = res.data.boards
-          this.paging = res.data.pagination
-          this.no = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize)
+          this.list = res.data.boards;
+          this.paging = res.data.pagination;
+          this.no = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize);
       }).catch((err) => {
         if(err.response.data.status && err.response.data.message){
-          alert(err.response.data.message)
-          console.log(err.response.data.message)
+          alert(err.response.data.message);
+          console.log(err.response.data.message);
         }
         else {
-          alert('게시글 리스트를 불러올 수 없습니다.')
+          alert('게시글 리스트를 불러올 수 없습니다.');
         }
       })
     },
 
     fnView(id) {
-      this.$router.push({
-        path: '/board/' + id,
-      })
+      this.$router.push({path: '/board/' + id,});
     },
 
     fnWrite() {
-      this.$router.push({
-        path: './board/writeform'
-      })
+      this.$router.push({path: './board/writeform'});
     },
 
     fnPage(n) {
       if (this.page !== n) {
-        this.page = n
-        this.fnGetList()
+        this.page = n;
+        this.fnGetList();
       }
 
     }

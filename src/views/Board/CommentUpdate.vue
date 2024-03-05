@@ -24,12 +24,12 @@ export default {
     }
   },
   mounted() {
-    this.fnGetView()
+    this.fnGetView();
   },
   methods: {
     fnGetView() {
       // URL 에서 게시글 ID 가져옴
-      let commentId = this.$route.params.id;
+      const commentId = this.$route.params.id;
       this.commentId = commentId;
 
       // 해당 댓글 불러오기
@@ -46,35 +46,35 @@ export default {
             }
 
             // 그 외 Custom Exception 발생시 alert 반환
-            else if(err.response.data.status && err.response.data.message){
-              console.log(err.response.data.message)
-              alert(err.response.data.message)
+            else if (err.response.data.status && err.response.data.message) {
+              console.log(err.response.data.message);
+              alert(err.response.data.message);
             }
 
             // 기타
             else {
-              console.log('해당 댓글을 불러올 수 없습니다.')
-              alert('해당 댓글을 불러올 수 없습니다.')
+              console.log('해당 댓글을 불러올 수 없습니다.');
+              alert('해당 댓글을 불러올 수 없습니다.');
             }
           })
     },
 
     fnSave() {
-      let commentId = this.$route.params.id;
+      const commentId = this.$route.params.id;
       this.form = {
         "contents": this.contents
-      }
+      };
 
-      var blankPattern = /^\s*$/ // 공백 유효성 검사
+      const blankPattern = /^\s*$/ // 공백 유효성 검사
 
       if (blankPattern.test(this.contents)) {
         alert("빈 내용은 입력할 수 없습니다.")
       } else {
         this.$axios.put(this.$serverUrl + `/comment/${commentId}`, this.form)
             .then((res) => {
-              alert('글이 수정되었습니다.')
-              let boardId = res.data.boardId
-              this.$router.push(`/board/${boardId}`)
+              alert('글이 수정되었습니다.');
+              const boardId = res.data.boardId;
+              this.$router.push(`/board/${boardId}`);
             }).catch((err) => {
 
           // COMMENT_NOTFOUND: 댓글 부재시, alert 반환
@@ -97,19 +97,16 @@ export default {
 
           // 기타
           else {
-            console.log('댓글 수정에 실패했습니다.')
-            alert('댓글 수정에 실패했습니다.')
+            console.log('댓글 수정에 실패했습니다.');
+            alert('댓글 수정에 실패했습니다.');
           }
         })
       }
     },
 
     fnList() {
-      this.$router.push({
-        path: '/board',
-      })
+      this.$router.push({path: '/board',});
     },
-
   }
 }
 

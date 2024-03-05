@@ -25,10 +25,10 @@ export default {
     return {
       title: '',
       content: ''
-    }
+    };
   },
   mounted() {
-    this.fnGetView()
+    this.fnGetView();
   },
   methods: {
     fnGetView() {
@@ -42,78 +42,76 @@ export default {
             this.title = response.data.title;
             this.contents = response.data.contents;
           })
-          .catch(error => {
-            if (error.response.data.status === "400" && error.response.data.message) {
-              console.log(error.response.data.message);
-              alert(error.response.data.message);
+          .catch(err => {
+            if (err.response.data.status === "400" && err.response.data.message) {
+              console.log(err.response.data.message);
+              alert(err.response.data.message);
             }
             // BOARD_NOTFOUND
-            else if(error.response.data.status === "404" && error.response.data.message){
-              console.log(error.response.data.message);
-              alert(error.response.data.message);
-              this.fnList()
+            else if(err.response.data.status === "404" && err.response.data.message){
+              console.log(err.response.data.message);
+              alert(err.response.data.message);
+              this.fnList();
             }
-            else if(error.response.data.status && error.response.data.message){
-              console.log(error.response.data.message);
-              alert(error.response.data.message);
+            else if(err.response.data.status && err.response.data.message){
+              console.log(err.response.data.message);
+              alert(err.response.data.message);
             } else{
-              alert('알 수 없는 오류가 발생했습니다.')
+              alert('알 수 없는 오류가 발생했습니다.');
             }
           });
     },
 
     fnSave() {
-      let postId = this.$route.params.id;
+      const postId = this.$route.params.id;
       this.form = {
         "title": this.title,
         "contents": this.contents
       }
 
-      var blankPattern = /^\s*$/ // 공백 유효성 검사
+      const blankPattern = /^\s*$/; // 공백 유효성 검사
 
       if (blankPattern.test(this.title)) {
-        alert("빈 제목은 사용할 수 없습니다.")
+        alert("빈 제목은 사용할 수 없습니다.");
       } else if (blankPattern.test(this.contents)) {
-        alert("빈 내용은 입력할 수 없습니다.")
+        alert("빈 내용은 입력할 수 없습니다.");
       } else {
         this.$axios.put(this.$serverUrl + `/board/${postId}`, this.form)
             .then(() => {
-              alert('글이 수정되었습니다.')
-              this.$router.push(`/board/${postId}`)
+              alert('글이 수정되었습니다.');
+              this.$router.push(`/board/${postId}`);
             }).catch((err) => {
 
           // NO_AUTHORIZATION: 권한 검증 실패시, alert 반환
           if (err.response.data.status === "403" && err.response.data.message) {
-            console.log(err.response.data.message)
-            alert(err.response.data.message)
+            console.log(err.response.data.message);
+            alert(err.response.data.message);
           }
 
           // BOARD_NOTFOUND: 게시글 부재시, alert 반환 및 리스트로
           else if (err.response.data.status === "404" && err.response.data.message) {
-            console.log(err.response.data.message)
-            alert(err.response.data.message)
-            this.fnList()
+            console.log(err.response.data.message);
+            alert(err.response.data.message);
+            this.fnList();
           }
 
           // 그 외 Custom Exception 발생시 alert 반환
           else if(err.response.data.status && err.response.data.message){
-            console.log(err.response.data.message)
-            alert(err.response.data.message)
+            console.log(err.response.data.message);
+            alert(err.response.data.message);
           }
 
           // 기타
           else {
-            console.log('수정에 실패했습니다.')
-            alert('수정에 실패했습니다.')
+            console.log('수정에 실패했습니다.');
+            alert('수정에 실패했습니다.');
           }
         })
       }
     },
 
     fnList() {
-      this.$router.push({
-        path: '/board',
-      })
+      this.$router.push({path: '/board',});
     },
 
   }

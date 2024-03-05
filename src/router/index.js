@@ -10,17 +10,13 @@ import SignUp from "@/views/common/SignUp.vue";
 import Cookies from 'js-cookie';
 
 const requireAuth = () => (from, to, next) => {
-    const token1 = Cookies.get('ACCESS_TOKEN')
-    // const token2 = Cookies.get('REFRESH_TOKEN')
+    const ACCESS_TOKEN = Cookies.get('ACCESS_TOKEN');
 
-    // const token1 = localStorage.getItem('ACCESS_TOKEN')
-    // const token2 = localStorage.getItem('REFRESH_TOKEN')
-
-    if (token1) {
-        store.state.isLogin = true
-        return next()
+    if (ACCESS_TOKEN) {
+        store.state.isLogin = true;
+        return next();
     } // isLogin === true면 페이지 이동
-    next('/member/login') // isLogin === false면 다시 로그인 화면으로 이동
+    next('/member/login'); // isLogin === false면 다시 로그인 화면으로 이동
 }
 
 const routes = [
