@@ -67,7 +67,7 @@ export default {
       this.form = {
         "title": this.title,
         "contents": this.contents
-      }
+      };
 
       const blankPattern = /^\s*$/; // 공백 유효성 검사
 
