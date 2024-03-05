@@ -66,16 +66,21 @@ export default {
       this.$axios.get(this.$serverUrl + "/board/" + id + "/comment").then((res) => {
         this.list = res.data
       }).catch((err) => {
-        // BOARD_NOTFOUND
+        // BOARD_NOTFOUND: 게시글 부재시 log 반환
         if (err.response.data.status === "404" && err.response.data.message) {
           console.log(err.response.data.message);
-        } else if(err.response.data.status && err.response.data.message){
+        }
+
+        // 그 외 Custom Exception 발생시 alert 반환
+        else if(err.response.data.status && err.response.data.message){
           console.log(err.response.data.message);
           alert(err.response.data.message);
         }
+
+        // 기타
         else {
-          console.log("알 수 없는 오류가 발생했습니다.")
-          alert('알 수 없는 오류가 발생했습니다.')
+          console.log("댓글을 불러올 수 없습니다.")
+          alert('댓글을 불러올 수 없습니다.')
         }
       })
     },
@@ -104,28 +109,33 @@ export default {
               this.fnGetview()
             }).catch((err) => {
 
-          // NO_AUTHORIZATION
+          // NO_AUTHORIZATION: 권한 검증 실패시, alert 반환
           if (err.response.data.status === "403" && err.response.data.message) {
             console.log(err.response.data.message);
             alert(err.response.data.message);
           }
-          // ONLY_BLANk
+          // ONLY_BLANk: 빈칸 입력시 alert 반환
           else if(err.response.data.status === "400" && err.response.data.message){
             console.log(err.response.data.message);
             alert(err.response.data.message);
           }
-          // BOARD_NOTFOUND
+          // BOARD_NOTFOUND: 게시글 부재시, alert 반환 및 리스트로
           else if(err.response.data.status === "404" && err.response.data.message){
             console.log(err.response.data.message);
             alert(err.response.data.message);
             this.fnList();
           }
+
+          // 그 외 Custom Exception 발생시 alert 반환
           else if(err.response.data.status && err.response.data.message){
             console.log(err.response.data.message);
             alert(err.response.data.message);
           }
+
+          // 기타
           else {
-            alert("알 수 없는 오류가 발생했습니다.");
+            console.log("댓글 입력에 실패했습니다.")
+            alert("댓글 입력에 실패했습니다.");
           }
         })
       }
@@ -139,21 +149,26 @@ export default {
               path: '/comment/' + id + '/update',
             })
           }).catch((err) => {
-        // NO_AUTHORIZATION
+        // NO_AUTHORIZATION: 권한 검증 실패시, alert 반환
         if (err.response.data.status === "403" && err.response.data.message) {
           console.log(err.response.data.message)
           alert(err.response.data.message)
         }
-        // COMMENT_NOTFOUND
+
+        // COMMENT_NOTFOUND: 댓글 부재시, 댓글 리스트 리로딩
         else if(err.response.data.status === "404" && err.response.data.message){
           console.log(err.response.data.message)
           alert(err.response.data.message)
           this.fnGetview()
         }
+
+        // 그 외 Custom Exception 발생시 alert 반환
         else if(err.response.data.status && err.response.data.message){
           console.log(err.response.data.message)
           alert(err.response.data.message)
         }
+
+        // 기타
         else {
           console.log('알 수 없는 오류가 발생했습니다.')
           alert('알 수 없는 오류가 발생했습니다.')
@@ -169,28 +184,36 @@ export default {
             alert('삭제되었습니다.')
             this.fnGetview();
           }).catch((err) => {
+
+        // UNKNOWN_ERROR: 댓글 삭제 실패시, alert 반환
         if (err.response.data.status === "400" && err.response.data.message) {
           console.log(err.response.data.message);
           alert(err.response.data.message);
         }
-        // NO_AUTHORIZATION
+
+        // NO_AUTHORIZATION: 권한 검증 실패시, alert 반환
         else if(err.response.data.status === "403" && err.response.data.message){
           console.log(err.response.data.message);
           alert(err.response.data.message);
         }
-        // NOT_FOUND
+
+        // COMMENT_NOTFOUND: 댓글 부재시, alert 반환 및 댓글 리스트 reload
         else if(err.response.data.status === "404" && err.response.data.message){
           console.log(err.response.data.message);
           alert(err.response.data.message);
           this.fnGetview()
         }
+
+        // 그 외 Custom Exception 발생시 alert 반환
         else if (err.response.data.status && err.response.data.message){
           console.log(err.response.data.message);
           alert(err.response.data.message);
         }
+
+        // 기타
         else {
-          console.log("알 수 없는 오류가 발생했습니다.");
-          alert("알 수 없는 오류가 발생했습니다.");
+          console.log("게시글 삭제에 실패했습니다.");
+          alert("게시글 삭제에 실패했습니다.");
         }
       })
     }

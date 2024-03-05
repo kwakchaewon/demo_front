@@ -13,6 +13,7 @@
           </thead>
           <tbody>
           <tr v-for="(row, id) in list" :key="id">
+<!--            <td>{{ setRangePage }}</td>-->
             <td>{{ paging.totalListCnt - (paging.page * paging.pageSize) - id + 10 }}</td>
             <td><a v-on:click="fnView(`${row.id}`)">{{ row.title }}</a></td>
             <td>{{ row.createdAt }}</td>
@@ -39,7 +40,6 @@
           <a href="javascript:;" @click="fnPage(`${paging.totalPageCnt}`)" class="last w3-button w3-border">&gt;&gt;</a>
           </span>
         </div>
-
         <div class="common-buttons">
           <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnWrite">등록</button>
         </div>
@@ -80,6 +80,11 @@ export default {
       }
     }
   },
+  computed:{
+    // setRangePage(){
+    //   return this.paging.totalListCnt - (this.paging.page * this.paging.pageSize) - this.id + 10;
+    // }
+  },
   mounted() {
     this.fnGetList()
   },
@@ -103,7 +108,7 @@ export default {
           console.log(err.response.data.message)
         }
         else {
-          alert('알 수 없는 오류가 발생했습니다.')
+          alert('게시글 리스트를 불러올 수 없습니다.')
         }
       })
     },

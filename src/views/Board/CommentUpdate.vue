@@ -38,11 +38,23 @@ export default {
             this.contents = response.data.contents;
           })
           .catch(err => {
-            console.log(err)
-            if (err.response.data.status && err.response.data.message) {
+
+            // COMMENT_NOTFOUND: 댓글 부재시, alert 반환
+            if (err.response.data.status === "404" && err.response.data.message) {
+              console.log(err.response.data.message);
               alert(err.response.data.message);
-            } else {
-              alert('알 수 없는 오류가 발생했습니다.')
+            }
+
+            // 그 외 Custom Exception 발생시 alert 반환
+            else if(err.response.data.status && err.response.data.message){
+              console.log(err.response.data.message)
+              alert(err.response.data.message)
+            }
+
+            // 기타
+            else {
+              console.log('해당 댓글을 불러올 수 없습니다.')
+              alert('해당 댓글을 불러올 수 없습니다.')
             }
           })
     },
@@ -64,13 +76,29 @@ export default {
               let boardId = res.data.boardId
               this.$router.push(`/board/${boardId}`)
             }).catch((err) => {
-          console.log(err)
-          if (err.response.data.status && err.response.data.message) {
+
+          // COMMENT_NOTFOUND: 댓글 부재시, alert 반환
+          if (err.response.data.status === "404" && err.response.data.message) {
             console.log(err.response.data.message);
             alert(err.response.data.message);
-          } else {
-            console.log('알 수 없는 오류가 발생했습니다.')
-            alert('알 수 없는 오류가 발생했습니다.')
+          }
+
+          // NO_AUTHORIZATION: 권한 검증 실패시, alert 반환
+          else if (err.response.data.status === "403" && err.response.data.message) {
+            console.log(err.response.data.message);
+            alert(err.response.data.message);
+          }
+
+          // 그 외 Custom Exception 발생시 alert 반환
+          else if (err.response.data.status && err.response.data.message) {
+            console.log(err.response.data.message);
+            alert(err.response.data.message);
+          }
+
+          // 기타
+          else {
+            console.log('댓글 수정에 실패했습니다.')
+            alert('댓글 수정에 실패했습니다.')
           }
         })
       }
