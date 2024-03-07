@@ -35,9 +35,9 @@
                   <a class="w3-button w3-border" href="javascript:;" @click="fnPage(`${n}`)" :key="index">{{ n }}</a>
               </template>
           </template>
-          <a href="javascript:;" v-if="paging.totalPageCnt > paging.endPage"
+          <a v-if="paging.totalPageCnt > paging.endPage"
              @click="fnPage(`${paging.endPage+1}`)" class="next w3-button w3-border">&gt;</a>
-          <a href="javascript:;" @click="fnPage(`${paging.totalPageCnt}`)" class="last w3-button w3-border">&gt;&gt;</a>
+          <a @click="fnPage(`${paging.totalPageCnt}`)" class="last w3-button w3-border">&gt;&gt;</a>
           </span>
         </div>
         <div class="common-buttons">
@@ -126,7 +126,6 @@ export default {
         this.page = n;
         this.fnGetList();
       }
-
     }
   }
 }
