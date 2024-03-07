@@ -23,6 +23,9 @@
             <div>{{ updatedAt }}</div>
           </div>
         </div>
+        <div class="my-3" v-if="this.imgPath">
+          <img :src="imgPath">
+        </div>
         <div class="my-3" v-if="originalFile">
           <text>첨부파일(클릭시 다운) :</text>
           <a ref="downloadLink" href="#" @click="fnDownload">{{ originalFile }}</a>
@@ -55,6 +58,7 @@ export default {
       memberId: '', // 작성자
       originalFile: '',
       savedFile: '',
+      imgPath: ''
     }
   },
   mounted() {
@@ -73,6 +77,7 @@ export default {
             this.memberId = res.data.memberId;
             this.originalFile = res.data.originalFile;
             this.savedFile = res.data.savedFile;
+            this.imgPath = res.data.imgPath;
           }).catch((err) => {
         // BOARD_NOTFOUND
         if (err.response.data.status === "404" && err.response.data.message) {
@@ -95,15 +100,15 @@ export default {
         const link = document.createElement('a');
 
         // content-disposition 으로 파일명을 설정하려 했으나 UTF8 인코딩 문제 발생
-        // let fileName = res.headers['content-disposition'].split('filename=')[1];
-        // fileName = fileName.replace(/[""]/g, '');
+        let fileName = res.headers['content-disposition'].split('filename=')[1];
+        fileName = fileName.replace(/[""]/g, '');
 
-        // console.log(decodeURIComponent(fileName));
-        // console.log(encodeURIComponent(fileName));
+        // UTF-8 디코딩
+        let decodeFileName = decodeURI(fileName);
 
         // 파일 다운로드시 다른이름으로 저장
         link.href = url;
-        link.setAttribute('download', this.originalFile);
+        link.setAttribute('download', decodeFileName);
         document.body.appendChild(link);
         link.click();
       })
