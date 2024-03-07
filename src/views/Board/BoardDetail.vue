@@ -23,6 +23,10 @@
             <div>{{ updatedAt }}</div>
           </div>
         </div>
+        <div class="my-3" v-if="originalFile">
+          <text>첨부파일(클릭시 다운) :</text>
+          <a ref="downloadLink" href="#" @click="fnDownload">{{ originalFile }}</a>
+        </div>
         <div class="my-3">
           <button class="btn btn-sm btn-outline-secondary" v-on:click="fnCheckUpdate">수정</button>
           <button class="btn btn-sm btn-outline-secondary" v-on:click="fnDelete">삭제</button>
@@ -43,11 +47,14 @@ export default {
   },
   data() { //변수생성
     return {
+      id: '',
       title: '', // 제목
       contents: '', // 내용
       createdAt: '', // 작성일
       updatedAt: '', // 수정일
-      memberId: '' // 작성자
+      memberId: '', // 작성자
+      originalFile: '',
+      savedFile: '',
     }
   },
   mounted() {
@@ -58,11 +65,14 @@ export default {
       const id = this.$route.params.id;
       this.$axios.get(this.$serverUrl + '/board/' + id)
           .then((res) => {
-            this.title = res.data.title
-            this.contents = res.data.contents
-            this.createdAt = res.data.createdAt
-            this.updatedAt = res.data.updatedAt
+            this.id = res.data.id;
+            this.title = res.data.title;
+            this.contents = res.data.contents;
+            this.createdAt = res.data.createdAt;
+            this.updatedAt = res.data.updatedAt;
             this.memberId = res.data.memberId;
+            this.originalFile = res.data.originalFile;
+            this.savedFile = res.data.savedFile;
           }).catch((err) => {
         // BOARD_NOTFOUND
         if (err.response.data.status === "404" && err.response.data.message) {
@@ -73,6 +83,29 @@ export default {
           alert('알 수 없는 오류가 발생했습니다.');
           this.fnList();
         }
+      })
+    },
+
+    fnDownload() {
+      const id = this.id
+      this.$axios.get(this.$serverUrl + '/board/' + id + '/file',
+          {responseType: 'blob'}
+      ).then((res) => {
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement('a');
+
+        // content-disposition 으로 파일명을 설정하려 했으나 UTF8 인코딩 문제 발생
+        // let fileName = res.headers['content-disposition'].split('filename=')[1];
+        // fileName = fileName.replace(/[""]/g, '');
+
+        // console.log(decodeURIComponent(fileName));
+        // console.log(encodeURIComponent(fileName));
+
+        // 파일 다운로드시 다른이름으로 저장
+        link.href = url;
+        link.setAttribute('download', this.originalFile);
+        document.body.appendChild(link);
+        link.click();
       })
     },
 
@@ -96,14 +129,14 @@ export default {
         }
 
         // BOARD_NOTFOUND: 게시글 부재시, alert 반환 및 리스트로
-        else if(err.response.data.status === "404" && err.response.data.message){
+        else if (err.response.data.status === "404" && err.response.data.message) {
           console.log(err.response.data.message);
           alert(err.response.data.message);
           this.fnList();
         }
 
         // 그 외 Custom Exception 발생시 alert 반환
-        else if(err.response.data.status && err.response.data.message){
+        else if (err.response.data.status && err.response.data.message) {
           console.log(err.response.data.message);
           alert(err.response.data.message);
         }
@@ -125,20 +158,20 @@ export default {
           }).catch((err) => {
 
         // NO_AUTHORIZATION: 권한 검증 실패시, alert 반환
-        if (err.response.data.status === "403" && err.response.data.message){
+        if (err.response.data.status === "403" && err.response.data.message) {
           console.log(err.response.data.message);
           alert(err.response.data.message);
         }
 
         // BOARD_NOTFOUND: 게시글 부재시, alert 반환 및 리스트로
-        else if(err.response.data.status === "404" && err.response.data.message){
+        else if (err.response.data.status === "404" && err.response.data.message) {
           console.log(err.response.data.message);
           alert(err.response.data.message);
           this.fnList();
         }
 
         // 그 외 Custom Exception 발생시 alert 반환
-        else if(err.response.data.status && err.response.data.message){
+        else if (err.response.data.status && err.response.data.message) {
           console.log(err.response.data.message);
           alert(err.response.data.message);
         }
