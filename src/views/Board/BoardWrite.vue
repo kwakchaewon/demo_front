@@ -153,7 +153,7 @@ export default {
               const boardId = parseInt(res.data.id);
               this.$router.push('' + boardId);
             }).catch((err) => {
-          // ONLY_BLANk
+          // ONLY_BLANk, // FILE_IOFAILED
           if (err.response.data.status && err.response.data.message) {
             console.log(err.response.data.message);
             alert(err.response.data.message);
