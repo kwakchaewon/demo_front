@@ -7,7 +7,10 @@
 
     <h2 class="border-bottom py-2">{{ title }}</h2>
     <div class="card my-3">
+      <div class="my-3" v-if="uploadFile">
+      </div>
       <div class="card-body">
+        <img :src="fileUrl" width="80%" style="margin: auto; display: block" v-if="fileUrl">
         <div class="card-text" style="white-space: pre-line;">{{ contents }}</div>
         <div class="d-flex justify-content-end">
           <div class="badge bg-light text-dark p-2 text-start mx-3">
@@ -22,9 +25,6 @@
             <div class="mb-2">수정일</div>
             <div>{{ updatedAt }}</div>
           </div>
-        </div>
-        <div class="my-3" v-if="this.imgPath">
-          <img :src="imgPath">
         </div>
         <div class="my-3" v-if="originalFile">
           <text>첨부파일(클릭시 다운) :</text>
@@ -58,11 +58,23 @@ export default {
       memberId: '', // 작성자
       originalFile: '',
       savedFile: '',
-      imgPath: ''
+      imgPath: '',
+
+      uploadFile: null,
+      fileUrl: null
     }
+  },
+  computed: {
+    resolvedImgPath() {
+      // 여기서 동적으로 이미지 경로를 처리
+      // 실제 사용 시에는 웹팩이 파일 시스템의 절대 경로를 이해하지 못하므로,
+      // 상대 경로나 정적 자원 경로를 사용해야 합니다.
+      return require(`${this.imgPath}`);
+    },
   },
   mounted() {
     this.fnGetView();
+    this.fnGetImgfile();
   },
   methods: {
     fnGetView() {
@@ -78,6 +90,10 @@ export default {
             this.originalFile = res.data.originalFile;
             this.savedFile = res.data.savedFile;
             this.imgPath = res.data.imgPath;
+
+            // if(this.savedFile) {
+            //   this.getUploadFile;
+            // }
           }).catch((err) => {
         // BOARD_NOTFOUND
         if (err.response.data.status === "404" && err.response.data.message) {
@@ -91,20 +107,62 @@ export default {
       })
     },
 
+    // 이미지 파일 출력
+    fnGetImgfile() {
+      const id = this.$route.params.id;
+      this.$axios.get(this.$serverUrl + '/board/' + id + '/image', {responseType: 'blob'})
+          .then((res) => {
+            // 1. Blob 으로 받아온 데이터로 ULR 생성 후 fileUrl 에 바인딩
+            const url = URL.createObjectURL(new Blob([res.data]));
+            this.fileUrl = url;
+          }).catch((err) => {
+
+        // 2. IMAGE_NOTFOUND, BOARD_NOTFOUND, : 이미지 부재시, log 출력
+        if (err.response.data.status === "404" && err.response.data.message) {
+          console.log(err.response.data.message);
+        }
+
+        // 3. FILE_IOFAILED: 파일 입출력 실패시, alert & log 출력
+        else if (err.response.data.status === "500" && err.response.data.message) {
+          console.log(err.response.data.message);
+          alert(err.response.data.message);
+        }
+
+        // 4. 그 외 Custom Exception 발생시 log 출력
+        else if (err.response.data.status && err.response.data.message) {
+          console.log(err.response.data.message);
+        } else {
+          console.log(err);
+          console.log("이미지를 찾을 수 없습니다.");
+        }
+
+        console.log("이미지를 찾을 수 없습니다.");
+      })
+    },
+
+    // getUploadFile() {
+    //   console.log("가져오기 구현");
+    //   // this.uploadFile = reponse
+    //
+    // },
+
+    // 파일 다운로드
     fnDownload() {
       const id = this.id
       this.$axios.get(this.$serverUrl + '/board/' + id + '/file',
           {responseType: 'blob'}
       ).then((res) => {
         const url = window.URL.createObjectURL(new Blob([res.data]));
+        this.fileUrl = url;
         const link = document.createElement('a');
 
         // content-disposition 으로 파일명을 설정하려 했으나 UTF8 인코딩 문제 발생
         let fileName = res.headers['content-disposition'].split('filename=')[1];
         fileName = fileName.replace(/[""]/g, '');
+        console.log(fileName)
 
         // UTF-8 디코딩
-        let decodeFileName = decodeURI(fileName);
+        const decodeFileName = decodeURI(fileName);
 
         // 파일 다운로드시 다른이름으로 저장
         link.href = url;

@@ -19,6 +19,8 @@
         <input type="file" id="file" @change="handleFileChange">
       </div>
 
+      <img :src="fileSrc" width="80%" style="margin: auto; display: block">
+
       <!--<div class="board-contents">-->
       <!--    <tr>-->
       <!--      <th>첨부파일</th>-->
@@ -72,11 +74,12 @@ export default {
     return {
       title: '',
       contents: '',
-      file: null
+      file: null,
       // files: [],
       // addFileList: [{
       //   file: ''
-      // }]
+      // }],
+      fileSrc: null
     }
   },
   mounted() {
@@ -164,6 +167,7 @@ export default {
     handleFileChange(event) {
       console.log(event.target.files)
       this.file = event.target.files[0];
+      this.fileSrc = URL.createObjectURL(this.file);
     }
 
     // // 파일 선택
