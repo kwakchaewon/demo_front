@@ -16,10 +16,11 @@
       </div>
       <div class="board-contents">
         <label for="file">파일:</label>
-        <input type="file" id="file" @change="handleFileChange">
+        <input ref="fileInput" type="file" id="fileInput" @change="handleFileChange">
+        <button type="button" @click="resetFileInput">삭제</button>
       </div>
 
-      <img :src="fileSrc" width="80%" style="margin: auto; display: block">
+<!--      <img :src="fileSrc" width="80%" style="margin: auto; display: block">-->
 
       <!--<div class="board-contents">-->
       <!--    <tr>-->
@@ -74,7 +75,7 @@ export default {
     return {
       title: '',
       contents: '',
-      file: null,
+      fileInput: null,
       // files: [],
       // addFileList: [{
       //   file: ''
@@ -118,8 +119,8 @@ export default {
       formData.append("title", this.title);
       formData.append("contents", this.contents);
 
-      if (this.file){
-        formData.append("file", this.file);
+      if (this.fileInput){
+        formData.append("file", this.fileInput);
       }
       // formData.append("title", this.title)
 
@@ -166,8 +167,13 @@ export default {
 
     handleFileChange(event) {
       console.log(event.target.files)
-      this.file = event.target.files[0];
-      this.fileSrc = URL.createObjectURL(this.file);
+      this.fileInput = event.target.files[0];
+      // this.fileSrc = URL.createObjectURL(this.fileInput);
+    },
+
+    resetFileInput(){
+      if (!confirm("파일을 삭제하시겠습니까?")) return
+      this.$refs.fileInput.value = null;
     }
 
     // // 파일 선택
