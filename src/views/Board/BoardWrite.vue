@@ -19,46 +19,6 @@
         <input ref="fileInput" type="file" id="fileInput" @change="handleFileChange">
         <button type="button" @click="resetFileInput">삭제</button>
       </div>
-
-<!--      <img :src="fileSrc" width="80%" style="margin: auto; display: block">-->
-
-      <!--<div class="board-contents">-->
-      <!--    <tr>-->
-      <!--      <th>첨부파일</th>-->
-      <!--      <td colspan="3">-->
-      <!--        <div class="file_list" ref="file_list">-->
-      <!--          <div>-->
-      <!--            <div class="file_input">-->
-      <!--              <input type="text" readonly />-->
-      <!--              <label> 첨부파일-->
-      <!--                <input type="file" name="files" v-on:change="fnSelectFile" />-->
-      <!--&lt;!&ndash;                <input type="file" name="files" v-model="selectedFile" @change="fnSelectFile(this)" />&ndash;&gt;-->
-      <!--              </label>-->
-      <!--              <button type="button" v-on:click="removeFile" class="btns del_btn"><span>삭제</span></button>-->
-      <!--              <div v-for="(d,i) in addFileList" v-bind:key="d">-->
-      <!--                <div class="file_input">-->
-      <!--                  <input type="text" readonly />-->
-      <!--                  <label> 첨부파일-->
-      <!--                    <input id="file" type="file" name="files" v-on:change="fnSelectFile($event, i)"/>-->
-      <!--                  </label>-->
-      <!--                  <button type="button" v-on:click="removeFile(i)" class="btns del_btn"><span>삭제</span></button>-->
-      <!--                </div>-->
-      <!--              </div>-->
-      <!--            </div>-->
-      <!--            <button type="button" v-on:click="addFile" class="btns fn_add_btn"><span>파일 추가</span></button>-->
-      <!--          </div>-->
-      <!--        </div>-->
-      <!--      </td>-->
-      <!--    </tr>-->
-      <!--</div>-->
-
-      <!--    <div class="file_input board-contents">-->
-      <!--      <label> 첨부파일-->
-      <!--        <input type="file" id="files" name="files" @onchange="fnSelectFile(this)"/>-->
-      <!--      </label>-->
-      <!--    </div>-->
-      <!--    <button type="button" @click="removeFile(this);" class="btns del_btn"><span>삭제</span></button>-->
-      <!--    <button type="button" @click="addFile" class="btns fn_add_btn"><span>파일 추가</span></button>-->
       <div class="common-buttons">
         <button type="submit" class="w3-button w3-round w3-blue-gray">저장</button>&nbsp;
         <button type="button" class="w3-button w3-round w3-gray" v-on:click="fnList">목록</button>
@@ -153,7 +113,8 @@ export default {
               const boardId = parseInt(res.data.id);
               this.$router.push('' + boardId);
             }).catch((err) => {
-          // ONLY_BLANk, // FILE_IOFAILED
+
+          // ONLY_BLANk, // FILE_IOFAILED: 에러 경고창 및 메시지 출력
           if (err.response.data.status && err.response.data.message) {
             console.log(err.response.data.message);
             alert(err.response.data.message);

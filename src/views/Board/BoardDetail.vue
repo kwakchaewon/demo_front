@@ -28,7 +28,7 @@
         </div>
         <div class="my-3" v-if="originalFile">
           <text>첨부파일(클릭시 다운) :</text>
-          <a ref="downloadLink" href="#" @click="fnDownload">{{ originalFile }}</a>
+          <a href="#" @click="fnDownload">{{ originalFile }}</a>
         </div>
         <div class="my-3">
           <button class="btn btn-sm btn-outline-secondary" v-on:click="fnCheckUpdate">수정</button>
@@ -153,7 +153,7 @@ export default {
           {responseType: 'blob'}
       ).then((res) => {
         const url = window.URL.createObjectURL(new Blob([res.data]));
-        this.fileUrl = url;
+        // this.fileUrl = url;
         const link = document.createElement('a');
 
         // content-disposition 으로 파일명을 설정하려 했으나 UTF8 인코딩 문제 발생
@@ -211,7 +211,8 @@ export default {
         }
       })
     },
-    async fnDelete() {
+
+    fnDelete() {
       if (!confirm("삭제하시겠습니까?")) return
       const id = this.$route.params.id;
       this.$axios.delete(this.$serverUrl + '/board/' + id)
@@ -226,7 +227,7 @@ export default {
           alert(err.response.data.message);
         }
 
-        // BOARD_NOTFOUND: 게시글 부재시, alert 반환 및 리스트로
+        // BOARD_NOTFOUND, FILE_NOTFOUND: 게시글/파일 부재시, alert 반환 및 리스트로
         else if (err.response.data.status === "404" && err.response.data.message) {
           console.log(err.response.data.message);
           alert(err.response.data.message);
