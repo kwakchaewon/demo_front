@@ -31,66 +31,33 @@
 import Cookies from 'js-cookie';
 
 export default {
-  data() { //변수생성
+  data() {
     return {
-      title: '',
-      contents: '',
-      fileInput: null,
-      // files: [],
-      // addFileList: [{
-      //   file: ''
-      // }],
-      fileSrc: null
+      title: '', // 제목
+      contents: '', // 내용
+      fileInput: null, // 첨부파일
     }
   },
-  mounted() {
-    this.fnGetView()
-  },
-  methods: {
-    fnGetView() {
-      if (this.idx !== undefined) {
-        this.$axios.get(this.$serverUrl + '/board/' + this.idx, {
-          params: this.requestBody
-        }).then((res) => {
-          this.title = res.data.title;
-          this.contents = res.data.contents;
-        }).catch((err) => {
-          if (err.response.data.status && err.response.data.message) {
-            console.log(err.response.data.message);
-            alert(err.response.data.message);
-          } else {
-            console.log("알 수 없는 오류가 발생했습니다.");
-            alert("알 수 없는 오류가 발생했습니다.");
-          }
-        })
-      }
-    },
 
+  methods: {
     fnList() {
       this.$router.push({
         path: '/board',
       })
     },
 
+    // 게시글 등록
     fnSave() {
       const apiUrl = this.$serverUrl + '/board'
-
       const formData = new FormData();
+
       formData.append("title", this.title);
       formData.append("contents", this.contents);
 
-      if (this.fileInput){
+      if (this.fileInput) {
         formData.append("file", this.fileInput);
       }
-      // formData.append("title", this.title)
 
-      // this.form = {
-      //   "contents": this.contents,
-      //   "title": this.title,
-      //   "file":this.file
-      // }
-
-      console.log(this.form);
       const blankPattern = /^\s*$/ // 공백 유효성 검사
 
       if (blankPattern.test(this.title)) {
@@ -98,14 +65,13 @@ export default {
       } else if (blankPattern.test(this.contents)) {
         alert("빈 내용은 입력할 수 없습니다.");
       } else {
+
         const token = Cookies.get('ACCESS_TOKEN');
 
-        // 생성
-        //INSERT
         this.$axios.post(apiUrl, formData, {
           headers: {
-            'Content-Type':'multipart/form-data', // context-type 설정
-            'Authorization': `Bearer ${token}` // JWT를 헤더에 포함하여 전송
+            'Content-Type': 'multipart/form-data',
+            'Authorization': `Bearer ${token}`
           }
         })
             .then((res) => {
@@ -114,7 +80,7 @@ export default {
               this.$router.push('' + boardId);
             }).catch((err) => {
 
-          // ONLY_BLANk, // FILE_IOFAILED: 에러 경고창 및 메시지 출력
+          // ONLY_BLANK, FILE_IOFAILED: 에러 경고창 및 메시지 출력
           if (err.response.data.status && err.response.data.message) {
             console.log(err.response.data.message);
             alert(err.response.data.message);
@@ -126,13 +92,14 @@ export default {
       }
     },
 
+    // 첨부파일 등록
     handleFileChange(event) {
       console.log(event.target.files)
       this.fileInput = event.target.files[0];
-      // this.fileSrc = URL.createObjectURL(this.fileInput);
     },
 
-    resetFileInput(){
+    // 첨부파일 초기화
+    resetFileInput() {
       if (!confirm("파일을 삭제하시겠습니까?")) return
       this.$refs.fileInput.value = null;
     }
