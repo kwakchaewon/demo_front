@@ -94,8 +94,17 @@ export default {
 
     // 첨부파일 등록
     handleFileChange(event) {
-      console.log(event.target.files)
-      this.fileInput = event.target.files[0];
+      const files = event.target.files;
+      const maxSize = 1024; // 허용되는 최대 파일 크기 (KB)
+
+      // 파일 최대 용량 1024 KB
+      if (files.length > 0 && files[0].size > maxSize * 1024){
+        alert("1024kb 이상은 첨부할 수 없습니다.");
+        event.target.value = '';
+      } else {
+        console.log(event.target.files)
+        this.fileInput = event.target.files[0];
+      }
     },
 
     // 첨부파일 초기화
