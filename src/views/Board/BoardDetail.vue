@@ -7,8 +7,6 @@
 
     <h2 class="border-bottom py-2">{{ title }}</h2>
     <div class="card my-3">
-      <div class="my-3" v-if="uploadFile">
-      </div>
       <div class="card-body">
         <img :src="fileUrl" width="80%" style="margin: auto; display: block" v-if="fileUrl">
         <div class="card-text" style="white-space: pre-line;">{{ contents }}</div>
@@ -48,19 +46,16 @@ export default {
   components: {
     Comment
   },
-  data() { //변수생성
+  data() {
     return {
-      id: '',
+      id: '', //
       title: '', // 제목
       contents: '', // 내용
       createdAt: '', // 작성일
       updatedAt: '', // 수정일
       memberId: '', // 작성자
-      originalFile: '',
-      savedFile: '',
-      imgPath: '',
-
-      uploadFile: null,
+      originalFile: '', // 첨부파일명
+      imgPath: '', // 첨부 이미지
       fileUrl: null
     }
   },
@@ -77,6 +72,8 @@ export default {
     this.fnGetImgfile();
   },
   methods: {
+
+    // 게시글 상세
     fnGetView() {
       const id = this.$route.params.id;
       this.$axios.get(this.$serverUrl + '/board/' + id)
@@ -88,19 +85,20 @@ export default {
             this.updatedAt = res.data.updatedAt;
             this.memberId = res.data.memberId;
             this.originalFile = res.data.originalFile;
-            this.savedFile = res.data.savedFile;
             this.imgPath = res.data.imgPath;
 
-            // if(this.savedFile) {
-            //   this.getUploadFile;
-            // }
           }).catch((err) => {
-        // BOARD_NOTFOUND
+        // BOARD_NOTFOUND: 에러 메시지 출력 및 리스트로 이동
         if (err.response.data.status === "404" && err.response.data.message) {
           console.log(err.response.data.message);
           alert(err.response.data.message);
           this.fnList()
-        } else {
+        }
+        else if(err.response.data.message){
+          console.log(err.response.data.message);
+          alert(err.response.data.message);
+        }
+        else {
           alert('알 수 없는 오류가 발생했습니다.');
           this.fnList();
         }
@@ -135,16 +133,8 @@ export default {
           console.log(err);
           console.log("이미지를 찾을 수 없습니다.");
         }
-
-        console.log("이미지를 찾을 수 없습니다.");
       })
     },
-
-    // getUploadFile() {
-    //   console.log("가져오기 구현");
-    //   // this.uploadFile = reponse
-    //
-    // },
 
     // 파일 다운로드
     fnDownload() {
@@ -153,7 +143,6 @@ export default {
           {responseType: 'blob'}
       ).then((res) => {
         const url = window.URL.createObjectURL(new Blob([res.data]));
-        // this.fileUrl = url;
         const link = document.createElement('a');
 
         // content-disposition 으로 파일명을 설정하려 했으나 UTF8 인코딩 문제 발생
@@ -169,6 +158,20 @@ export default {
         link.setAttribute('download', decodeFileName);
         document.body.appendChild(link);
         link.click();
+
+        // 파일 다운로드 실패시, alert 경고문
+      }).catch((err) => {
+        console.log(err.response);
+        if (err.response.status === 500) {
+          alert("파일을 다운로드 할 수 없습니다.");
+        }
+        if (err.response.status === 404) {
+          alert("존재하지 않는 게시글입니다.");
+          this.fnList();
+        }
+        else {
+          alert("파일을 다운로드 할 수 없습니다.");
+        }
       })
     },
 

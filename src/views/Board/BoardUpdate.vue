@@ -153,6 +153,13 @@ export default {
             this.fnList();
           }
 
+          // FILE_IOFAILED: 파일 입출력 실패시, alert 반환
+          else if (err.response.data.status === "500" && err.response.data.message) {
+            console.log(err.response.data.message);
+            alert(err.response.data.message);
+            this.fnList();
+          }
+
           // 그 외 Custom Exception 발생시 alert 반환
           else if (err.response.data.status && err.response.data.message) {
             console.log(err.response.data.message);
