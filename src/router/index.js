@@ -8,15 +8,36 @@ import Login from '@/views/common/Login'
 import store from '@/vuex/store'
 import SignUp from "@/views/common/SignUp.vue";
 import Cookies from 'js-cookie';
+import axios from "axios";
 
 const requireAuth = () => (from, to, next) => {
+    const serverUrl = '//localhost:8080';
     const ACCESS_TOKEN = Cookies.get('ACCESS_TOKEN');
+    const REFRESH_TOKEN = Cookies.get('REFRESH_TOKEN');
 
     if (ACCESS_TOKEN) {
         store.state.isLogin = true;
         return next();
-    } // isLogin === true면 페이지 이동
-    next('/member/login'); // isLogin === false면 다시 로그인 화면으로 이동
+    } else {
+        // refresh 토큰만 있을 경우
+        if (REFRESH_TOKEN) {
+            // 액세스 토큰 재발급
+            axios.get(serverUrl + "/member/refresh", REFRESH_TOKEN).then((res) => {
+                Cookies.set("ACCESS_TOKEN", res.data, {expires: 1 / 24});
+                store.state.isLogin = true;
+                return next();
+            }).catch(() => {
+                alert("액세스 토큰 로그인 실패");
+                next('/member/login');
+            })
+        }
+
+        // access, refresh 둘 다 없을 경우
+        else {
+            alert("로그인 세션이 만료됐습니다.");
+            next('/member/login'); // isLogin === false면 다시 로그인 화면으로 이동
+        }
+    }
 }
 
 const routes = [
