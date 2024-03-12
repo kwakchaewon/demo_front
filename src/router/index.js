@@ -7,6 +7,7 @@ import CommentUpdate from '@/views/Board/CommentUpdate.vue'
 import Login from '@/views/common/Login'
 import store from '@/vuex/store'
 import SignUp from "@/views/common/SignUp.vue";
+import Admin from "@/views/Admin/Admin.vue";
 import Cookies from 'js-cookie';
 import axios from "axios";
 
@@ -80,6 +81,12 @@ const routes = [
         path: '/member/signup',
         name: 'SignUp',
         component: SignUp  //로그인 컴포넌트 추가
+    },
+    {
+        path: '/admin',
+        name: 'admin',
+        component: Admin,
+        beforeEnter: requireAuth()
     }
 ]
 
