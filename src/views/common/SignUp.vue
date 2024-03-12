@@ -22,7 +22,6 @@
               </p>
               <p>
                 <button type="submit" class="w3-button w3-green w3-round" v-on:click="fnRegist">가입</button>
-                <!--                                <button type="submit" class="w3-button w3-green w3-round">취소</button>-->
               </p>
             </form>
           </div>

@@ -95,8 +95,8 @@ export default {
           this.fnList()
         }
         else if(err.response.data.message){
-          console.log(err.response.data.message);
-          alert(err.response.data.message);
+          alert('알 수 없는 오류가 발생했습니다.');
+          this.fnList();
         }
         else {
           alert('알 수 없는 오류가 발생했습니다.');

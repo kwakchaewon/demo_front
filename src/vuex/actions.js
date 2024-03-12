@@ -32,6 +32,6 @@ export default {
   async login (store, {user_id, user_pw}) {
     let loginResponse = await loginAPI.doLogin(user_id, user_pw)
     processResponse(store, loginResponse)
-    return store.getters.getIsAuth  // 로그인 결과를 리턴한다
+    return store.getters.getIsAuth  // 로그인 결과 리턴한다
   }
 }

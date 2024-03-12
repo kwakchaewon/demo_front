@@ -111,6 +111,7 @@ export default {
             console.log(err.response.data.message);
             alert(err.response.data.message);
           }
+
           // ONLY_BLANk: 빈칸 입력시 alert 반환
           else if(err.response.data.status === "400" && err.response.data.message){
             console.log(err.response.data.message);
