@@ -42,7 +42,7 @@ export default {
   updated() {
     this.fetchUserId();
   },
-  
+
   methods: {
     fnLogout() {
       this.userId = null;
@@ -50,6 +50,7 @@ export default {
       Cookies.remove('REFRESH_TOKEN');
       Cookies.remove('user_role');
       this.$store.state.isLogin = false;
+      this.$store.state.user = null;
     },
 
     async fetchUserId(){
