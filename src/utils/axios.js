@@ -2,9 +2,6 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 axios.interceptors.request.use(function (config) {
-    // const access = localStorage.getItem('ACCESS_TOKEN');
-    // const refresh = localStorage.getItem('REFRESH_TOKEN');
-
     const access = Cookies.get('ACCESS_TOKEN');
     const refresh = Cookies.get('REFRESH_TOKEN');
 

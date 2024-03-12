@@ -13,7 +13,7 @@
           </thead>
           <tbody>
           <tr v-for="(row, id) in list" :key="id">
-<!--            <td>{{ setRangePage }}</td>-->
+<!--            <td>{{ setRangePage[id] }}</td>-->
             <td>{{ paging.totalListCnt - (paging.page * paging.pageSize) - id + 10 }}</td>
             <td><a v-on:click="fnView(`${row.id}`)">{{ row.title }}</a></td>
             <td>{{ row.createdAt }}</td>
@@ -81,8 +81,9 @@ export default {
     }
   },
   computed:{
-    // setRangePage(){
-    //   return this.paging.totalListCnt - (this.paging.page * this.paging.pageSize) - this.id + 10;
+    // setRangePage: function (id){
+    //   console.log(id);
+    //   return this.paging.totalListCnt - (this.paging.page * this.paging.pageSize) -id + 10
     // }
   },
   mounted() {
