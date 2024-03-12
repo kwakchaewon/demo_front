@@ -72,7 +72,7 @@ export default {
       //eslint-disable-next-line
       const emailPattern = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-za-z0-9\-]+/; // 이메일 유효성 검사:
       const idCheckPattern = /^[0-9a-zA-Z]{4,12}$/; // 아이디 유효성 검사: 영어 또는 숫자만 허용
-      const passwordCheck = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$;/ // 비밀번호 유효성 검사: 8글자 이상 영문, 숫자, 특수문자 사용 비밀번호
+      const passwordCheck = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/; // 비밀번호 유효성 검사: 8글자 이상 영문, 숫자, 특수문자 사용 비밀번호
 
       if(this.userId === ''){
         alert('ID를 입력하세요.');
