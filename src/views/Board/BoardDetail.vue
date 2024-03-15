@@ -55,17 +55,16 @@ export default {
       updatedAt: '', // 수정일
       memberId: '', // 작성자
       originalFile: '', // 첨부파일명
-      imgPath: '', // 첨부 이미지
       fileUrl: null
     }
   },
   computed: {
-    resolvedImgPath() {
+    // resolvedImgPath() {
       // 여기서 동적으로 이미지 경로를 처리
       // 실제 사용 시에는 웹팩이 파일 시스템의 절대 경로를 이해하지 못하므로,
       // 상대 경로나 정적 자원 경로를 사용해야 합니다.
-      return require(`${this.imgPath}`);
-    },
+      // return require(`${this.imgPath}`);
+    // },
   },
   mounted() {
     this.fnGetView();
@@ -85,8 +84,6 @@ export default {
             this.updatedAt = res.data.updatedAt;
             this.memberId = res.data.memberId;
             this.originalFile = res.data.originalFile;
-            this.imgPath = res.data.imgPath;
-
           }).catch((err) => {
         // BOARD_NOTFOUND: 에러 메시지 출력 및 리스트로 이동
         if (err.response.data.status === "404" && err.response.data.message) {

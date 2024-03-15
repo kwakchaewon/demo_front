@@ -98,7 +98,7 @@ export default {
       const maxSize = 1024; // 허용되는 최대 파일 크기 (KB)
 
       // 파일 최대 용량 1024 KB
-      if (files.length > 0 && files[0].size > maxSize * 1024){
+      if (files.length > 0 && files[0].size > maxSize * 1024) {
         alert("1024kb 이상은 첨부할 수 없습니다.");
         event.target.value = '';
       } else {
@@ -111,49 +111,9 @@ export default {
     resetFileInput() {
       if (!confirm("파일을 삭제하시겠습니까?")) return
       this.$refs.fileInput.value = null;
+      this.fileInput=null
     }
 
-    // // 파일 선택
-    // fnSelectFile(element) {
-    //
-    //   console.log(element)
-    //   console.log(1)
-    //
-    //   const file = element.target.files[0];
-    //   console.log(file)
-    //   const filename = element.target.closest('.file_input').firstElementChild;
-    //
-    //   // 1. 파일 선택 창에서 취소 버튼이 클릭된 경우
-    //   if (!file) {
-    //     filename.value = '';
-    //     return false;
-    //   }
-    //
-    //   // 2. 파일 크기가 10MB를 초과하는 경우
-    //   const fileSize = Math.floor(file.size / 1024 / 1024);
-    //   if (fileSize > 10) {
-    //     alert('10MB 이하의 파일로 업로드해 주세요.');
-    //     filename.value = '';
-    //     element.value = '';
-    //     return false;
-    //   }
-    //   // 3. 파일명 지정
-    //   filename.value = file.name;
-    // },
-
-    // // 파일 추가
-    // addFile() {
-    //   // const fileDiv = document.createElement('div');
-    //   this.addFileList.push(0);
-    //   // document.querySelector('.file_list').appendChild(fileDiv);
-    // },
-
-    // removeFile(i) {
-    //   console.log(i)
-    //   // this.addFileList = this.addFileList.filter((v, idx) => idx !== i)
-    //   this.addFileList.splice(i,1);
-    //
-    // }
   }
 }
 </script>
