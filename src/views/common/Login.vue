@@ -44,9 +44,10 @@ export default {
     removeCookies(){
       Cookies.remove('ACCESS_TOKEN');
       Cookies.remove('REFRESH_TOKEN');
-      Cookies.remove('user_role');
+
       this.$store.state.isLogin = false;
       this.$store.state.user = null;
+      this.$store.state.role = null;
     },
 
     async fnLogin() {

@@ -54,7 +54,6 @@ export default {
     removeCookies(){
       Cookies.remove('ACCESS_TOKEN');
       Cookies.remove('REFRESH_TOKEN');
-      Cookies.remove('user_role');
     },
     submitForm() {
       this.form = {

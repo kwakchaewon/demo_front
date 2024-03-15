@@ -17,18 +17,25 @@ const requireAuth = () => (from, to, next) => {
     const REFRESH_TOKEN = Cookies.get('REFRESH_TOKEN');
 
     if (ACCESS_TOKEN) {
+        console.log("1");
         store.state.isLogin = true;
         return next();
     } else {
         // refresh 토큰만 있을 경우
         if (REFRESH_TOKEN) {
             // 액세스 토큰 재발급
-            axios.get(serverUrl + "/member/refresh", REFRESH_TOKEN).then((res) => {
-                Cookies.set("ACCESS_TOKEN", res.data, {expires: 1 / 24});
-                store.state.isLogin = true;
+            axios.get(serverUrl + "/member/refresh").then((res) => {
+                Cookies.set("ACCESS_TOKEN", res.data.accessToken, {expires: res.data.accessTime});
+
+                store.state.isLogin = true
+                store.state.user = res.data.memberId;
+                store.state.role = res.data.authority;
                 return next();
             }).catch(() => {
                 alert("액세스 토큰 로그인 실패");
+                store.state.isLogin = false;
+                store.state.user = null;
+                store.state.role =null;
                 next('/member/login');
             })
         }

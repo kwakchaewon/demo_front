@@ -1,7 +1,7 @@
 // src/service/loginAPI.js
 import axios from 'axios'
 import Cookies from 'js-cookie';
-
+import store from '@/vuex/store'
 
 const getUserInfo = (userId, userPw) => {
     const reqData = {
@@ -23,13 +23,15 @@ export default {
         try {
             const getUserInfoPromise = getUserInfo(userId, userPw);
             const [userInfoResponse] = await Promise.all([getUserInfoPromise]);
-
-            console.log(userInfoResponse.data)
             if (userInfoResponse.data.length === 0) {
                 return 'notFound';
             } else {
-                Cookies.set('ACCESS_TOKEN', userInfoResponse.data.ACCESS_TOKEN, {expires: 1/24}); // 1시간
-                Cookies.set('REFRESH_TOKEN', userInfoResponse.data.REFRESH_TOKEN, {expires: 7});
+                store.state.isLogin = true;
+                store.state.user = userInfoResponse.data.memberId;
+                store.state.role = userInfoResponse.data.authority;
+
+                Cookies.set('ACCESS_TOKEN', userInfoResponse.data.accessToken, {expires: userInfoResponse.data.accessTime}); // 3시간
+                Cookies.set('REFRESH_TOKEN', userInfoResponse.data.refreshToken, {expires: userInfoResponse.data.refreshTime}); // 7일
                 return userInfoResponse;
             }
         } catch (err) {
