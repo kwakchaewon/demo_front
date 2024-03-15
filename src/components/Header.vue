@@ -20,7 +20,7 @@
             <a class="nav-link disabled" href="#"></a>
           </li>
         </ul>
-        <p id="userId" v-if="this.$store.state.isLogin">환영합니다! {{ this.userId }} 님</p>
+        <p id="userId" v-if="this.$store.state.isLogin">환영합니다! {{ this.$store.state.user }} 님</p>
       </div>
     </nav>
   </header>
@@ -36,11 +36,9 @@ export default {
     }
   },
   mounted() {
-    this.fetchUserId();
     },
 
   updated() {
-    this.fetchUserId();
   },
 
   methods: {
@@ -48,24 +46,11 @@ export default {
       this.userId = null;
       Cookies.remove('ACCESS_TOKEN');
       Cookies.remove('REFRESH_TOKEN');
-      Cookies.remove('user_role');
+
       this.$store.state.isLogin = false;
       this.$store.state.user = null;
+      this.$store.state.role = null;
     },
-
-    async fetchUserId(){
-      const token = Cookies.get('ACCESS_TOKEN');
-      this.$axios.get(this.$serverUrl + '/member/userid', {
-        headers: {
-          'ACCESS_TOKEN': `Bearer ${token}` // JWT를 헤더에 포함하여 전송
-        }
-      }).then((res)=>{
-        console.log(res.data)
-        this.userId = res.data;
-      }).catch((err)=>{
-        console.log(err.message);
-      })
-    }
   }
 }
 
