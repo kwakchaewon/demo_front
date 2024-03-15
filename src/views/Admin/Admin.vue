@@ -60,6 +60,7 @@ export default {
 
     // 사용자 삭제
     fnDeleteMember(id){
+      if (!confirm("회원을 삭제하시겠습니까?")) return
       this.$axios.delete(this.$serverUrl + '/admin/member/'+id)
           .then(() => {
             this.fnGetMemberList();
