@@ -1,24 +1,24 @@
 <template>
-  <h2 class="border-bottom py-2">게시글 관리</h2>
+  <br>
+  <h2 class="border-bottom py-2">회원 관리</h2>
   <table class="table">
-    <span v-if="!paging.totalListCnt || list.length === 0">게시글이 존재하지 않습니다.</span>
     <thead class="table-dark">
     <tr class="text-center">
       <th>번호</th>
-      <th style="width:50%">제목</th>
-      <th>작성자</th>
-      <th>작성일</th>
+      <th style="width:30%">아이디</th>
+      <th>이메일</th>
+      <th>생성일자</th>
       <th>관리</th>
     </tr>
     </thead>
     <tbody>
-    <tr class="text-center" v-for="(row, id) in list" :key="id">
+    <tr v-for="(row, id) in list" :key="id" class="text-center">
       <td>{{ paging.totalListCnt - (paging.page * paging.pageSize) - id + 10 }}</td>
-      <td><a v-on:click="fnView(`${row.id}`)">{{ row.title }}</a></td>
-      <td>{{ row.memberId }}</td>
+      <td>{{ row.userId }}</td>
+      <td>{{ row.email }}</td>
       <td>{{ row.createdAt }}</td>
       <td>
-        <button class="delete-btn">삭제</button>
+        <button class="delete-btn" @click="fnDeleteMember(`${row.id}`)">삭제</button>
       </td>
     </tr>
     </tbody>
@@ -48,11 +48,11 @@
 </template>
 <script>
 export default {
-  name: 'AdminBoard',
+  name: 'AdminMember',
 
   data() {
-    return {
-      list: {}, //리스트 데이터
+    return{
+      list: {},
       no: '', //게시판 숫자처리
       paging: {
         block: 0,
@@ -83,22 +83,21 @@ export default {
   },
 
   mounted() {
-    this.fnGetList();
+    this.fnGetMemberList();
   },
 
   methods: {
-    // 게시글 조회
-    fnGetList() {
+    // 사용자 조회
+    fnGetMemberList() {
       console.log(this.page)
       this.requestBody = { // 데이터 전송
         keyword: this.keyword,
-        // page: this.page,
-        // page: this.$route.query.page,
         page: this.page,
         size: this.size
       }
-      console.log(this.requestBody);
-      this.$axios.get(this.$serverUrl + "/board", {
+      console.log(this.$serverUrl);
+
+      this.$axios.get(this.$serverUrl + "/admin/members", {
         params: this.requestBody,
         headers: {}
       }).then((res) => {
@@ -115,12 +114,26 @@ export default {
       })
     },
 
+    // 페이지 이동
     fnPage(n) {
       if (this.page !== n) {
         this.page = n;
       }
 
-      this.fnGetList();
+      this.fnGetMemberList();
+    },
+
+    // 사용자 삭제
+    fnDeleteMember(id) {
+      if (!confirm("회원을 삭제하시겠습니까?")) return
+      this.$axios.delete(this.$serverUrl + '/admin/member/' + id)
+          .then(() => {
+            alert("회원이 삭제됐습니다.")
+            this.fnGetMemberList();
+          }).catch(() => {
+        alert("사용자 삭제에 실패했습니다.");
+        console("사용자 삭제에 실패했습니다.");
+      })
     },
   }
 }
