@@ -12,8 +12,8 @@
     </tr>
     </thead>
     <tbody>
-    <tr v-for="(row, id) in members" :key="id" class="text-center">
-      <td>{{ row.id }}</td>
+    <tr v-for="(row, id) in list" :key="id" class="text-center">
+      <td>{{ paging.totalListCnt - (paging.page * paging.pageSize) - id + 10 }}</td>
       <td>{{ row.userId }}</td>
       <td>{{ row.email }}</td>
       <td>{{ row.createdAt }}</td>
@@ -23,6 +23,27 @@
     </tr>
     </tbody>
   </table>
+  <div class="pagination w3-bar w3-padding-16 w3-small" v-if="paging.totalListCnt > 0 && list.length > 0"
+       style="justify-content: center">
+                  <span class="pg">
+                  <a href="javascript:;" @click="fnPage(1)" class="first w3-button w3-border">처음</a>
+                  <a href="javascript:;" v-if="paging.startPage > 10" @click="fnPage(`${paging.startPage-1}`)"
+                     class="prev w3-button w3-border">이전</a>
+                  <template v-for=" (n,index) in paginavigation()">
+                      <template v-if="paging.page==n">
+                          <strong class="w3-button w3-border w3-green" :key="index">{{ n }}</strong>
+                      </template>
+                      <template v-else>
+                          <a class="w3-button w3-border" href="javascript:;" @click="fnPage(`${n}`)" :key="index">
+                            {{ n }}
+                          </a>
+                      </template>
+                  </template>
+                  <a v-if="paging.totalPageCnt > paging.endPage"
+                     @click="fnPage(`${paging.endPage+1}`)" class="next w3-button w3-border">다음</a>
+                  <a @click="fnPage(`${paging.totalPageCnt}`)" class="last w3-button w3-border">끝</a>
+                  </span>
+  </div>
   <br>
 </template>
 <script>
@@ -31,7 +52,33 @@ export default {
 
   data() {
     return{
-      members: {}
+      list: {},
+      no: '', //게시판 숫자처리
+      paging: {
+        block: 0,
+        endPage: 0,
+        nextBlock: 0,
+        page: 0,
+        pageSize: 0,
+        prevBlock: 0,
+        startIndex: 0,
+        startPage: 0,
+        totalBlockCnt: 0,
+        totalListCnt: 0,
+        totalPageCnt: 0,
+      }, //페이징 데이터
+      page: this.$route.query.page ? this.$route.query.page : 1,
+      size: this.$route.query.size ? this.$route.query.size : 10,
+      // page: this.$route.params.page ? this.$route.params.page : 1,
+      keyword: this.$route.query.keyword ? this.$route.query.keyword : '',
+
+      paginavigation: function () { //페이징 처리 for문 커스텀
+        const pageNumber = [];
+        const startPage = this.paging.startPage;
+        const endPage = this.paging.endPage;
+        for (let i = startPage; i <= endPage; i++) pageNumber.push(i);
+        return pageNumber;
+      }
     }
   },
 
@@ -42,24 +89,38 @@ export default {
   methods: {
     // 사용자 조회
     fnGetMemberList() {
-      console.log(1)
-      console.log(this.$serverUrl)
-      this.$axios.get(this.$serverUrl + '/admin')
-          .then((res) => {
-            console.log(2)
-            this.members = res.data;
-            console.log(3)
-            // alert("admin 접속 완료");
-          }).catch((err) => {
-        if (err.response.status === 403) {
-          // console.log(err.response);
-          alert("일반 사용자는 접근 불가합니다");
-          this.$router.push({name: 'BoardList'})
+      console.log(this.page)
+      this.requestBody = { // 데이터 전송
+        keyword: this.keyword,
+        page: this.page,
+        size: this.size
+      }
+      console.log(this.$serverUrl);
+
+      this.$axios.get(this.$serverUrl + "/admin/members", {
+        params: this.requestBody,
+        headers: {}
+      }).then((res) => {
+        this.list = res.data.boards.content;
+        this.paging = res.data.pagination;
+        this.no = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize);
+      }).catch((err) => {
+        if (err.response.data.status && err.response.data.message) {
+          alert(err.response.data.message);
+          console.log(err.response.data.message);
         } else {
-          alert("알 수 없는 오류가 발생했습니다.");
-          this.$router.push({name: 'BoardList'})
+          alert('게시글 리스트를 불러올 수 없습니다.');
         }
       })
+    },
+
+    // 페이지 이동
+    fnPage(n) {
+      if (this.page !== n) {
+        this.page = n;
+      }
+
+      this.fnGetMemberList();
     },
 
     // 사용자 삭제
