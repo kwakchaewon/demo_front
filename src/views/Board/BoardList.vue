@@ -13,7 +13,7 @@
           </div>
         </div>
       </div>
-
+      <h2 class="border-bottom py-2">자유 게시판</h2>
       <table class="table">
         <span v-if="!paging.totalListCnt || list.length === 0">게시글이 존재하지 않습니다.</span>
         <thead class="table-dark">
@@ -37,14 +37,16 @@
       <div class="row my-3" style="justify-content: center;">
         <div class="col-6">
           <div class="input-group">
-            <input ref="keyword"  type="text" id="search_keyword" class="form-control" v-bind:value="keyword" @keyup.enter="fnKeywordSearch">
-            <button class="btn btn-outline-secondary" type="button" id="btn_search" v-on:click="fnKeywordSearch">찾기</button>
+            <input ref="keyword" type="text" id="search_keyword" class="form-control" v-bind:value="keyword"
+                   @keyup.enter="fnKeywordSearch">
+            <button class="btn btn-outline-secondary" type="button" id="btn_search" v-on:click="fnKeywordSearch">찾기
+            </button>
           </div>
         </div>
       </div>
 
       <!-- 페이징 처리 시작 -->
-      <div class="pagination w3-bar w3-padding-16 w3-small" v-if="paging.totalListCnt > 0 && list.length > 0"
+      <div class="pagination w3-bar w3-padding-16 w3-small" v-if="paging.totalListCnt > 0  && list.length > 0"
            style="justify-content: center">
                   <span class="pg">
                   <a href="javascript:;" @click="fnPage(1)" class="first w3-button w3-border">처음</a>
@@ -96,7 +98,7 @@ export default {
       page: this.$route.query.page ? this.$route.query.page : 1,
       size: this.$route.query.size ? this.$route.query.size : 10,
       // page: this.$route.params.page ? this.$route.params.page : 1,
-      keyword: this.$route.query.keyword? this.$route.query.keyword: '',
+      keyword: this.$route.query.keyword ? this.$route.query.keyword : '',
 
       paginavigation: function () { //페이징 처리 for문 커스텀
         const pageNumber = [];
@@ -111,8 +113,8 @@ export default {
   //   'queryPage':'fnGetList'
   // },
   // created() {
-    // console.log(history.state);
-    // console.log(this.$router.params.page)
+  // console.log(history.state);
+  // console.log(this.$router.params.page)
   // },
 
   mounted() {
@@ -140,7 +142,7 @@ export default {
         size: this.size
       }
       console.log(this.requestBody);
-      this.$axios.get(this.$serverUrl + "/board",{
+      this.$axios.get(this.$serverUrl + "/board", {
         params: this.requestBody,
         headers: {}
       }).then((res) => {
@@ -173,9 +175,10 @@ export default {
       this.fnGetList();
     },
 
-    fnKeywordSearch(){
+    fnKeywordSearch() {
       this.keyword = this.$refs.keyword.value;
       this.page = 0;
+      // this.paging.page = 0;
       this.fnGetList();
     }
   }

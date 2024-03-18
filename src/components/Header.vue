@@ -2,7 +2,9 @@
   <header>
     <!-- Fixed navbar -->
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-      <router-link class="navbar-brand" to="/board">자유게시판</router-link>
+      <!--      <router-link class="navbar-brand" v-on:click="fnReset">자유게시판</router-link>-->
+<!--      <router-link class="navbar-brand" to="/">자유게시판</router-link>-->
+            <a class="navbar-brand" v-on:click="fnReset">자유게시판</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
               aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -11,7 +13,8 @@
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
             <router-link v-if="!this.$store.state.isLogin" class="nav-link" to="/member/login">로그인</router-link>
-            <router-link v-if="this.$store.state.isLogin" class="nav-link" to="/member/login" @click="fnLogout" >로그아웃</router-link>
+            <router-link v-if="this.$store.state.isLogin" class="nav-link" to="/member/login" @click="fnLogout">로그아웃
+            </router-link>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#"></a>
@@ -28,17 +31,14 @@
 
 <script>
 import Cookies from 'js-cookie';
+
 export default {
   name: 'Header',
   data() {
     return {
-      userId: null
+      userId: null,
+      cnt: 0,
     }
-  },
-  mounted() {
-    },
-
-  updated() {
   },
 
   methods: {
@@ -51,6 +51,25 @@ export default {
       this.$store.state.user = null;
       this.$store.state.role = null;
     },
+
+    fnReset() {
+      // Object.assign(this.$data);
+      // this.cnt = this.cnt+1;
+      // console.log(this.cnt);
+      // this.$router.push({
+      //   path: '/board',
+      //   query: {
+      //     page:1,
+      //     keyword: ''
+      //   }
+      // });
+      // this.$route.param =
+      // this.$router.push({name: 'BoardList', params:{page:1, keyword:''}
+      // this.$router.push({name: 'BoardList', query:{page:1, keyword:''}
+      this.$router.push({name: 'BoardList'});
+        // , query:{page:1, keyword:''}
+    }
+
   }
 }
 

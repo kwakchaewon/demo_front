@@ -3,7 +3,7 @@
     <section class="jumbotron text-center">
       <div>
         <div>
-          <h2>Please Log In</h2>
+          <h2>로그인</h2>
           <div id="loginForm">
             <form @submit.prevent="fnLogin">
               <p>
@@ -68,6 +68,7 @@ export default {
         if (err.message.indexOf('Network Error') > -1) {
           alert('서버에 접속할 수 없습니다. 상태를 확인해주세요.');
         } else {
+          console.log(err.message)
           alert('로그인 정보를 확인할 수 없습니다.');
         }
       }
