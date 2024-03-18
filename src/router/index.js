@@ -9,8 +9,9 @@ import store from '@/vuex/store'
 import SignUp from "@/views/common/SignUp.vue";
 import Admin from "@/views/Admin/Admin.vue";
 import Cookies from 'js-cookie';
-import AdminMember from "@/components/AdminMember.vue";
-import AdminBoard from "@/components/AdminBoard.vue";
+import AdminMember from "@/components/MemberManage.vue";
+import AdminBoard from "@/components/BoardManage.vue";
+import AdminManage from "@/components/AdminManage.vue";
 import axios from "axios";
 
 const requireAuth = () => (from, to, next) => {
@@ -94,7 +95,7 @@ const routes = [
     {
         path: '/admin',
         name: 'admin',
-        component: Admin, AdminMember, AdminBoard,
+        component: Admin, AdminMember, AdminBoard, AdminManage,
         beforeEnter: requireAuth()
     }
 ]
