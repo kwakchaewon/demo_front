@@ -1,6 +1,6 @@
 <template>
   <br>
-  <h2 class="border-bottom py-2">사용자 권한 관리</h2>
+  <h2 class="border-bottom py-2">권한 관리</h2>
   <table class="table">
     <thead class="table-dark">
     <tr class="text-center">
@@ -23,7 +23,7 @@
         </select>
       </td>
       <td>
-        <button class="delete-btn" @click="fnAuthCommit(`${row.id}`)">반영</button>
+        <button class="delete-btn" @click="fnAuthCommit(`${row.id}`,`${row.auth}`)">반영</button>
       </td>
     </tr>
     </tbody>
@@ -59,20 +59,6 @@ export default {
   name: 'AdminManage',
   data() {
     return {
-      // rowData:[{val:"1"},{val:"2"}],
-      // selected : '',
-      // selectItems : [
-      //   {val:"1", lbl:"Val1"},
-      //   {val:"2", lbl:"Val2"},
-      //   {val:"3", lbl:"Val3"}
-      // ],
-      //
-      // selectAuth:[
-      //   {val:"1", lbl:"Val1"},
-      //   {val:"2", lbl:"Val2"},
-      //   {val:"3", lbl:"Val3"}
-      // ],
-
       list: {},
       no: '', //게시판 숫자처리
       paging: {
@@ -145,9 +131,20 @@ export default {
       this.fnGetAdminList();
     },
 
-    // 사용자 삭제
-    fnAuthCommit() {
-
+    // 권한 변경
+    fnAuthCommit(id, auth) {
+      if(!confirm("권한을 수정하시겠습니까?")) return
+      const data = {
+        auth: auth
+      }
+      console.log(1)
+      this.$axios.put(this.$serverUrl + "/member/"+ id + "/auth", data).then(() => {
+        alert("권한 수정에 성공했습니다.")
+        this.fnGetAdminList();
+      }).catch((err)=>{
+        console.log(err.messasge);
+        alert("권한 수정 실패");
+      })
     },
   }
 }
