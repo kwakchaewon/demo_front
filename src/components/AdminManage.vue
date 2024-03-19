@@ -1,13 +1,154 @@
 <template>
   <br>
-  <h2 class="border-bottom py-2">관리자 권한 관리</h2>
+  <h2 class="border-bottom py-2">사용자 권한 관리</h2>
+  <table class="table">
+    <thead class="table-dark">
+    <tr class="text-center">
+      <th>번호</th>
+      <th style="width:30%">아이디</th>
+      <th>이메일</th>
+      <th>권한</th>
+      <th>관리</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr v-for="(row, id) in list" :key="id" class="text-center">
+      <td>{{ paging.totalListCnt - (paging.page * paging.pageSize) - id + 10 }}</td>
+      <td>{{ row.userId }}</td>
+      <td>{{ row.email }}</td>
+      <td>
+        <select v-model="row.auth">
+          <option value="ROLE_ADMIN" :selected="row.auth === 'ROLE_ADMIN'">관리자</option>
+          <option value="ROLE_USER" :selected="row.auth === 'ROLE_USER'">일반 사용자</option>
+        </select>
+      </td>
+      <td>
+        <button class="delete-btn" @click="fnAuthCommit(`${row.id}`)">반영</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <div class="pagination w3-bar w3-padding-16 w3-small" v-if="paging.totalListCnt > 0 && list.length > 0"
+       style="justify-content: center">
+                  <span class="pg">
+                  <a href="javascript:;" @click="fnPage(1)" class="first w3-button w3-border">처음</a>
+                  <a href="javascript:;" v-if="paging.startPage > 10" @click="fnPage(`${paging.startPage-1}`)"
+                     class="prev w3-button w3-border">이전</a>
+                  <template v-for=" (n,index) in paginavigation()">
+                      <template v-if="paging.page==n">
+                          <strong class="w3-button w3-border w3-green" :key="index">{{ n }}</strong>
+                      </template>
+                      <template v-else>
+                          <a class="w3-button w3-border" href="javascript:;" @click="fnPage(`${n}`)" :key="index">
+                            {{ n }}
+                          </a>
+                      </template>
+                  </template>
+                  <a v-if="paging.totalPageCnt > paging.endPage"
+                     @click="fnPage(`${paging.endPage+1}`)" class="next w3-button w3-border">다음</a>
+                  <a @click="fnPage(`${paging.totalPageCnt}`)" class="last w3-button w3-border">끝</a>
+                  </span>
+  </div>
+  <br>
+
+
 </template>
 
 <script>
 export default {
   name: 'AdminManage',
-  data(){
+  data() {
+    return {
+      // rowData:[{val:"1"},{val:"2"}],
+      // selected : '',
+      // selectItems : [
+      //   {val:"1", lbl:"Val1"},
+      //   {val:"2", lbl:"Val2"},
+      //   {val:"3", lbl:"Val3"}
+      // ],
+      //
+      // selectAuth:[
+      //   {val:"1", lbl:"Val1"},
+      //   {val:"2", lbl:"Val2"},
+      //   {val:"3", lbl:"Val3"}
+      // ],
 
+      list: {},
+      no: '', //게시판 숫자처리
+      paging: {
+        block: 0,
+        endPage: 0,
+        nextBlock: 0,
+        page: 0,
+        pageSize: 0,
+        prevBlock: 0,
+        startIndex: 0,
+        startPage: 0,
+        totalBlockCnt: 0,
+        totalListCnt: 0,
+        totalPageCnt: 0,
+      }, //페이징 데이터
+      page: this.$route.query.page ? this.$route.query.page : 1,
+      size: this.$route.query.size ? this.$route.query.size : 10,
+      // page: this.$route.params.page ? this.$route.params.page : 1,
+
+      paginavigation: function () { //페이징 처리 for문 커스텀
+        const pageNumber = [];
+        const startPage = this.paging.startPage;
+        const endPage = this.paging.endPage;
+        for (let i = startPage; i <= endPage; i++) pageNumber.push(i);
+        return pageNumber;
+      }
+    }
+  },
+
+  mounted() {
+    this.fnGetAdminList();
+  },
+
+  methods: {
+    // 사용자 + 관리자 조회
+    fnGetAdminList() {
+      this.requestBody = { // 데이터 전송
+        page: this.page,
+        size: this.size
+      }
+      console.log(this.$serverUrl);
+
+      this.$axios.get(this.$serverUrl + "/admin/auth", {
+        params: this.requestBody,
+        headers: {}
+      }).then((res) => {
+        this.list = res.data.members.content;
+        this.paging = res.data.pagination;
+        this.no = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize);
+      }).catch((err) => {
+        if (err.response.data.status && err.response.data.message) {
+          alert(err.response.data.message);
+          console.log(err.response.data.message);
+        } else {
+          alert('게시글 리스트를 불러올 수 없습니다.');
+        }
+      })
+    },
+
+    // fnSelectedBinding(){
+    //
+    // },
+
+    // 페이지 이동
+    fnPage(n) {
+      if (this.page !== n) {
+        this.page = n;
+      }
+
+      this.fnGetAdminList();
+    },
+
+    // 사용자 삭제
+    fnAuthCommit() {
+
+    },
   }
 }
 
