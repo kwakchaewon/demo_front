@@ -1,24 +1,29 @@
-<template>
-  <h2 class="border-bottom py-2">게시글 관리</h2>
+<template v-if="this.$store.state.role === 'ROLE_SUPERVISOR'">
+  <br>
+  <h2 class="border-bottom py-2">권한 관리</h2>
   <table class="table">
-    <span v-if="!paging.totalListCnt || list.length === 0">게시글이 존재하지 않습니다.</span>
     <thead class="table-dark">
     <tr class="text-center">
       <th>번호</th>
-      <th style="width:50%">제목</th>
-      <th>작성자</th>
-      <th>작성일</th>
+      <th style="width:30%">아이디</th>
+      <th>이메일</th>
+      <th>권한</th>
       <th>관리</th>
     </tr>
     </thead>
     <tbody>
-    <tr class="text-center" v-for="(row, id) in list" :key="id">
+    <tr v-for="(row, id) in list" :key="id" class="text-center">
       <td>{{ paging.totalListCnt - (paging.page * paging.pageSize) - id + 10 }}</td>
-      <td><a v-on:click="fnView(`${row.id}`)">{{ row.title }}</a></td>
-      <td>{{ row.memberId }}</td>
-      <td>{{ row.createdAt }}</td>
+      <td>{{ row.userId }}</td>
+      <td>{{ row.email }}</td>
       <td>
-        <button class="delete-btn" @click="fnDeleteBoard(`${row.id}`)">삭제</button>
+        <select v-model="row.auth">
+          <option value="ROLE_ADMIN" :selected="row.auth === 'ROLE_ADMIN'">관리자</option>
+          <option value="ROLE_USER" :selected="row.auth === 'ROLE_USER'">일반 사용자</option>
+        </select>
+      </td>
+      <td>
+        <button class="delete-btn" @click="fnAuthCommit(`${row.id}`,`${row.auth}`)">반영</button>
       </td>
     </tr>
     </tbody>
@@ -45,14 +50,16 @@
                   </span>
   </div>
   <br>
+
+
 </template>
+
 <script>
 export default {
-  name: 'AdminBoard',
-
+  name: 'AdminManage',
   data() {
     return {
-      list: {}, //리스트 데이터
+      list: {},
       no: '', //게시판 숫자처리
       paging: {
         block: 0,
@@ -70,7 +77,6 @@ export default {
       page: this.$route.query.page ? this.$route.query.page : 1,
       size: this.$route.query.size ? this.$route.query.size : 10,
       // page: this.$route.params.page ? this.$route.params.page : 1,
-      keyword: this.$route.query.keyword ? this.$route.query.keyword : '',
 
       paginavigation: function () { //페이징 처리 for문 커스텀
         const pageNumber = [];
@@ -83,24 +89,24 @@ export default {
   },
 
   mounted() {
-    this.fnGetList();
+    this.fnGetAdminList();
   },
 
   methods: {
-    // 게시글 조회
-    fnGetList() {
-      console.log(this.page)
+    // 사용자 + 관리자 조회
+    fnGetAdminList() {
+      // console.log(this.store.state)
       this.requestBody = { // 데이터 전송
-        keyword: this.keyword,
         page: this.page,
         size: this.size
       }
-      console.log(this.requestBody);
-      this.$axios.get(this.$serverUrl + "/board", {
+      console.log(this.$serverUrl);
+
+      this.$axios.get(this.$serverUrl + "/admin/auth", {
         params: this.requestBody,
         headers: {}
       }).then((res) => {
-        this.list = res.data.boards.content;
+        this.list = res.data.members.content;
         this.paging = res.data.pagination;
         this.no = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize);
       }).catch((err) => {
@@ -113,30 +119,35 @@ export default {
       })
     },
 
+    // 페이지 이동
     fnPage(n) {
       if (this.page !== n) {
         this.page = n;
       }
 
-      this.fnGetList();
+      this.fnGetAdminList();
     },
 
-    // 사용자 삭제
-    fnDeleteBoard(id) {
-      if (!confirm("게시글을 삭제하시겠습니까?")) return
-      this.$axios.delete(this.$serverUrl + '/board/' + id)
-          .then(() => {
-            alert("게시글이 삭제됐습니다.")
-            this.fnGetList();
-          }).catch(() => {
-        alert("게시글 삭제에 실패했습니다.");
-        console("사용자 삭제에 실패했습니다.");
+    // 권한 변경
+    fnAuthCommit(id, auth) {
+      if(!confirm("권한을 수정하시겠습니까?")) return
+      const data = {
+        auth: auth
+      }
+      console.log(1)
+      this.$axios.put(this.$serverUrl + "/member/"+ id + "/auth", data).then(() => {
+        alert("권한 수정에 성공했습니다.")
+        this.fnGetAdminList();
+      }).catch((err)=>{
+        console.log(err.messasge);
+        alert("권한 수정 실패");
       })
     },
-
   }
 }
+
 </script>
+
 <style scoped>
 
 </style>
