@@ -9,18 +9,21 @@ import store from '@/vuex/store'
 import SignUp from "@/views/common/SignUp.vue";
 import Admin from "@/views/Admin/Admin.vue";
 import Cookies from 'js-cookie';
-import AdminMember from "@/components/MemberManage.vue";
-import AdminBoard from "@/components/BoardManage.vue";
-import AdminManage from "@/components/AdminManage.vue";
+import AdminMember from "@/components/Admin/MemberManage.vue";
+import AdminBoard from "@/components/Admin/BoardManage.vue";
+import AdminManage from "@/components/Admin/AdminManage.vue";
 import axios from "axios";
 
+/**
+ * 컴포넌트 진입 전 실행
+ * 토큰 유무에 따라 store 변수 관리, 로그인 상태 관리
+ */
 const requireAuth = () => (from, to, next) => {
     const serverUrl = '//localhost:8080';
     const ACCESS_TOKEN = Cookies.get('ACCESS_TOKEN');
     const REFRESH_TOKEN = Cookies.get('REFRESH_TOKEN');
 
     if (ACCESS_TOKEN) {
-        console.log("1");
         store.state.isLogin = true;
         return next();
     } else {
