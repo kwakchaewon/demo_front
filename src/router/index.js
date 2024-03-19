@@ -54,6 +54,18 @@ const requireAuth = () => (from, to, next) => {
     }
 }
 
+const requireAdmin  = () => (from, to, next) => {
+    console.log('12');
+
+    if(store.state.role === "ROLE_ADMIN" || store.state.role === "ROLE_SUPERVISOR"){
+        return next();
+    } else {
+        alert("접근 권한이 없습니다.");
+        next('/board');
+    }
+}
+
+
 const routes = [
     {
         path: '/board',
@@ -99,7 +111,7 @@ const routes = [
         path: '/admin',
         name: 'admin',
         component: Admin, AdminMember, AdminBoard, AdminManage,
-        beforeEnter: requireAuth()
+        beforeEnter: requireAdmin()
     }
 ]
 
