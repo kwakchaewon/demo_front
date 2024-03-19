@@ -118,10 +118,6 @@ export default {
       })
     },
 
-    // fnSelectedBinding(){
-    //
-    // },
-
     // 페이지 이동
     fnPage(n) {
       if (this.page !== n) {
