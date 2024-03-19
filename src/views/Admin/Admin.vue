@@ -13,9 +13,9 @@
 </template>
 
 <script>
-import AdminMember from "@/components/MemberManage.vue";
-import AdminBoard from "@/components/BoardManage.vue";
-import AdminManage from "@/components/AdminManage.vue";
+import AdminMember from "@/components/Admin/MemberManage.vue";
+import AdminBoard from "@/components/Admin/BoardManage.vue";
+import AdminManage from "@/components/Admin/AdminManage.vue";
 
 export default {
   components: {
