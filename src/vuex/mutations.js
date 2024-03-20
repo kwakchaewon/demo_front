@@ -1,4 +1,7 @@
-// src/vuex/mutation.js
+/**
+ * store 상태 변경 메서드
+ */
+
 import * as types from './mutation_types'
 
 export default {

@@ -4,6 +4,10 @@ import getters from "./getters"
 import mutations from "./mutations"
 import actions from "./actions";
 
+/**
+ * store.js: vuex 로 변수 및 데이터 관리
+ */
+
 const store = createStore({
   state: {
     user: null,
