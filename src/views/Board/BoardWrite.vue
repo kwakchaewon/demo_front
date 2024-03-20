@@ -1,10 +1,6 @@
 <template>
   <div class="board-detail">
     <form @submit.prevent="fnSave" enctype="multipart/form-data">
-      <div class="common-buttons">
-        <button type="button" class="w3-button w3-round w3-blue-gray">저장</button>&nbsp;
-        <button type="button" class="w3-button w3-round w3-gray">목록</button>
-      </div>
       <div class="board-contents">
         <input type="text" id="title" v-model="title" name='title' class="w3-input w3-border" placeholder="제목을 입력해주세요.">
       </div>
@@ -17,7 +13,7 @@
       <div class="board-contents">
         <label for="file">파일:</label>
         <input ref="fileInput" type="file" id="fileInput" @change="handleFileChange">
-        <button type="button" @click="resetFileInput">삭제</button>
+        <button type="button" v-if="fileInput" @click="resetFileInput">삭제</button>
       </div>
       <div class="common-buttons">
         <button type="submit" class="w3-button w3-round w3-blue-gray">저장</button>&nbsp;
