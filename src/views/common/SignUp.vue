@@ -19,7 +19,7 @@
                 <input class="w3-input" name="email" placeholder="이메일을 입력하세요." id="email" v-model="email"><br>
               </p>
 
-              <p style="text-align: left">아이디 조건: 영문 또는 숫자</p>
+              <p style="text-align: left">아이디 조건: 4~12자 영문 또는 숫자</p>
               <p style="text-align: left">비밀번호 조건: 8글자 이상 영문, 숫자, 특수문자 조합 비밀번호</p>
               <br>
               <p>
@@ -100,10 +100,14 @@ export default {
               alert('회원가입이 완료되었습니다. 로그인 화면으로 이동합니다.');
               this.$router.push('/member/login');
             }).catch((err) => {
+
+          // 아이디, 이메일 중복검사 예외
           if (err.response.data.status === '400' && err.response.data.message) {
             console.log(err.response.data.message);
             alert(err.response.data.message);
-          } else {
+          }
+          // 기타
+          else {
             console.log(err.message);
             alert("회원가입에 실패했습니다.");
           }
