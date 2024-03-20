@@ -3,6 +3,10 @@ import axios from 'axios'
 import Cookies from 'js-cookie';
 import store from '@/vuex/store'
 
+/**
+ * 로그인 api 호출
+ */
+
 const getUserInfo = (userId, userPw) => {
     const reqData = {
         'userId': userId,

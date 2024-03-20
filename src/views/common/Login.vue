@@ -40,7 +40,8 @@ export default {
     this.removeCookies();
   },
   methods: {
-    ...mapActions(['login']),
+    ...mapActions(['login']), // actions.js 에서 선언한 login 함수 가져와 사용
+
     removeCookies(){
       Cookies.remove('ACCESS_TOKEN');
       Cookies.remove('REFRESH_TOKEN');
@@ -67,8 +68,11 @@ export default {
       } catch (err) {
         if (err.message.indexOf('Network Error') > -1) {
           alert('서버에 접속할 수 없습니다. 상태를 확인해주세요.');
-        } else {
-          console.log(err.message)
+          // console.log(err);
+        }
+
+        else {
+          console.log(err)
           alert('로그인 정보를 확인할 수 없습니다.');
         }
       }
