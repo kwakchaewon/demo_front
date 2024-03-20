@@ -8,6 +8,10 @@
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 
+/**
+ * app.vue: vue 어플리케이션의 루트 컴포넌트.
+ */
+
 export default {
   name: 'App',
   components: {
