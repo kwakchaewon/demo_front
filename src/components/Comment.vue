@@ -189,10 +189,10 @@ export default {
           alert(err.response.data.message);
         }
 
-        // NO_AUTHORIZATION: 권한 검증 실패시, alert 반환
-        else if(err.response.data.status === "403" && err.response.data.message){
-          console.log(err.response.data.message);
-          alert(err.response.data.message);
+        // 403 권한없음 예외 처리
+        else if(err.response.data.status === 403){
+          alert("권한이 없습니다.");
+          console.log("권한이 없습니다.");
         }
 
         // COMMENT_NOTFOUND: 댓글 부재시, alert 반환 및 댓글 리스트 reload
