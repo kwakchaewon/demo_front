@@ -58,7 +58,7 @@
 
 <script>
 export default {
-  name: 'AdminManage',
+  name: 'SuperManage',
   data() {
     return {
       list: {},
