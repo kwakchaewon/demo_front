@@ -38,11 +38,17 @@ export default {
             this.contents = response.data.contents;
           })
           .catch(err => {
+            if (err.response.data.status === 403) {
+              console.log(err.message);
+              alert("수정 권한이 없습니다. 게시글 목록으로 이동합니다.")
+              this.$router.push('/board');
+            }
 
-            // COMMENT_NOTFOUND: 댓글 부재시, alert 반환
-            if (err.response.data.status === "404" && err.response.data.message) {
+            // COMMENT_NOTFOUND: 댓글 부재시, alert 반환 및 /board 로 이동
+            else if (err.response.data.status === "404" && err.response.data.message) {
               console.log(err.response.data.message);
               alert(err.response.data.message);
+              this.$router.push('/board');
             }
 
             // 그 외 Custom Exception 발생시 alert 반환
