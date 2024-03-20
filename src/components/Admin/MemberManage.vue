@@ -1,6 +1,5 @@
 <template>
   <div v-if="this.$store.state.role === 'ROLE_SUPERVISOR' || this.$store.state.role === 'ROLE_ADMIN'">
-    <br>
     <h2 class="border-bottom py-2">회원 관리</h2>
     <table class="table">
       <thead class="table-dark">

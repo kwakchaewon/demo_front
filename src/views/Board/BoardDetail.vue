@@ -1,10 +1,5 @@
 <template>
   <div class="container my-3">
-    <div class="common-buttons">
-      <button type="button" class="w3-button w3-round w3-blue-gray"></button>&nbsp;
-      <button type="button" class="w3-button w3-round w3-gray"></button>
-    </div>
-
     <h2 class="border-bottom py-2">{{ title }}</h2>
     <div class="card my-3">
       <div class="card-body">
