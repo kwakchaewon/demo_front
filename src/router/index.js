@@ -40,9 +40,10 @@ const requireAuth = () => (from, to, next) => {
             }).catch(() => {
                 alert("액세스 토큰 로그인 실패");
                 store.state.isLogin = false;
-                store.state.user = null;
-                store.state.role =null;
+                store.state.user = "";
+                store.state.role = "";
                 next('/member/login');
+
             })
         }
 
@@ -54,11 +55,18 @@ const requireAuth = () => (from, to, next) => {
     }
 }
 
-const requireAdmin  = () => (from, to, next) => {
-    console.log('12');
+/**
+ * ADMIN 페이지 검증 로직
+ */
+const requireAdmin = () => (from, to, next) => {
 
-    if(store.state.role === "ROLE_ADMIN" || store.state.role === "ROLE_SUPERVISOR"){
-        return next();
+    if (store.state.isLogin === true) {
+        if (store.state.role === "ROLE_ADMIN" || store.state.role === "ROLE_SUPERVISOR") {
+            return next();
+        } else {
+            alert("접근 권한이 없습니다.");
+            next('/board');
+        }
     } else {
         alert("접근 권한이 없습니다.");
         next('/board');
