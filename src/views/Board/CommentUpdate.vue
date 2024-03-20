@@ -83,10 +83,10 @@ export default {
             alert(err.response.data.message);
           }
 
-          // NO_AUTHORIZATION: 권한 검증 실패시, alert 반환
-          else if (err.response.data.status === "403" && err.response.data.message) {
-            console.log(err.response.data.message);
-            alert(err.response.data.message);
+          // 403 권한없음 예외 처리
+          else if (err.response.data.status === 403) {
+            console.log(err.message);
+            alert("수정 권한이 없습니다.")
           }
 
           // 그 외 Custom Exception 발생시 alert 반환
