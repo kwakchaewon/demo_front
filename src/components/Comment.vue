@@ -147,10 +147,10 @@ export default {
               path: '/comment/' + id + '/update',
             });
           }).catch((err) => {
-        // NO_AUTHORIZATION: 권한 검증 실패시, alert 반환
-        if (err.response.data.status === "403" && err.response.data.message) {
-          console.log(err.response.data.message);
-          alert(err.response.data.message);
+
+        if (err.response.data.status === 403) {
+          console.log(err.message);
+          alert("수정 권한이 없습니다.");
         }
 
         // COMMENT_NOTFOUND: 댓글 부재시, 댓글 리스트 리로딩
