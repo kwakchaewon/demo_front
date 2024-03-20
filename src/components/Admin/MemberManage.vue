@@ -156,12 +156,9 @@ export default {
 
         // 그외
         else {
-          console.log(err);
-          alert('알 수 없는 오류가 발생했습니다.');
+          console.log(err.message);
+          alert("회원 삭제에 실패했습니다.");
         }
-
-        alert("회원 삭제에 실패했습니다.");
-        console("회원 삭제에 실패했습니다.");
       })
     },
   }
