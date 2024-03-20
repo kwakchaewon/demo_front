@@ -1,35 +1,36 @@
-<template v-if="this.$store.state.role === 'ROLE_SUPERVISOR'">
-  <br>
-  <h2 class="border-bottom py-2">권한 관리</h2>
-  <table class="table">
-    <thead class="table-dark">
-    <tr class="text-center">
-      <th>번호</th>
-      <th style="width:30%">아이디</th>
-      <th>이메일</th>
-      <th>권한</th>
-      <th>관리</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr v-for="(row, id) in list" :key="id" class="text-center">
-      <td>{{ paging.totalListCnt - (paging.page * paging.pageSize) - id + 10 }}</td>
-      <td>{{ row.userId }}</td>
-      <td>{{ row.email }}</td>
-      <td>
-        <select v-model="row.auth">
-          <option value="ROLE_ADMIN" :selected="row.auth === 'ROLE_ADMIN'">관리자</option>
-          <option value="ROLE_USER" :selected="row.auth === 'ROLE_USER'">일반 사용자</option>
-        </select>
-      </td>
-      <td>
-        <button class="delete-btn" @click="fnAuthCommit(`${row.id}`,`${row.auth}`)">반영</button>
-      </td>
-    </tr>
-    </tbody>
-  </table>
-  <div class="pagination w3-bar w3-padding-16 w3-small" v-if="paging.totalListCnt > 0 && list.length > 0"
-       style="justify-content: center">
+<template>
+  <div v-if="this.$store.state.role === 'ROLE_SUPERVISOR'">
+    <br>
+    <h2 class="border-bottom py-2">권한 관리</h2>
+    <table class="table">
+      <thead class="table-dark">
+      <tr class="text-center">
+        <th>번호</th>
+        <th style="width:30%">아이디</th>
+        <th>이메일</th>
+        <th>권한</th>
+        <th>관리</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr v-for="(row, id) in list" :key="id" class="text-center">
+        <td>{{ paging.totalListCnt - (paging.page * paging.pageSize) - id + 10 }}</td>
+        <td>{{ row.userId }}</td>
+        <td>{{ row.email }}</td>
+        <td>
+          <select v-model="row.auth">
+            <option value="ROLE_ADMIN" :selected="row.auth === 'ROLE_ADMIN'">관리자</option>
+            <option value="ROLE_USER" :selected="row.auth === 'ROLE_USER'">일반 사용자</option>
+          </select>
+        </td>
+        <td>
+          <button class="delete-btn" @click="fnAuthCommit(`${row.id}`,`${row.auth}`)">반영</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="pagination w3-bar w3-padding-16 w3-small" v-if="paging.totalListCnt > 0 && list.length > 0"
+         style="justify-content: center">
                   <span class="pg">
                   <a href="javascript:;" @click="fnPage(1)" class="first w3-button w3-border">처음</a>
                   <a href="javascript:;" v-if="paging.startPage > 10" @click="fnPage(`${paging.startPage-1}`)"
@@ -48,10 +49,8 @@
                      @click="fnPage(`${paging.endPage+1}`)" class="next w3-button w3-border">다음</a>
                   <a @click="fnPage(`${paging.totalPageCnt}`)" class="last w3-button w3-border">끝</a>
                   </span>
+    </div>
   </div>
-  <br>
-
-
 </template>
 
 <script>
@@ -95,12 +94,10 @@ export default {
   methods: {
     // 사용자 + 관리자 조회
     fnGetAdminList() {
-      // console.log(this.store.state)
       this.requestBody = { // 데이터 전송
         page: this.page,
         size: this.size
       }
-      console.log(this.$serverUrl);
 
       this.$axios.get(this.$serverUrl + "/admin/auth", {
         params: this.requestBody,
@@ -110,11 +107,18 @@ export default {
         this.paging = res.data.pagination;
         this.no = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize);
       }).catch((err) => {
-        if (err.response.data.status && err.response.data.message) {
+
+        // 403 권한없음 예외 처리
+        if (err.response.data.status === 403){
+          alert("권한이 없습니다.");
+          console.log("권한이 없습니다.");
+        }
+
+        else if (err.response.data.status && err.response.data.message) {
           alert(err.response.data.message);
           console.log(err.response.data.message);
         } else {
-          alert('게시글 리스트를 불러올 수 없습니다.');
+          alert('권한 리스트를 불러올 수 없습니다.');
         }
       })
     },
@@ -130,17 +134,27 @@ export default {
 
     // 권한 변경
     fnAuthCommit(id, auth) {
-      if(!confirm("권한을 수정하시겠습니까?")) return
+      if (!confirm("권한을 수정하시겠습니까?")) return
       const data = {
         auth: auth
       }
-      console.log(1)
-      this.$axios.put(this.$serverUrl + "/member/"+ id + "/auth", data).then(() => {
+      this.$axios.put(this.$serverUrl + "/member/" + id + "/auth", data).then(() => {
         alert("권한 수정에 성공했습니다.")
         this.fnGetAdminList();
-      }).catch((err)=>{
-        console.log(err.messasge);
-        alert("권한 수정 실패");
+      }).catch((err) => {
+
+        // 403 권한없음 예외 처리
+        if (err.response.data.status === 403){
+          console.log("권한이 없습니다. 로그인 페이지로 이동합니다.");
+          alert("권한이 없습니다. 로그인 페이지로 이동합니다.")
+          this.$router.push('/member/login');
+        }
+
+        // 그 외
+        else{
+          console.log(err.messasge);
+          alert("권한 수정 실패");
+        }
       })
     },
   }
@@ -149,5 +163,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>
