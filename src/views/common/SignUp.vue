@@ -6,7 +6,7 @@
           <h2>회원가입</h2>
           <div id="loginForm">
             <form @submit.prevent="submitForm">
-                <input class="w3-input" name="userId" placeholder="ID 를 입력하세요." v-model="userId"><br>
+              <input class="w3-input" name="userId" placeholder="ID 를 입력하세요." v-model="userId"><br>
               <p>
                 <input name="userPw" class="w3-input" placeholder="비밀번호를 입력하세요." id="userPw" v-model="userPw"
                        type="password">
@@ -53,7 +53,7 @@ export default {
   },
 
   methods: {
-    removeCookies(){
+    removeCookies() {
       Cookies.remove('ACCESS_TOKEN');
       Cookies.remove('REFRESH_TOKEN');
     },
@@ -74,28 +74,24 @@ export default {
       const idCheckPattern = /^[0-9a-zA-Z]{4,12}$/; // 아이디 유효성 검사: 영어 또는 숫자만 허용
       const passwordCheck = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/; // 비밀번호 유효성 검사: 8글자 이상 영문, 숫자, 특수문자 사용 비밀번호
 
-      if(this.userId === ''){
+      if (this.userId === '') {
         alert('ID를 입력하세요.');
         return
-      } else if(!idCheckPattern.test(this.userId)){
+      } else if (!idCheckPattern.test(this.userId)) {
         alert('올바르지 못한 ID 입니다. \n4~12자의 영문 또는 숫자로 생성 가능합니다.');
         return;
-      }
-      else if (this.userPw === ''){
+      } else if (this.userPw === '') {
         alert('비밀번호를 입력하세요.');
         return;
-      }
-      else if(this.userPwCk === ''){
+      } else if (this.userPwCk === '') {
         alert('비밀번호 확인을 입력하세요.');
         return;
-      }
-      else if(!passwordCheck.test(this.userPw)){
+      } else if (!passwordCheck.test(this.userPw)) {
         alert('비밀번호가 올바르지 않습니다. \n8자 이상 영문,숫자,특수문자 조합으로 생성하세요.')
-      }
-        else if (this.userPwCk !== this.userPw){
+      } else if (this.userPwCk !== this.userPw) {
         alert('비밀번호와 비밀번호 확인이 다릅니다.');
         return
-      } else if(!this.email || !emailPattern.test(this.email)) {
+      } else if (!this.email || !emailPattern.test(this.email)) {
         alert('이메일 주소가 올바르지 않습니다.');
         return
       } else {
@@ -107,9 +103,9 @@ export default {
           if (err.response.data.status === '400' && err.response.data.message) {
             console.log(err.response.data.message);
             alert(err.response.data.message);
-          } else{
-            console.log("알 수 없는 오류가 발생했습니다.");
-            alert("알 수 없는 오류가 발생했습니다.");
+          } else {
+            console.log(err.message);
+            alert("회원가입에 실패했습니다.");
           }
         })
       }
@@ -118,8 +114,8 @@ export default {
 }
 </script>
 <style scoped>
-#errorMessages{
-  text-align:left;
+#errorMessages {
+  text-align: left;
   //width: 140%;
   //align-content: center;
   margin: 0 auto;
