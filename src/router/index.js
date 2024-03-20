@@ -9,9 +9,9 @@ import store from '@/vuex/store'
 import SignUp from "@/views/common/SignUp.vue";
 import Admin from "@/views/Admin/Admin.vue";
 import Cookies from 'js-cookie';
-import AdminMember from "@/components/Admin/MemberManage.vue";
+import SuperManage from "@/components/Admin/SuperManage.vue";
 import AdminBoard from "@/components/Admin/BoardManage.vue";
-import AdminManage from "@/components/Admin/AdminManage.vue";
+import AdminManage from "@/components/Admin/SuperManage.vue";
 import axios from "axios";
 
 /**
@@ -42,15 +42,14 @@ const requireAuth = () => (from, to, next) => {
                 store.state.isLogin = false;
                 store.state.user = "";
                 store.state.role = "";
-                next('/member/login');
-
+                return next('/member/login');
             })
         }
 
         // access, refresh 둘 다 없을 경우
         else {
             alert("로그인 세션이 만료됐습니다.");
-            next('/member/login'); // isLogin === false면 다시 로그인 화면으로 이동
+            return next('/member/login'); // isLogin === false면 다시 로그인 화면으로 이동
         }
     }
 }
@@ -65,14 +64,14 @@ const requireAdmin = () => (from, to, next) => {
             return next();
         } else {
             alert("접근 권한이 없습니다.");
-            next('/board');
+            return next('/board');
         }
     } else {
+        console.log(store.state);
         alert("접근 권한이 없습니다.");
-        next('/board');
+        return next('/board');
     }
 }
-
 
 const routes = [
     {
@@ -118,14 +117,30 @@ const routes = [
     {
         path: '/admin',
         name: 'admin',
-        component: Admin, AdminMember, AdminBoard, AdminManage,
+        component: Admin, SuperManage, AdminBoard, AdminManage,
         beforeEnter: requireAdmin()
-    }
+    },
+    // {
+    //     path: '/',
+    //     name: 'BoardList',
+    //     component: BoardList,
+    //     beforeEnter: requireAuth()
+    // },
 ]
 
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
     routes
 })
+
+// router.beforeEach((to, from, next) => {
+//     // 요청된 URL이 존재하지 않을 때
+//     if (to.matched.length === 0) {
+//         alert("URL을 찾을 수 없습니다.");
+//         next.('/board'); // /board로 리디렉션합니다.
+//     } else {
+//         next(); // 계속 진행합니다.
+//     }
+// });
 
 export default router

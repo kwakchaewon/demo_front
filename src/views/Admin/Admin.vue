@@ -9,9 +9,9 @@
 </template>
 
 <script>
-import AdminMember from "@/components/Admin/MemberManage.vue";
+import AdminMember from "@/components/Admin/AdminManage.vue";
 import AdminBoard from "@/components/Admin/BoardManage.vue";
-import AdminManage from "@/components/Admin/AdminManage.vue";
+import AdminManage from "@/components/Admin/SuperManage.vue";
 
 export default {
   components: {
