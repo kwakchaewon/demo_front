@@ -1,30 +1,31 @@
 <template>
-  <h2 class="border-bottom py-2">게시글 관리</h2>
-  <table class="table">
-    <span v-if="!paging.totalListCnt || list.length === 0">게시글이 존재하지 않습니다.</span>
-    <thead class="table-dark">
-    <tr class="text-center">
-      <th>번호</th>
-      <th style="width:50%">제목</th>
-      <th>작성자</th>
-      <th>작성일</th>
-      <th>관리</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr class="text-center" v-for="(row, id) in list" :key="id">
-      <td>{{ paging.totalListCnt - (paging.page * paging.pageSize) - id + 10 }}</td>
-      <td><a>{{ row.title }}</a></td>
-      <td>{{ row.memberId }}</td>
-      <td>{{ row.createdAt }}</td>
-      <td>
-        <button class="delete-btn" @click="fnDeleteBoard(`${row.id}`)">삭제</button>
-      </td>
-    </tr>
-    </tbody>
-  </table>
-  <div class="pagination w3-bar w3-padding-16 w3-small" v-if="paging.totalListCnt > 0 && list.length > 0"
-       style="justify-content: center">
+  <div v-if="this.$store.state.role === 'ROLE_SUPERVISOR' || this.$store.state.role === 'ROLE_ADMIN'">
+    <h2 class="border-bottom py-2">게시글 관리</h2>
+    <table class="table">
+      <span v-if="!paging.totalListCnt || list.length === 0">게시글이 존재하지 않습니다.</span>
+      <thead class="table-dark">
+      <tr class="text-center">
+        <th>번호</th>
+        <th style="width:50%">제목</th>
+        <th>작성자</th>
+        <th>작성일</th>
+        <th>관리</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr class="text-center" v-for="(row, id) in list" :key="id">
+        <td>{{ paging.totalListCnt - (paging.page * paging.pageSize) - id + 10 }}</td>
+        <td><a>{{ row.title }}</a></td>
+        <td>{{ row.memberId }}</td>
+        <td>{{ row.createdAt }}</td>
+        <td>
+          <button class="delete-btn" @click="fnDeleteBoard(`${row.id}`)">삭제</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="pagination w3-bar w3-padding-16 w3-small" v-if="paging.totalListCnt > 0 && list.length > 0"
+         style="justify-content: center">
                   <span class="pg">
                   <a href="javascript:;" @click="fnPage(1)" class="first w3-button w3-border">처음</a>
                   <a href="javascript:;" v-if="paging.startPage > 10" @click="fnPage(`${paging.startPage-1}`)"
@@ -43,6 +44,7 @@
                      @click="fnPage(`${paging.endPage+1}`)" class="next w3-button w3-border">다음</a>
                   <a @click="fnPage(`${paging.totalPageCnt}`)" class="last w3-button w3-border">끝</a>
                   </span>
+    </div>
   </div>
   <br>
 </template>
@@ -121,16 +123,41 @@ export default {
       this.fnGetList();
     },
 
-    // 사용자 삭제
+    // 게시글 삭제
     fnDeleteBoard(id) {
       if (!confirm("게시글을 삭제하시겠습니까?")) return
       this.$axios.delete(this.$serverUrl + '/board/' + id)
           .then(() => {
             alert("게시글이 삭제됐습니다.")
             this.fnGetList();
-          }).catch(() => {
-        alert("게시글 삭제에 실패했습니다.");
-        console("사용자 삭제에 실패했습니다.");
+          }).catch((err) => {
+
+        // 403 권한없음 예외 처리: 로그인 창으로
+        if (err.response.data.status === 403){
+          this.$router.push({path: '/member/login'})
+          console.log("삭제 권한이 없습니다.");
+          alert("삭제 권한이 없습니다.")
+
+        }
+
+        // BOARD_NOTFOUND, FILE_NOTFOUND: 게시글/파일 부재시, alert 반환 및 리스트로
+        else if (err.response.data.status === "404" && err.response.data.message) {
+          console.log(err.response.data.message);
+          alert(err.response.data.message);
+          this.fnGetList();
+        }
+
+        // 그 외 Custom Exception 발생시 alert 반환
+        else if (err.response.data.status && err.response.data.message) {
+          console.log(err.response.data.message);
+          alert(err.response.data.message);
+        }
+
+        // 기타
+        else {
+          console.log(err.message);
+          alert('삭제에 실패했습니다.');
+        }
       })
     },
 
