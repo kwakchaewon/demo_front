@@ -221,10 +221,10 @@ export default {
             this.fnList();
           }).catch((err) => {
 
-        // NO_AUTHORIZATION: 권한 검증 실패시, alert 반환
-        if (err.response.data.status === "403" && err.response.data.message) {
-          console.log(err.response.data.message);
-          alert(err.response.data.message);
+        // 403 권한없음 예외 처리
+        if (err.response.data.status === 403){
+          console.log("삭제 권한이 없습니다.");
+          alert("삭제 권한이 없습니다.")
         }
 
         // BOARD_NOTFOUND, FILE_NOTFOUND: 게시글/파일 부재시, alert 반환 및 리스트로
@@ -242,7 +242,7 @@ export default {
 
         // 기타
         else {
-          console.log('삭제에 실패했습니다.');
+          console.log(err.message);
           alert('삭제에 실패했습니다.');
         }
       })

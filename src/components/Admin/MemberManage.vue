@@ -106,6 +106,13 @@ export default {
         this.paging = res.data.pagination;
         this.no = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize);
       }).catch((err) => {
+
+        // 403
+        if (err.response.data.status === 403){
+          console.log("조회 권한이 없습니다.");
+          console.log(err.message);
+        }
+
         if (err.response.data.status && err.response.data.message) {
           alert(err.response.data.message);
           console.log(err.response.data.message);
@@ -150,8 +157,7 @@ export default {
         // 403 권한없음 삭제 권한이 없을 경우
         else if (err.response.data.status === 403){
           console.log("권한이 없습니다. 로그인 페이지로 이동합니다.");
-          alert("권한이 없습니다. 로그인 페이지로 이동합니다.")
-          this.$router.push('/member/login');
+          alert("삭제 권한이 없습니다.");
         }
 
         // 그외
