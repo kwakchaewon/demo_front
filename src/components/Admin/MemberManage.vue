@@ -1,30 +1,31 @@
 <template>
-  <br>
-  <h2 class="border-bottom py-2">회원 관리</h2>
-  <table class="table">
-    <thead class="table-dark">
-    <tr class="text-center">
-      <th>번호</th>
-      <th style="width:30%">아이디</th>
-      <th>이메일</th>
-      <th>생성일자</th>
-      <th>관리</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr v-for="(row, id) in list" :key="id" class="text-center">
-      <td>{{ paging.totalListCnt - (paging.page * paging.pageSize) - id + 10 }}</td>
-      <td>{{ row.userId }}</td>
-      <td>{{ row.email }}</td>
-      <td>{{ row.createdAt }}</td>
-      <td>
-        <button class="delete-btn" @click="fnDeleteMember(`${row.id}`)">삭제</button>
-      </td>
-    </tr>
-    </tbody>
-  </table>
-  <div class="pagination w3-bar w3-padding-16 w3-small" v-if="paging.totalListCnt > 0 && list.length > 0"
-       style="justify-content: center">
+  <div v-if="this.$store.state.role === 'ROLE_SUPERVISOR' || this.$store.state.role === 'ROLE_ADMIN'">
+    <br>
+    <h2 class="border-bottom py-2">회원 관리</h2>
+    <table class="table">
+      <thead class="table-dark">
+      <tr class="text-center">
+        <th>번호</th>
+        <th style="width:30%">아이디</th>
+        <th>이메일</th>
+        <th>생성일자</th>
+        <th>관리</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr v-for="(row, id) in list" :key="id" class="text-center">
+        <td>{{ paging.totalListCnt - (paging.page * paging.pageSize) - id + 10 }}</td>
+        <td>{{ row.userId }}</td>
+        <td>{{ row.email }}</td>
+        <td>{{ row.createdAt }}</td>
+        <td>
+          <button class="delete-btn" @click="fnDeleteMember(`${row.id}`)">삭제</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="pagination w3-bar w3-padding-16 w3-small" v-if="paging.totalListCnt > 0 && list.length > 0"
+         style="justify-content: center">
                   <span class="pg">
                   <a href="javascript:;" @click="fnPage(1)" class="first w3-button w3-border">처음</a>
                   <a href="javascript:;" v-if="paging.startPage > 10" @click="fnPage(`${paging.startPage-1}`)"
@@ -43,15 +44,15 @@
                      @click="fnPage(`${paging.endPage+1}`)" class="next w3-button w3-border">다음</a>
                   <a @click="fnPage(`${paging.totalPageCnt}`)" class="last w3-button w3-border">끝</a>
                   </span>
+    </div>
   </div>
-  <br>
 </template>
 <script>
 export default {
   name: 'AdminMember',
 
   data() {
-    return{
+    return {
       list: {},
       no: '', //게시판 숫자처리
       paging: {
@@ -130,9 +131,37 @@ export default {
           .then(() => {
             alert("회원이 삭제됐습니다.")
             this.fnGetMemberList();
-          }).catch(() => {
-        alert("사용자 삭제에 실패했습니다.");
-        console("사용자 삭제에 실패했습니다.");
+          }).catch((err) => {
+
+        // 회원이 존재하지 않을 경우
+        if (err.response.data.status === "404" && err.response.data.message) {
+          console.log(err.response.data.message);
+          alert(err.response.data.message);
+          this.fnGetMemberList();
+        }
+
+        // 커스텀 에러 존재시
+        else if (err.response.data.status && err.response.data.message) {
+          console.log(err.response.data.message);
+          alert(err.response.data.message);
+          this.fnGetMemberList();
+        }
+
+        // 403 권한없음 삭제 권한이 없을 경우
+        else if (err.response.data.status === 403){
+          console.log("권한이 없습니다. 로그인 페이지로 이동합니다.");
+          alert("권한이 없습니다. 로그인 페이지로 이동합니다.")
+          this.$router.push('/member/login');
+        }
+
+        // 그외
+        else {
+          console.log(err);
+          alert('알 수 없는 오류가 발생했습니다.');
+        }
+
+        alert("회원 삭제에 실패했습니다.");
+        console("회원 삭제에 실패했습니다.");
       })
     },
   }
