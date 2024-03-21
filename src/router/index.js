@@ -67,7 +67,6 @@ const requireAdmin = () => (from, to, next) => {
             return next('/board');
         }
     } else {
-        console.log(store.state);
         alert("접근 권한이 없습니다.");
         return next('/board');
     }
