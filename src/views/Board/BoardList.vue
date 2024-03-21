@@ -2,17 +2,6 @@
 <template>
   <main>
     <div class="container my-3">
-<!--      <div class="row my-3">-->
-<!--        <div class="col-6">-->
-<!--          <a class="btn btn-primary">질문 등록하기</a>-->
-<!--        </div>-->
-<!--        <div class="col-6">-->
-<!--          <div class="input-group">-->
-<!--            <input type="text" id="search_keyword" class="form-control">-->
-<!--            <button class="btn btn-outline-secondary" type="button" id="btn_search"></button>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
       <h2 class="border-bottom py-2">자유 게시판</h2>
       <table class="table">
         <span v-if="!paging.totalListCnt || list.length === 0">게시글이 존재하지 않습니다.</span>
@@ -134,7 +123,6 @@ export default {
   // },
   methods: {
     fnGetList() {
-      console.log(this.page)
       this.requestBody = { // 데이터 전송
         keyword: this.keyword,
         // page: this.page,
@@ -142,7 +130,6 @@ export default {
         page: this.page,
         size: this.size
       }
-      console.log(this.requestBody);
       this.$axios.get(this.$serverUrl + "/board", {
         params: this.requestBody,
         headers: {}
