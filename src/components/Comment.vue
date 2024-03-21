@@ -19,8 +19,8 @@
           </div>
         </div>
         <div class="my-3">
-          <button class="btn btn-sm btn-outline-secondary" v-on:click="fnCheckUpdate(row.id)">수정</button>
-          <button class="delete btn btn-sm btn-outline-secondary" v-on:click="fnDelete(`${row.id}`)">삭제</button>
+          <button class="btn btn-sm btn-outline-secondary" v-on:click="fnCheckUpdate(row.id)" v-if="row.memberId == this.$store.state.user ">수정</button>
+          <button class="delete btn btn-sm btn-outline-secondary" v-on:click="fnDelete(`${row.id}`)" v-if="row.memberId == this.$store.state.user ">삭제</button>
         </div>
       </div>
     </div>

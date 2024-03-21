@@ -24,8 +24,8 @@
           <a href="#" @click="fnDownload">{{ originalFile }}</a>
         </div>
         <div class="my-3">
-          <button class="btn btn-sm btn-outline-secondary" v-on:click="fnCheckUpdate">수정</button>
-          <button class="btn btn-sm btn-outline-secondary" v-on:click="fnDelete">삭제</button>
+          <button class="btn btn-sm btn-outline-secondary" v-on:click="fnCheckUpdate" v-if="this.memberId == this.$store.state.user">수정</button>
+          <button class="btn btn-sm btn-outline-secondary" v-on:click="fnDelete" v-if="this.memberId == this.$store.state.user">삭제</button>
           <button class="btn btn-sm btn-outline-secondary" v-on:click="fnList">목록</button>
         </div>
       </div>
