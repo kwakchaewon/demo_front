@@ -68,7 +68,6 @@ export default {
       } catch (err) {
         if (err.message.indexOf('Network Error') > -1) {
           alert('서버에 접속할 수 없습니다. 상태를 확인해주세요.');
-          // console.log(err);
         }
 
         else {

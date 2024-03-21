@@ -83,7 +83,6 @@ export default {
     },
 
     fnReset() {
-      console.log("123");
       // Object.assign(this.$data);
       // this.cnt = this.cnt+1;
       // console.log(this.cnt);
