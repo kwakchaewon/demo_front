@@ -1,9 +1,5 @@
 <template>
   <div class="board-detail">
-    <div class="common-buttons">
-      <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnSave">저장</button>&nbsp;
-      <button type="button" class="w3-button w3-round w3-gray" v-on:click="fnList">목록</button>
-    </div>
     <div class="board-contents">
       <input type="text" id="title" v-model="title" class="w3-input w3-border" placeholder="제목을 입력해주세요.">
     </div>
@@ -35,7 +31,7 @@
     <div class="board-contents" v-if="!originalFile || isUpdatedFile">
       <label for="file">파일:</label>
       <input ref="fileInput" type="file" id="fileInput" @change="handleFileChange">
-      <button type="button" @click="resetFileInput">삭제</button>
+      <button type="button" @click="resetFileInput" v-if="fileInput">삭제</button>
     </div>
 
     <div class="common-buttons">
