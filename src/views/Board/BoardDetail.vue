@@ -53,14 +53,6 @@ export default {
       fileUrl: null
     }
   },
-  computed: {
-    // resolvedImgPath() {
-      // 여기서 동적으로 이미지 경로를 처리
-      // 실제 사용 시에는 웹팩이 파일 시스템의 절대 경로를 이해하지 못하므로,
-      // 상대 경로나 정적 자원 경로를 사용해야 합니다.
-      // return require(`${this.imgPath}`);
-    // },
-  },
   mounted() {
     this.fnGetView();
     this.fnGetImgfile();
@@ -72,23 +64,19 @@ export default {
       const id = this.$route.params.id;
       this.$axios.get(this.$serverUrl + '/board/' + id)
           .then((res) => {
-            this.id = res.data.id;
-            this.title = res.data.title;
-            this.contents = res.data.contents;
-            this.createdAt = res.data.createdAt;
-            this.updatedAt = res.data.updatedAt;
-            this.memberId = res.data.memberId;
-            this.originalFile = res.data.originalFile;
+            this.id = res.data.id; // 아이디
+            this.title = res.data.title; // 제목
+            this.contents = res.data.contents; // 내용
+            this.createdAt = res.data.createdAt; // 작성일
+            this.updatedAt = res.data.updatedAt; // 수정일
+            this.memberId = res.data.memberId; // 작성자
+            this.originalFile = res.data.originalFile; // 첨부파일명
           }).catch((err) => {
         // BOARD_NOTFOUND: 에러 메시지 출력 및 리스트로 이동
         if (err.response.data.status === "404" && err.response.data.message) {
           console.log(err.response.data.message);
           alert(err.response.data.message);
           this.fnList()
-        }
-        else if(err.response.data.message){
-          alert('알 수 없는 오류가 발생했습니다.');
-          this.fnList();
         }
         else {
           alert('알 수 없는 오류가 발생했습니다.');
@@ -107,7 +95,7 @@ export default {
             this.fileUrl = url;
           }).catch((err) => {
 
-        // 2. IMAGE_NOTFOUND, BOARD_NOTFOUND, : 이미지 부재시, log 출력
+        // 2. IMAGE_NOTFOUND : 이미지 부재시, log 출력
         if (err.response.data.status === "404" && err.response.data.message) {
           console.log(err.response.data.message);
         }
@@ -119,9 +107,7 @@ export default {
         }
 
         // 4. 그 외 Custom Exception 발생시 log 출력
-        else if (err.response.data.status && err.response.data.message) {
-          console.log(err.response.data.message);
-        } else {
+        else {
           console.log(err);
           console.log("이미지를 찾을 수 없습니다.");
         }
@@ -137,7 +123,7 @@ export default {
         const url = window.URL.createObjectURL(new Blob([res.data]));
         const link = document.createElement('a');
 
-        // content-disposition 으로 파일명을 설정하려 했으나 UTF8 인코딩 문제 발생
+        // content-disposition 으로 파일명을 설정
         let fileName = res.headers['content-disposition'].split('filename=')[1];
         fileName = fileName.replace(/[""]/g, '');
         console.log(fileName)
@@ -173,6 +159,7 @@ export default {
       });
     },
 
+    // 게시글 수정 권한 확인
     fnCheckUpdate() {
       const id = this.$route.params.id;
       this.$axios.get(this.$serverUrl + '/board/' + id + '/check')
@@ -207,6 +194,7 @@ export default {
       })
     },
 
+    // 게시글 삭제
     fnDelete() {
       if (!confirm("삭제하시겠습니까?")) return
       const id = this.$route.params.id;
@@ -227,12 +215,6 @@ export default {
           console.log(err.response.data.message);
           alert(err.response.data.message);
           this.fnList();
-        }
-
-        // 그 외 Custom Exception 발생시 alert 반환
-        else if (err.response.data.status && err.response.data.message) {
-          console.log(err.response.data.message);
-          alert(err.response.data.message);
         }
 
         // 기타

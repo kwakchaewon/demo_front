@@ -15,6 +15,10 @@ import AdminManage from "@/components/Admin/SuperManage.vue";
 import axios from "axios";
 
 /**
+ * vue.js 에서 라우터를 설정하는 부분
+ */
+
+/**
  * 컴포넌트 진입 전 실행
  * 토큰 유무에 따라 store 변수 관리, 로그인 상태 관리
  */

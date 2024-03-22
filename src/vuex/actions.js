@@ -1,4 +1,9 @@
-// src/vuex/actions.js
+/**
+ * vuex store 의 action를 정의하는 파일
+ * 어플리케이션 단의 비동기적 로직 처리
+ */
+
+
 import {USER_ID, IS_AUTH, ERROR_STATE} from './mutation_types'
 import loginAPI from '../service/LoginAPI'
 

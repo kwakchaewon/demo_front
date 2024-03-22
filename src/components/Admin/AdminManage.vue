@@ -1,3 +1,7 @@
+<!-- 권한이 admin 경우 리턴되는 회원관리 페이지  -->
+<!-- 일반 사용자를 조회하고   -->
+
+
 <template>
   <div v-if="this.$store.state.role === 'ROLE_ADMIN'">
     <h2 class="border-bottom py-2">회원 관리</h2>
@@ -95,7 +99,6 @@ export default {
         page: this.page,
         size: this.size
       }
-      console.log(this.$serverUrl);
 
       this.$axios.get(this.$serverUrl + "/admin/members", {
         params: this.requestBody,
