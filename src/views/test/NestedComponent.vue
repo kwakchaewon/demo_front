@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import PageTitle from '../components/PageTitle'
+import PageTitle from '../../components/test/PageTitle.vue'
 
 export default {
   name: '', // 컴포넌트 이름
