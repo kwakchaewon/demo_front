@@ -9,10 +9,9 @@ import store from '@/vuex/store'
 import SignUp from "@/views/common/SignUp.vue";
 import Admin from "@/views/Admin/Admin.vue";
 import Cookies from 'js-cookie';
-import SuperManage from "@/components/Admin/SuperManage.vue";
-import AdminBoard from "@/components/Admin/BoardManage.vue";
-import AdminManage from "@/components/Admin/SuperManage.vue";
 import axios from "axios";
+import BoardManage from "@/components/Admin/BoardManage.vue";
+import MemberManage from "@/components/Admin/MemberManage.vue";
 
 /**
  * vue.js 에서 라우터를 설정하는 부분
@@ -120,7 +119,7 @@ const routes = [
     {
         path: '/admin',
         name: 'admin',
-        component: Admin, SuperManage, AdminBoard, AdminManage,
+        component: Admin, BoardManage, MemberManage,
         beforeEnter: requireAdmin()
     },
     // {

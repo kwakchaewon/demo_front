@@ -1,23 +1,20 @@
 <template>
   <main>
     <div class="container my-3">
-      <AdminManage/>
-      <AdminMember/>
-      <AdminBoard/>
+      <MemberManage/>
+      <BoardManage/>
     </div>
   </main>
 </template>
 
 <script>
-import AdminMember from "@/components/Admin/AdminManage.vue";
-import AdminBoard from "@/components/Admin/BoardManage.vue";
-import AdminManage from "@/components/Admin/SuperManage.vue";
+import BoardManage from "@/components/Admin/BoardManage.vue";
+import MemberManage from "@/components/Admin/MemberManage.vue";
 
 export default {
   components: {
-    AdminManage,
-    AdminBoard,
-    AdminMember
+    MemberManage,
+    BoardManage,
   },
 }
 

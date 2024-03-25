@@ -1,18 +1,48 @@
-<!-- 권한이 admin 경우 리턴되는 회원관리 페이지  -->
-<!-- 일반 사용자를 조회하고   -->
-
-
 <template>
-  <div v-if="this.$store.state.role === 'ROLE_ADMIN'">
+  <div>
     <h2 class="border-bottom py-2">회원 관리</h2>
-    <table class="table">
+    <table class="table"  v-if="this.$store.state.role === 'ROLE_SUPERVISOR'">
       <thead class="table-dark">
       <tr class="text-center">
         <th>번호</th>
         <th style="width:30%">아이디</th>
         <th>이메일</th>
-        <th>생성일자</th>
+        <th>생성일</th>
+        <th>권한</th>
         <th>관리</th>
+        <th>삭제</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr v-for="(row, id) in list" :key="id" class="text-center">
+        <td>{{ paging.totalListCnt - (paging.page * paging.pageSize) - id + 10 }}</td>
+        <td>{{ row.userId }}</td>
+        <td>{{ row.email }}</td>
+        <td>{{ row.createdAt }}</td>
+        <td>
+          <select v-model="row.auth">
+            <option value="ROLE_ADMIN" :selected="row.auth === 'ROLE_ADMIN'">관리자</option>
+            <option value="ROLE_USER" :selected="row.auth === 'ROLE_USER'">일반 사용자</option>
+          </select>
+        </td>
+        <td>
+          <button class="delete-btn" @click="fnAuthCommit(`${row.id}`,`${row.auth}`)">반영</button>
+        </td>
+        <td>
+          <button class="delete-btn" @click="fnDeleteMember(`${row.id}`)">삭제</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <table class="table"  v-if="this.$store.state.role === 'ROLE_ADMIN'">
+      <thead class="table-dark">
+      <tr class="text-center">
+        <th>번호</th>
+        <th style="width:30%">아이디</th>
+        <th>이메일</th>
+        <th>생성일</th>
+        <th>삭제</th>
       </tr>
       </thead>
       <tbody>
@@ -27,6 +57,7 @@
       </tr>
       </tbody>
     </table>
+
     <div class="pagination w3-bar w3-padding-16 w3-small" v-if="paging.totalListCnt > 0 && list.length > 0"
          style="justify-content: center">
                   <span class="pg">
@@ -50,10 +81,10 @@
     </div>
   </div>
 </template>
+
 <script>
 export default {
-  name: 'AdminManage',
-
+  name: 'MemberManage',
   data() {
     return {
       list: {},
@@ -74,7 +105,6 @@ export default {
       page: this.$route.query.page ? this.$route.query.page : 1,
       size: this.$route.query.size ? this.$route.query.size : 10,
       // page: this.$route.params.page ? this.$route.params.page : 1,
-      keyword: this.$route.query.keyword ? this.$route.query.keyword : '',
 
       paginavigation: function () { //페이징 처리 for문 커스텀
         const pageNumber = [];
@@ -85,40 +115,34 @@ export default {
       }
     }
   },
-
   mounted() {
     this.fnGetMemberList();
   },
 
   methods: {
-    // 사용자 조회
+    // 사용자 + 관리자 조회
     fnGetMemberList() {
-      console.log(this.page)
       this.requestBody = { // 데이터 전송
-        keyword: this.keyword,
         page: this.page,
         size: this.size
       }
 
-      this.$axios.get(this.$serverUrl + "/admin/members", {
+      this.$axios.get(this.$serverUrl + "/member/list", {
         params: this.requestBody,
         headers: {}
       }).then((res) => {
-        this.list = res.data.boards.content;
+        this.list = res.data.list.content;
         this.paging = res.data.pagination;
         this.no = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize);
       }).catch((err) => {
-
-        // 403
-        if (err.response.data.status === 403){
-          console.log(err.message);
-        }
-
-        else if (err.response.data.status && err.response.data.message) {
+        // 403 권한없음 예외 처리
+        if (err.response.data.status === 403) {
+          console.log(err.response.message);
+        } else if (err.response.data.status && err.response.data.message) {
           alert(err.response.data.message);
           console.log(err.response.data.message);
         } else {
-          alert('게시글 리스트를 불러올 수 없습니다.');
+          alert('권한 리스트를 불러올 수 없습니다.');
         }
       })
     },
@@ -130,6 +154,31 @@ export default {
       }
 
       this.fnGetMemberList();
+    },
+
+    // 권한 변경
+    fnAuthCommit(id, auth) {
+      if (!confirm("권한을 수정하시겠습니까?")) return
+      const data = {
+        auth: auth
+      }
+      this.$axios.put(this.$serverUrl + "/member/" + id + "/auth", data).then(() => {
+        alert("권한 수정에 성공했습니다.")
+        this.fnGetMemberList();
+      }).catch((err) => {
+
+        // 403 권한없음 예외 처리
+        if (err.response.data.status === 403) {
+          console.log(err.message);
+          alert("권한이 없습니다.")
+        }
+
+        // 그 외
+        else {
+          console.log(err.messasge);
+          alert("권한 수정 실패");
+        }
+      })
     },
 
     // 사용자 삭제
@@ -156,7 +205,7 @@ export default {
         }
 
         // 403 권한없음 삭제 권한이 없을 경우
-        else if (err.response.data.status === 403){
+        else if (err.response.data.status === 403) {
           console.log("권한이 없습니다. 로그인 페이지로 이동합니다.");
           alert("삭제 권한이 없습니다.");
         }
@@ -167,10 +216,13 @@ export default {
           alert("회원 삭제에 실패했습니다.");
         }
       })
-    },
+    }
   }
 }
+
+
 </script>
+
 <style scoped>
 
 </style>
