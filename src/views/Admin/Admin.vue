@@ -2,6 +2,7 @@
   <main>
     <div class="container my-3">
       <MemberManage/>
+      <br>
       <BoardManage/>
     </div>
   </main>

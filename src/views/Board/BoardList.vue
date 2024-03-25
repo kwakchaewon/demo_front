@@ -134,7 +134,7 @@ export default {
         params: this.requestBody,
         headers: {}
       }).then((res) => {
-        this.list = res.data.boards.content;
+        this.list = res.data.list.content;
         this.paging = res.data.pagination;
         this.no = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize);
       }).catch((err) => {
