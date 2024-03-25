@@ -12,7 +12,8 @@ import Cookies from 'js-cookie';
 import axios from "axios";
 import BoardManage from "@/components/Admin/BoardManage.vue";
 import MemberManage from "@/components/Admin/MemberManage.vue";
-import NestedComponent from "@/views/NestedComponent.vue";
+import NestedComponent from "@/views/test/NestedComponent.vue";
+import ParentComponent from "@/views/test/ParentComponent.vue";
 
 /**
  * vue.js 에서 라우터를 설정하는 부분
@@ -127,6 +128,16 @@ const routes = [
         path: '/test',
         name: 'test',
         component: NestedComponent,
+    },
+    {
+        path: '/test',
+        name: 'test',
+        component: NestedComponent,
+    },
+    {
+        path: '/test2',
+        name: 'test2',
+        component: ParentComponent,
     },
 ]
 
