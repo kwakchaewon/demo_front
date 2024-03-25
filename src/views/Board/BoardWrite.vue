@@ -72,17 +72,19 @@ export default {
           }
         })
             .then((res) => {
+              // 게시글 작성 성공시
               if (res.status === 200) {
                 alert('글이 저장됐습니다.');
                 const boardId = parseInt(res.data.id);
                 this.$router.push('' + boardId);
-              } else {
+              }
+              // 그 외, 분기 처리
+              else {
                 console.log('Unhandled status code:', res.status);
                 alert("게시글 저장에 실패했습니다.");
               }
             }).catch((err) => {
           const _status = err.response.data.status;
-
           // IllegalArgumentException(유효성 검사, 500), UsernameNotFoundException(계정 실패, 404), IoException(입출력 실패, 500)
           if (_status === 404 || _status === 500) {
             handleErrorWithAlert(err);
@@ -91,7 +93,6 @@ export default {
           else {
             handleAnonymousError(err);
           }
-          
         })
       }
     },
