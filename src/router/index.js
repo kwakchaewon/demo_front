@@ -14,6 +14,7 @@ import BoardManage from "@/components/Admin/BoardManage.vue";
 import MemberManage from "@/components/Admin/MemberManage.vue";
 import NestedComponent from "@/views/test/NestedComponent.vue";
 import ParentComponent from "@/views/test/ParentComponent.vue";
+import ParentComponent2 from "@/views/test/ParentComponent2.vue";
 
 /**
  * vue.js 에서 라우터를 설정하는 부분
@@ -138,6 +139,11 @@ const routes = [
         path: '/test2',
         name: 'test2',
         component: ParentComponent,
+    },
+    {
+        path: '/test3',
+        name: 'test3',
+        component: ParentComponent2,
     },
 ]
 
