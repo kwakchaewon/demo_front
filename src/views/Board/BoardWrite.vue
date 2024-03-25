@@ -25,6 +25,7 @@
 
 <script>
 import Cookies from 'js-cookie';
+import {handleErrorWithAlert, handleAnonymousError} from "@/utils/errorHandling";
 
 export default {
   data() {
@@ -71,19 +72,26 @@ export default {
           }
         })
             .then((res) => {
-              alert('글이 저장되었습니다.');
-              const boardId = parseInt(res.data.id);
-              this.$router.push('' + boardId);
+              if (res.status === 200) {
+                alert('글이 저장됐습니다.');
+                const boardId = parseInt(res.data.id);
+                this.$router.push('' + boardId);
+              } else {
+                console.log('Unhandled status code:', res.status);
+                alert("게시글 저장에 실패했습니다.");
+              }
             }).catch((err) => {
+          const _status = err.response.data.status;
 
-          // ONLY_BLANK, FILE_IOFAILED: 에러 경고창 및 메시지 출력
-          if (err.response.data.status && err.response.data.message) {
-            console.log(err.response.data.message);
-            alert(err.response.data.message);
-          } else {
-            console.log("알 수 없는 오류가 발생했습니다.");
-            alert("알 수 없는 오류가 발생했습니다.");
+          // IllegalArgumentException(유효성 검사, 500), UsernameNotFoundException(계정 실패, 404), IoException(입출력 실패, 500)
+          if (_status === 404 || _status === 500) {
+            handleErrorWithAlert(err);
           }
+          // 알 수 없는 에러 발생 시
+          else {
+            handleAnonymousError(err);
+          }
+          
         })
       }
     },
@@ -107,7 +115,7 @@ export default {
     resetFileInput() {
       if (!confirm("파일을 삭제하시겠습니까?")) return
       this.$refs.fileInput.value = null;
-      this.fileInput=null
+      this.fileInput = null
     }
 
   }
