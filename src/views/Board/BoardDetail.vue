@@ -24,8 +24,12 @@
           <a href="#" @click="fnDownload">{{ originalFile }}</a>
         </div>
         <div class="my-3">
-          <button class="btn btn-sm btn-outline-secondary" v-on:click="fnCheckUpdate" v-if="this.memberId == this.$store.state.user">수정</button>
-          <button class="btn btn-sm btn-outline-secondary" v-on:click="fnDelete" v-if="this.memberId == this.$store.state.user">삭제</button>
+          <button class="btn btn-sm btn-outline-secondary" v-on:click="fnCheckUpdate"
+                  v-if="this.memberId == this.$store.state.user">수정
+          </button>
+          <button class="btn btn-sm btn-outline-secondary" v-on:click="fnDelete"
+                  v-if="this.memberId == this.$store.state.user">삭제
+          </button>
           <button class="btn btn-sm btn-outline-secondary" v-on:click="fnList">목록</button>
         </div>
       </div>
@@ -36,6 +40,7 @@
 
 <script>
 import Comment from "@/components/Comment.vue";
+import {handleErrorWithAlert, handleAnonymousError} from "@/utils/errorHandling";
 
 export default {
   components: {
@@ -64,20 +69,32 @@ export default {
       const id = this.$route.params.id;
       this.$axios.get(this.$serverUrl + '/board/' + id)
           .then((res) => {
-            this.id = res.data.id; // 아이디
-            this.title = res.data.title; // 제목
-            this.contents = res.data.contents; // 내용
-            this.createdAt = res.data.createdAt; // 작성일
-            this.updatedAt = res.data.updatedAt; // 수정일
-            this.memberId = res.data.memberId; // 작성자
-            this.originalFile = res.data.originalFile; // 첨부파일명
+            // 게시글 상세 조회 성공시
+            if (res.status === 200) {
+              this.id = res.data.id; // 아이디
+              this.title = res.data.title; // 제목
+              this.contents = res.data.contents; // 내용
+              this.createdAt = res.data.createdAt; // 작성일
+              this.updatedAt = res.data.updatedAt; // 수정일
+              this.memberId = res.data.memberId; // 작성자
+              this.originalFile = res.data.originalFile; // 첨부파일명
+            }
+            // 그 외, 분기 처리
+            else {
+              console.log('Unhandled status code:', res.status);
+              alert("게시글 상세를 불러올 수 없습니다.");
+              this.fnList();
+            }
           }).catch((err) => {
-        // BOARD_NOTFOUND: 에러 메시지 출력 및 리스트로 이동
-        if (err.response.data.status === "404" && err.response.data.message) {
-          console.log(err.response.data.message);
-          alert(err.response.data.message);
-          this.fnList()
+        const _status = err.response.data.status;
+
+        // ResponseStatusException (게시글 부재, 404)
+        if (_status === 404) {
+          handleErrorWithAlert(err);
+          this.fnList();
         }
+
+        // 알 수 없는 예외 발생시
         else {
           alert('알 수 없는 오류가 발생했습니다.');
           this.fnList();
@@ -146,8 +163,7 @@ export default {
         if (err.response.status === 404) {
           alert("존재하지 않는 게시글입니다.");
           this.fnList();
-        }
-        else {
+        } else {
           alert("파일을 다운로드 할 수 없습니다.");
         }
       })
@@ -205,7 +221,7 @@ export default {
           }).catch((err) => {
 
         // 403 권한없음 예외 처리
-        if (err.response.data.status === 403){
+        if (err.response.data.status === 403) {
           console.log("삭제 권한이 없습니다.");
           alert("삭제 권한이 없습니다.")
         }
