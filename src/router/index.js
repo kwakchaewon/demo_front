@@ -12,6 +12,7 @@ import Cookies from 'js-cookie';
 import axios from "axios";
 import BoardManage from "@/components/Admin/BoardManage.vue";
 import MemberManage from "@/components/Admin/MemberManage.vue";
+import NestedComponent from "@/views/NestedComponent.vue";
 
 /**
  * vue.js 에서 라우터를 설정하는 부분
@@ -122,12 +123,11 @@ const routes = [
         component: Admin, BoardManage, MemberManage,
         beforeEnter: requireAdmin()
     },
-    // {
-    //     path: '/',
-    //     name: 'BoardList',
-    //     component: BoardList,
-    //     beforeEnter: requireAuth()
-    // },
+    {
+        path: '/test',
+        name: 'test',
+        component: NestedComponent,
+    },
 ]
 
 const router = createRouter({
