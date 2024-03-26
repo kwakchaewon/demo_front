@@ -152,7 +152,7 @@ export default {
     },
 
     fnWrite() {
-      this.$router.push({path: './board/writeform'});
+      this.$router.push({path: './board/write'});
     },
 
     fnPage(n) {

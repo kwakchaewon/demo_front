@@ -48,6 +48,7 @@ export default {
   },
   data() {
     return {
+      idx: this.$route.query.idx,
       id: '', //
       title: '', // 제목
       contents: '', // 내용
@@ -66,6 +67,7 @@ export default {
 
     // 게시글 상세
     fnGetView() {
+      console.log(this.idx)
       const id = this.$route.params.id;
       this.$axios.get(this.$serverUrl + '/board/' + id)
           .then((res) => {
@@ -185,7 +187,7 @@ export default {
           .then((res) => {
             // 게시글 수정 권한 확인 성공시
             if (res.status === 200) {
-              this.$router.push({path: './' + id + '/update',});
+              this.$router.push({path: './write/' + id,});
             }
             // 그외 분기 처리
             else {

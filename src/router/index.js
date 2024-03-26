@@ -98,7 +98,7 @@ const routes = [
         beforeEnter: requireAuth()
     },
     {
-        path: '/board/:id/update',
+        path: '/board/write/:id?',
         name: 'BoardUpdate',
         component: BoardUpdate,
         beforeEnter: requireAuth()
