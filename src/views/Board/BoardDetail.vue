@@ -182,33 +182,34 @@ export default {
     fnCheckUpdate() {
       const id = this.$route.params.id;
       this.$axios.get(this.$serverUrl + '/board/' + id + '/check')
-          .then(() => {
-            this.$router.push({path: './' + id + '/update',});
+          .then((res) => {
+            // 게시글 수정 권한 확인 성공시
+            if (res.status === 200) {
+              this.$router.push({path: './' + id + '/update',});
+            }
+            // 그외 분기 처리
+            else {
+              console.log('Unhandled status code:', res.status);
+              alert("게시글을 수정할 수 없습니다.");
+            }
           }).catch((err) => {
 
-        // NO_AUTHORIZATION: 권한 검증 실패시, alert 반환
-        if (err.response.data.status === "403" && err.response.data.message) {
-          console.log(err.response.data.message);
-          alert(err.response.data.message);
+        const _status = err.response.status;
+
+        // AccessDeniedException(삭제 권한 없음)
+        if (_status === 403) {
+          handleErrorWithAlert(err);
         }
 
-        // BOARD_NOTFOUND: 게시글 부재시, alert 반환 및 리스트로
-        else if (err.response.data.status === "404" && err.response.data.message) {
-          console.log(err.response.data.message);
-          alert(err.response.data.message);
+        // ResponseStatusException (게시글 부재)
+        else if (_status === 404) {
+          handleErrorWithAlert(err);
           this.fnList();
         }
-
-        // 그 외 Custom Exception 발생시 alert 반환
-        else if (err.response.data.status && err.response.data.message) {
-          console.log(err.response.data.message);
-          alert(err.response.data.message);
-        }
-
         // 기타
         else {
-          console.log("수정 권한 검증에 실패했습니다.");
-          alert('수정 권한 검증에 실패했습니다.');
+          alert("수정할 수 없는 게시글입니다.");
+          consoleError(err);
         }
       })
     },
@@ -233,15 +234,14 @@ export default {
         const _status = err.response.status;
 
         // AccessDeniedException(삭제 권한 없음)
-        if (_status === 403){
+        if (_status === 403) {
           handleErrorWithAlert(err);
         }
         // ResponseStatusException (게시글 부재)
-        else if(_status === 404){
+        else if (_status === 404) {
           handleErrorWithAlert(err);
           this.fnList();
-        }
-        else {
+        } else {
           alert("삭제에 실패했습니다.")
           handleAnonymousError(err);
         }
