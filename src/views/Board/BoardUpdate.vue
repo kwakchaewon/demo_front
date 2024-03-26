@@ -15,9 +15,6 @@
       <text>첨부파일(클릭시 다운) :</text>
       <a ref="downloadLink" href="#" @click="fnDownload">{{ originalFile }}</a>
       <button type="button" @click="deleteOriginalFile">삭제</button>
-
-      <!-- 기존 첨부파일이 존재하고 업데이트 됐을 경우 복원 버튼 표기 -->
-<!--      <button type="button" @click="restoreOriginalFile" v-if="originalFile && isUpdatedFile">복원</button>-->
     </div>
 
     <div class="board-contents" v-if="originalFile && isUpdatedFile">
@@ -42,6 +39,8 @@
 </template>
 
 <script>
+import {handleErrorWithAlert, consoleError} from "@/utils/errorHandling";
+
 export default {
   data() { //변수생성
     return {
@@ -49,7 +48,7 @@ export default {
       contents: '',
       originalFile: null, // 기존 파일
       updateFile: null, // 업데이트 이후 파일
-      isUpdatedFile:false, // 파일을 업데이트 할 것인지 아닌지를 결정
+      isUpdatedFile: false, // 파일을 업데이트 할 것인지 아닌지를 결정
       fileInput: null
     };
   },
@@ -97,7 +96,7 @@ export default {
       const formData = new FormData();
 
       // 1. 파일 변경 사항이 없다면 (isUpdatedFile == false)
-      if (this.isUpdatedFile===false){
+      if (this.isUpdatedFile === false) {
         formData.append("title", this.title);
         formData.append("contents", this.contents);
         formData.append("isUpdate", this.isUpdatedFile);
@@ -105,20 +104,19 @@ export default {
 
       // 2. 파일 변경 사항이 있다면 (isUpdatedFile == true)
       else {
-          // 기존 파일 삭제
-          if(this.fileInput === null){
-            console.log("?")
-            formData.append("title", this.title);
-            formData.append("contents", this.contents);
-            formData.append("isupdate", this.isUpdatedFile);
-          }
-          // 새로운 파일 등록
-          else {
-            formData.append("title", this.title);
-            formData.append("contents", this.contents);
-            formData.append("isupdate", this.isUpdatedFile);
-            formData.append("file", this.fileInput);
-          }
+        // 기존 파일 삭제
+        if (this.fileInput === null) {
+          formData.append("title", this.title);
+          formData.append("contents", this.contents);
+          formData.append("isupdate", this.isUpdatedFile);
+        }
+        // 새로운 파일 등록
+        else {
+          formData.append("title", this.title);
+          formData.append("contents", this.contents);
+          formData.append("isupdate", this.isUpdatedFile);
+          formData.append("file", this.fileInput);
+        }
       }
 
       const blankPattern = /^\s*$/; // 공백 유효성 검사
@@ -128,44 +126,37 @@ export default {
       } else if (blankPattern.test(this.contents)) {
         alert("빈 내용은 입력할 수 없습니다.");
       } else {
-        console.log(formData.get("isUpdate"));
-        console.log(formData.get("title"));
         this.$axios.put(this.$serverUrl + `/board/${postId}`, formData)
-            .then(() => {
-              alert('글이 수정되었습니다.');
-              this.$router.push(`/board/${postId}`);
+            .then((res) => {
+
+              // 게시글 수정 성공시
+              if (res.status === 200) {
+                alert('글이 수정되었습니다.');
+                this.$router.push(`/board/${postId}`);
+              }
+
+              // 그 외 분기처리
+              else {
+                console.log('Unhandled status code:', res.status);
+                alert("게시글을 수정할 수 없습니다.");
+              }
             }).catch((err) => {
+          const _status = err.response.status;
 
-          // NO_AUTHORIZATION: 권한 검증 실패시, alert 반환
-          if (err.response.data.status === "403" && err.response.data.message) {
-            console.log(err.response.data.message);
-            alert(err.response.data.message);
+          // AccessDeniedException(수정 권한 없음)
+          if (_status === 403) {
+            handleErrorWithAlert(err);
           }
 
-          // BOARD_NOTFOUND: 게시글 부재시, alert 반환 및 리스트로
-          else if (err.response.data.status === "404" && err.response.data.message) {
-            console.log(err.response.data.message);
-            alert(err.response.data.message);
+          // ResponseStatusException (게시글 부재)
+          else if (_status === 404) {
+            handleErrorWithAlert(err);
             this.fnList();
           }
-
-          // FILE_IOFAILED: 파일 입출력 실패시, alert 반환
-          else if (err.response.data.status === "500" && err.response.data.message) {
-            console.log(err.response.data.message);
-            alert(err.response.data.message);
-            this.fnList();
-          }
-
-          // 그 외 Custom Exception 발생시 alert 반환
-          else if (err.response.data.status && err.response.data.message) {
-            console.log(err.response.data.message);
-            alert(err.response.data.message);
-          }
-
           // 기타
           else {
-            console.log('수정에 실패했습니다.');
-            alert('수정에 실패했습니다.');
+            alert("게시글을 수정할 수 없습니다.");
+            consoleError(err);
           }
         })
       }
@@ -202,20 +193,20 @@ export default {
     },
 
     // 업데이트 첨부파일 삭졔: 클릭시 input 내 첨부파일 삭제
-    resetFileInput(){
+    resetFileInput() {
       if (!confirm("파일을 삭제하시겠습니까?")) return
       this.$refs.fileInput.value = null;
     },
 
     // 기존 첨부파일 삭제 버튼: 클릭시 isUpdatedFile true 설정. 기존 첨부파일 숨김
-    deleteOriginalFile(){
+    deleteOriginalFile() {
       if (!confirm("파일을 삭제하시겠습니까?")) return
       this.isUpdatedFile = true;
       console.log(this.isUpdatedFile);
     },
 
     // 기존 첨부파일 복원 버튼: 클릭시 isUpdatedFile false 설정. 첨부파일 input 숨기고 내용 삭제.
-    restoreOriginalFile(){
+    restoreOriginalFile() {
       if (!confirm("이전 파일로 복원하시겠습니까? 현재 첨부파일은 삭제됩니다.")) return
       this.isUpdatedFile = false;
       this.$refs.fileInput.value = null;
@@ -225,7 +216,7 @@ export default {
       const files = event.target.files;
       const maxSize = 1024; // 허용되는 최대 파일 크기 (KB)
 
-      if (files.length > 0 && files[0].size > maxSize * 1024){
+      if (files.length > 0 && files[0].size > maxSize * 1024) {
         alert("1024kb 이상은 첨부할 수 없습니다.");
         event.target.value = '';
       } else {
