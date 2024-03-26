@@ -1,4 +1,5 @@
 <template>
+  child
 </template>
 
 <script>

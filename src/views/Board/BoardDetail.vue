@@ -40,7 +40,7 @@
 
 <script>
 import Comment from "@/components/Comment.vue";
-import {handleErrorWithAlert, handleAnonymousError} from "@/utils/errorHandling";
+import {handleErrorWithAlert, consoleError} from "@/utils/errorHandling";
 
 export default {
   components: {
@@ -107,26 +107,29 @@ export default {
       const id = this.$route.params.id;
       this.$axios.get(this.$serverUrl + '/board/' + id + '/image', {responseType: 'blob'})
           .then((res) => {
-            // 1. Blob 으로 받아온 데이터로 ULR 생성 후 fileUrl 에 바인딩
-            const url = URL.createObjectURL(new Blob([res.data]));
-            this.fileUrl = url;
+            // 이미지 파일 출력 성공시
+            if (res.status === 200) {
+              // 1. Blob 으로 받아온 데이터로 ULR 생성 후 fileUrl 에 바인딩
+              const url = URL.createObjectURL(new Blob([res.data]));
+              this.fileUrl = url;
+            }
+            // 그 외 분기 처리
+            else {
+              console.log('Unhandled status code:', res.status);
+              alert("이미지 파일을 불러올 수 없습니다.");
+            }
           }).catch((err) => {
+        const _status = err.response.status;
 
-        // 2. IMAGE_NOTFOUND : 이미지 부재시, log 출력
-        if (err.response.data.status === "404" && err.response.data.message) {
-          console.log(err.response.data.message);
+        // FileNotFoundException (게시글 / 이미지 파일 부재 / 파일 부재, 404), IoException (파일 입출력 실패, 500)
+        if (_status === 404 || _status === 500) {
+          // response 타입을 blob 으로 받을 경우 exception 메시지가 출력되지 않음
+          console.log("이미지 파일을 출력할 수 없습니다.");
         }
 
-        // 3. FILE_IOFAILED: 파일 입출력 실패시, alert & log 출력
-        else if (err.response.data.status === "500" && err.response.data.message) {
-          console.log(err.response.data.message);
-          alert(err.response.data.message);
-        }
-
-        // 4. 그 외 Custom Exception 발생시 log 출력
+        // 그 외 Exception 발생시 log 출력
         else {
-          console.log(err);
-          console.log("이미지를 찾을 수 없습니다.");
+          consoleError(err);
         }
       })
     },
