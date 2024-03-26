@@ -40,7 +40,7 @@
 
 <script>
 import Comment from "@/components/Comment.vue";
-import {handleErrorWithAlert, consoleError} from "@/utils/errorHandling";
+import {handleErrorWithAlert, consoleError, handleAnonymousError} from "@/utils/errorHandling";
 
 export default {
   components: {
@@ -218,28 +218,32 @@ export default {
       if (!confirm("삭제하시겠습니까?")) return
       const id = this.$route.params.id;
       this.$axios.delete(this.$serverUrl + '/board/' + id)
-          .then(() => {
-            alert('삭제되었습니다.');
-            this.fnList();
+          .then((res) => {
+            // 이미지 파일 출력 성공시
+            if (res.status === 200) {
+              alert('삭제되었습니다.');
+              this.fnList();
+            }
+            // 그 외 분기 처리
+            else {
+              console.log('Unhandled status code:', res.status);
+              alert("게시글 삭제에 실패했습니다.");
+            }
           }).catch((err) => {
+        const _status = err.response.status;
 
-        // 403 권한없음 예외 처리
-        if (err.response.data.status === 403) {
-          console.log("삭제 권한이 없습니다.");
-          alert("삭제 권한이 없습니다.")
+        // AccessDeniedException(삭제 권한 없음)
+        if (_status === 403){
+          handleErrorWithAlert(err);
         }
-
-        // BOARD_NOTFOUND, FILE_NOTFOUND: 게시글/파일 부재시, alert 반환 및 리스트로
-        else if (err.response.data.status === "404" && err.response.data.message) {
-          console.log(err.response.data.message);
-          alert(err.response.data.message);
+        // ResponseStatusException (게시글 부재)
+        else if(_status === 404){
+          handleErrorWithAlert(err);
           this.fnList();
         }
-
-        // 기타
         else {
-          console.log(err.message);
-          alert('삭제에 실패했습니다.');
+          alert("삭제에 실패했습니다.")
+          handleAnonymousError(err);
         }
       })
     },
