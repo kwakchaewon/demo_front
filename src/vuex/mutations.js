@@ -5,6 +5,10 @@
 import * as types from './mutation_types'
 
 export default {
+    increment(state){
+        state.count++;
+    },
+
     [types.USER_ID] (state, userId) {
         state.userId = userId
     },

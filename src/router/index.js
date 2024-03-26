@@ -14,6 +14,7 @@ import MemberManage from "@/components/Admin/MemberManage.vue";
 import NestedComponent from "@/views/test/NestedComponent.vue";
 import ParentComponent from "@/views/test/ParentComponent.vue";
 import ParentComponent2 from "@/views/test/ParentComponent2.vue";
+import StoreAccess from "@/views/test/StoreAccess.vue";
 
 /**
  * vue.js 에서 라우터를 설정하는 부분
@@ -137,6 +138,11 @@ const routes = [
         path: '/test3',
         name: 'test3',
         component: ParentComponent2,
+    },
+    {
+        path: '/test4',
+        name: 'test4',
+        component: StoreAccess,
     },
 ]
 

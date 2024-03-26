@@ -12,7 +12,8 @@ const store = createStore({
   state: {
     user: null,
     isLogin: false,
-    role: null
+    role: null,
+    count: 0
   },
   mutations,
   getters,
