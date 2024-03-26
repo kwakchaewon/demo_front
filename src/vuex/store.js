@@ -9,26 +9,31 @@ import actions from "./actions";
  */
 
 const store = createStore({
-  state: {
-    user: null,
-    isLogin: false,
-    role: null,
-    count: 0
-  },
-  mutations,
-  getters,
-  actions
+    state: {
+        user: null,
+        isLogin: false,
+        role: null,
+        count: 0,
+        cart: [{
+            product_id: 1,
+            product_name: "아이폰",
+            category: "A"
+        }]
+    },
+    mutations,
+    getters,
+    actions
 })
 
 // 세션 스토리지에서 상태를 가져오기
 const savedState = JSON.parse(sessionStorage.getItem('vuex-state'))
 if (savedState) {
-  store.replaceState(savedState)
+    store.replaceState(savedState)
 }
 
 // 스토어의 상태가 변경될 때마다 세션 스토리지에 저장
 store.subscribe((mutation, state) => {
-  sessionStorage.setItem('vuex-state', JSON.stringify(state))
+    sessionStorage.setItem('vuex-state', JSON.stringify(state))
 })
 
 export default store
