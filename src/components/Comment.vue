@@ -44,7 +44,7 @@
 </template>
 <script>
 import Cookies from "js-cookie";
-import {consoleError, handleErrorWithAlert} from "@/utils/errorHandling";
+import {consoleError} from "@/utils/errorHandling";
 
 export default {
   name: 'Comment',
@@ -70,9 +70,7 @@ export default {
           .then((res) => {
             if (res.status === 200) {
               this.list = res.data;
-            }
-
-            else {
+            } else {
               console.log('Unhandled status code:', res.status);
               console.log("댓글을 불러올 수 없습니다.");
             }
@@ -110,40 +108,31 @@ export default {
             'ACCESS_TOKEN': `Bearer ${token}` // JWT를 헤더에 포함하여 전송
           }
         })
-            .then(() => {
-              alert('댓글이 저장되었습니다.');
-              this.contents = '';
-              this.fnGetview();
+            .then((res) => {
+              // 댓글 저장 성공시
+              if (res.status === 200) {
+                alert('댓글이 저장되었습니다.');
+                this.contents = '';
+                this.fnGetview();
+              }
+
+              // 그외 분기 처리
+              else {
+                console.log('Unhandled status code:', res.status);
+                alert("댓글 저장에 실패했습니다.");
+              }
             }).catch((err) => {
 
-          // NO_AUTHORIZATION: 권한 검증 실패시, alert 반환
-          if (err.response.data.status === "403" && err.response.data.message) {
-            console.log(err.response.data.message);
-            alert(err.response.data.message);
+          const _status = err.response.data.status;
+
+          // ResponseStatusException, UsernameNotFoundException (게시글 부재, 404)
+          if (_status === 404) {
+            consoleError(err);
           }
 
-          // ONLY_BLANk: 빈칸 입력시 alert 반환
-          else if (err.response.data.status === "400" && err.response.data.message) {
-            console.log(err.response.data.message);
-            alert(err.response.data.message);
-          }
-          // BOARD_NOTFOUND: 게시글 부재시, alert 반환 및 리스트로
-          else if (err.response.data.status === "404" && err.response.data.message) {
-            console.log(err.response.data.message);
-            alert(err.response.data.message);
-            this.fnList();
-          }
-
-          // 그 외 Custom Exception 발생시 alert 반환
-          else if (err.response.data.status && err.response.data.message) {
-            console.log(err.response.data.message);
-            alert(err.response.data.message);
-          }
-
-          // 기타
+          // 알 수 없는 예외 발생시
           else {
-            console.log("댓글 입력에 실패했습니다.");
-            alert("댓글 입력에 실패했습니다.");
+            consoleError(err);
           }
         })
       }
