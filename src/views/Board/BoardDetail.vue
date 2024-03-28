@@ -64,7 +64,7 @@ export default {
       },
     }
   },
-   mounted() {
+   created() {
     this.fetchBoardDetail()
     this.fnGetImgfile();
   },
@@ -73,7 +73,6 @@ export default {
       // this.board = await fetchBoardDetail(this.id);
       GetBoardDetail(this.id)
           .then(res=>{
-            console.log(14141);
             console.log(res);
             this.board = res;
           });

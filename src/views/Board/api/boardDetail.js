@@ -60,15 +60,28 @@ export const GetBoardDetail = (id) => {
             if (_status === 404) {
                 handleErrorWithAlert(err);
                 pushBoard();
-                throw err;
+                // throw err;
             }
 
             // 알 수 없는 예외 발생시
             else {
                 alert('알 수 없는 오류가 발생했습니다.');
                 pushBoard();
-                throw err;
+                // throw err;
             }
         });
 }
+//
+// export function GetBoardDetail2(id){
+//     axios.get(serverUrl + '/board/' + id)
+//         .then((res)=>{
+//             if (res.status === 200) {
+//                 return res.data;
+//             } else {
+//                 console.log('Unhandled status code:', res.status);
+//                 alert("게시글 상세를 불러올 수 없습니다.");
+//                 pushBoard();
+//             }
+//         })
+// }
 
