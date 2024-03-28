@@ -1,22 +1,22 @@
 <template>
   <div class="container my-3">
-    <h2 class="border-bottom py-2">{{ title }}</h2>
+    <h2 class="border-bottom py-2">{{ board.title }}</h2>
     <div class="card my-3">
       <div class="card-body">
         <img :src="fileUrl" width="80%" style="margin: auto; display: block" v-if="fileUrl">
-        <div class="card-text" style="white-space: pre-line;">{{ contents }}</div>
+        <div class="card-text" style="white-space: pre-line;">{{ board.contents }}</div>
         <div class="d-flex justify-content-end">
           <div class="badge bg-light text-dark p-2 text-start mx-3">
             <div class="mb-2">작성자</div>
-            <div>{{ memberId }}</div>
+            <div>{{ board.memberId }}</div>
           </div>
           <div class="badge bg-light text-dark p-2 text-start mx-3">
             <div class="mb-2">작성일</div>
-            <div>{{ createdAt }}</div>
+            <div>{{ board.createdAt }}</div>
           </div>
-          <div v-if="this.updatedAt" class="badge bg-light text-dark p-2 text-start mx-3">
+          <div v-if="board.updatedAt" class="badge bg-light text-dark p-2 text-start mx-3">
             <div class="mb-2">수정일</div>
-            <div>{{ updatedAt }}</div>
+            <div>{{ board.updatedAt }}</div>
           </div>
         </div>
         <div class="my-3" v-if="originalFile">
@@ -25,10 +25,10 @@
         </div>
         <div class="my-3">
           <button class="btn btn-sm btn-outline-secondary" v-on:click="fnCheckUpdate"
-                  v-if="this.memberId == this.$store.state.user">수정
+                  v-if="memberId === this.$store.state.user">수정
           </button>
           <button class="btn btn-sm btn-outline-secondary" v-on:click="fnDelete"
-                  v-if="this.memberId == this.$store.state.user">삭제
+                  v-if="memberId === this.$store.state.user">삭제
           </button>
           <button class="btn btn-sm btn-outline-secondary" v-on:click="fnList">목록</button>
         </div>
@@ -41,6 +41,8 @@
 <script>
 import Comment from "@/components/Comment.vue";
 import {handleErrorWithAlert, consoleError, handleAnonymousError} from "@/utils/errorHandling";
+import {GetBoardDetail} from "./api/boardDetail"
+
 
 export default {
   components: {
@@ -48,63 +50,36 @@ export default {
   },
   data() {
     return {
-      idx: this.$route.query.idx,
-      id: '', //
-      title: '', // 제목
-      contents: '', // 내용
-      createdAt: '', // 작성일
-      updatedAt: '', // 수정일
-      memberId: '', // 작성자
-      originalFile: '', // 첨부파일명
-      fileUrl: null
+      id: this.$route.params.id,
+      // idx: this.$route.query.idx,
+      // id: '', //
+      board: {
+        title: '', // 제목
+        contents: '', // 내용
+        createdAt: '', // 작성일
+        updatedAt: '', // 수정일
+        memberId: '', // 작성자
+        originalFile: '', // 첨부파일명
+        fileUrl: null
+      },
     }
   },
-  mounted() {
-    this.fnGetView();
+   mounted() {
+    this.fetchBoardDetail()
     this.fnGetImgfile();
   },
   methods: {
-
-    // 게시글 상세
-    fnGetView() {
-      console.log(this.idx)
-      const id = this.$route.params.id;
-      this.$axios.get(this.$serverUrl + '/board/' + id)
-          .then((res) => {
-            // 게시글 상세 조회 성공시
-            if (res.status === 200) {
-              this.id = res.data.id; // 아이디
-              this.title = res.data.title; // 제목
-              this.contents = res.data.contents; // 내용
-              this.createdAt = res.data.createdAt; // 작성일
-              this.updatedAt = res.data.updatedAt; // 수정일
-              this.memberId = res.data.memberId; // 작성자
-              this.originalFile = res.data.originalFile; // 첨부파일명
-            }
-            // 그 외, 분기 처리
-            else {
-              console.log('Unhandled status code:', res.status);
-              alert("게시글 상세를 불러올 수 없습니다.");
-              this.fnList();
-            }
-          }).catch((err) => {
-        const _status = err.response.data.status;
-
-        // ResponseStatusException (게시글 부재, 404)
-        if (_status === 404) {
-          handleErrorWithAlert(err);
-          this.fnList();
-        }
-
-        // 알 수 없는 예외 발생시
-        else {
-          alert('알 수 없는 오류가 발생했습니다.');
-          this.fnList();
-        }
-      })
+    fetchBoardDetail(){
+      // this.board = await fetchBoardDetail(this.id);
+      GetBoardDetail(this.id)
+          .then(res=>{
+            console.log(14141);
+            console.log(res);
+            this.board = res;
+          });
     },
 
-    // 이미지 파일 출력
+// 이미지 파일 출력
     fnGetImgfile() {
       const id = this.$route.params.id;
       this.$axios.get(this.$serverUrl + '/board/' + id + '/image', {responseType: 'blob'})
@@ -136,7 +111,7 @@ export default {
       })
     },
 
-    // 파일 다운로드
+// 파일 다운로드
     fnDownload() {
       const id = this.id
       this.$axios.get(this.$serverUrl + '/board/' + id + '/file',
@@ -193,7 +168,7 @@ export default {
       });
     },
 
-    // 게시글 수정 권한 확인
+// 게시글 수정 권한 확인
     fnCheckUpdate() {
       const id = this.$route.params.id;
       this.$axios.get(this.$serverUrl + '/board/' + id + '/check')
@@ -229,7 +204,7 @@ export default {
       })
     },
 
-    // 게시글 삭제
+// 게시글 삭제
     fnDelete() {
       if (!confirm("삭제하시겠습니까?")) return
       const id = this.$route.params.id;
