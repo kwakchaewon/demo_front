@@ -66,6 +66,7 @@
   </main>
 </template>
 <script>
+import api from "@/views/Board/api";
 export default {
   data() { //변수생성
     return {
@@ -99,30 +100,14 @@ export default {
       }
     }
   },
-  // watch:{
-  //   'queryPage':'fnGetList'
-  // },
-  // created() {
-  // console.log(history.state);
-  // console.log(this.$router.params.page)
-  // },
 
   mounted() {
-    this.fnGetList();
+    this.fetchBoardList();
   },
-  // computed:{
-  //   queryPage(){
-  //     console.log(1)
-  //     // console.log(this.$route.query)
-  //     // this.page = this.$route.query;
-  //     return this.$route.query.page;
-  //   }
-  // },
-  // beforeUpdate() {
-  //   this.fnGetList();
-  // },
+
   methods: {
-    fnGetList() {
+    // 게시글 리스트 조회
+    fetchBoardList(){
       this.requestBody = { // 데이터 전송
         keyword: this.keyword,
         // page: this.page,
@@ -130,21 +115,16 @@ export default {
         page: this.page,
         size: this.size
       }
-      this.$axios.get(this.$serverUrl + "/board", {
-        params: this.requestBody,
-        headers: {}
-      }).then((res) => {
-        this.list = res.data.list.content;
-        this.paging = res.data.pagination;
-        this.no = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize);
-      }).catch((err) => {
-        if (err.response.data.status && err.response.data.message) {
-          alert(err.response.data.message);
-          console.log(err.response.data.message);
-        } else {
-          alert('게시글 리스트를 불러올 수 없습니다.');
-        }
-      })
+
+      api.fetchBoardList(this.requestBody)
+          .then((res) => {
+            this.list = res.list.content;
+            this.paging = res.pagination;
+            this.no = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize);
+          })
+          .catch((err) => {
+            alert(err.message);
+          })
     },
 
     fnView(id) {
@@ -160,14 +140,14 @@ export default {
         this.page = n;
       }
 
-      this.fnGetList();
+      this.fetchBoardList();
     },
 
     fnKeywordSearch() {
       this.keyword = this.$refs.keyword.value;
       this.page = 0;
       // this.paging.page = 0;
-      this.fnGetList();
+      this.fetchBoardList();
     }
   }
 }

@@ -5,7 +5,7 @@ import {serverUrl} from "@/main";
 export default {
     // 게시글 상세 조회
     fetchBoardDetail(id) {
-        return axios.get(serverUrl + '/board/detail/' + id)
+        return axios.get(serverUrl + '/board/' + id)
             .then((res) => {
                 if (res.data.state.statusCode === 200) {
                     return res.data.data;
@@ -18,6 +18,24 @@ export default {
             .catch((err) => {
                 throw err;
             });
-    }
+    },
+
+    fetchBoardList(requestBody) {
+        return axios.get(serverUrl + "/board", {
+            params: requestBody
+            // headers: {}
+        })
+            .then((res)=>{
+                if (res.data.state.statusCode === 200){
+                    return res.data;
+                }
+                else {
+                    throw new Error("Unhandled status code: " + res.status);
+                }
+            })
+            .catch((err) => {
+                throw err;
+            })
+    },
 }
 
