@@ -41,7 +41,6 @@
 <script>
 import Comment from "@/components/Comment.vue";
 import {handleErrorWithAlert, consoleError, handleAnonymousError} from "@/utils/errorHandling";
-// import {GetBoardDetail} from "./api/boardDetail"
 import api from "@/views/Board/api";
 
 
@@ -52,45 +51,15 @@ export default {
   data() {
     return {
       id: this.$route.params.id,
-      board: {
-      },
+      board: {},
     }
   },
   mounted() {
     this.fetchBoardDetail()
     this.fnGetImgfile();
-    console.log(this.$store.state.user);
   },
   methods: {
-    // 잘 동작함
-    // fetchBoardDetail() {
-    //   this.$axios.get(this.$serverUrl + '/board/detail/' + this.id)
-    //       .then((res) => {
-    //         if (res.data.state.statusCode === 200) {
-    //           this.board = res.data.data;
-    //         }
-    //
-    //         // 상태 코드가 200 이 아닐 경우, 에러 메시지 alert ex) 게시글 부재
-    //         else if (res.data.state !== 200) {
-    //           alert(res.data.state.message);
-    //           this.fnList();
-    //         }
-    //
-    //         // 그 외,
-    //         else {
-    //           // console.log('Unhandled status code:', res.status);
-    //           alert("게시글 조회에 실패했습니다.");
-    //           this.fnList();
-    //         }
-    //       })
-    //
-    //       .catch((err) => {
-    //         alert("알 수 없는 에러가 발생했습니다.")
-    //         console.log(err)
-    //         this.fnList();
-    //       })
-    // },
-
+    // 게시글 상세 조회 (완료)
     fetchBoardDetail() {
       api.fetchBoardDetail(this.id)
           .then((board) => {
