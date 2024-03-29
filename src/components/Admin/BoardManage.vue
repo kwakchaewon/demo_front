@@ -49,6 +49,7 @@
   <br>
 </template>
 <script>
+import api from "@/views/Board/api";
 export default {
   name: 'BoardManage',
 
@@ -85,34 +86,30 @@ export default {
   },
 
   mounted() {
-    this.fnGetList();
+    this.fetchBoardList();
   },
 
   methods: {
+
     // 게시글 조회
-    fnGetList() {
-      console.log(this.page)
+    fetchBoardList(){
       this.requestBody = { // 데이터 전송
         keyword: this.keyword,
+        // page: this.page,
+        // page: this.$route.query.page,
         page: this.page,
         size: this.size
       }
-      console.log(this.requestBody);
-      this.$axios.get(this.$serverUrl + "/board", {
-        params: this.requestBody,
-        headers: {}
-      }).then((res) => {
-        this.list = res.data.list.content;
-        this.paging = res.data.pagination;
-        this.no = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize);
-      }).catch((err) => {
-        if (err.response.data.status && err.response.data.message) {
-          alert(err.response.data.message);
-          console.log(err.response.data.message);
-        } else {
-          alert('게시글 리스트를 불러올 수 없습니다.');
-        }
-      })
+
+      api.fetchBoardList(this.requestBody)
+          .then((res) => {
+            this.list = res.list.content;
+            this.paging = res.pagination;
+            this.no = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize);
+          })
+          .catch((err) => {
+            alert(err.message);
+          })
     },
 
     fnPage(n) {
@@ -120,7 +117,7 @@ export default {
         this.page = n;
       }
 
-      this.fnGetList();
+      this.fetchBoardList();
     },
 
     // 게시글 삭제
@@ -129,7 +126,7 @@ export default {
       this.$axios.delete(this.$serverUrl + '/board/' + id)
           .then(() => {
             alert("게시글이 삭제됐습니다.")
-            this.fnGetList();
+            this.fetchBoardList();
           }).catch((err) => {
 
         // 403 권한없음 예외 처리: 로그인 창으로
@@ -144,7 +141,7 @@ export default {
         else if (err.response.data.status === "404" && err.response.data.message) {
           console.log(err.response.data.message);
           alert(err.response.data.message);
-          this.fnGetList();
+          this.fetchBoardList();
         }
 
         // 그 외 Custom Exception 발생시 alert 반환
