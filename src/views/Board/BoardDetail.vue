@@ -52,16 +52,7 @@ export default {
   data() {
     return {
       id: this.$route.params.id,
-      // idx: this.$route.query.idx,
-      // id: '', //
       board: {
-        // title: '', // 제목
-        // contents: '', // 내용
-        // createdAt: '', // 작성일
-        // updatedAt: '', // 수정일
-        // memberId: '', // 작성자
-        // originalFile: '', // 첨부파일명
-        // fileUrl: null
       },
     }
   },
