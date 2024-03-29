@@ -74,9 +74,18 @@ export default {
 
               // 수정 게시글 불러오기 성공시
               if (res.status === 200) {
-                this.title = res.data.title;
-                this.contents = res.data.contents;
-                this.originalFile = res.data.originalFile;
+
+                // 게시글 작성자와 memberId가 다를경우 강제 push
+                if (this.$store.state.user !== res.data.memberId){
+                  alert("수정 권한이 없습니다.")
+                  this.$router.push('/board/' + this.idx);
+                }
+
+                else {
+                  this.title = res.data.title;
+                  this.contents = res.data.contents;
+                  this.originalFile = res.data.originalFile;
+                }
               }
 
               // 그 외, 분기 처리

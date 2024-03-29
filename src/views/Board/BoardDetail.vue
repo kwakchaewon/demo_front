@@ -19,16 +19,16 @@
             <div>{{ board.updatedAt }}</div>
           </div>
         </div>
-        <div class="my-3" v-if="originalFile">
+        <div class="my-3" v-if="board.originalFile">
           <text>첨부파일(클릭시 다운) :</text>
-          <a href="#" @click="fnDownload">{{ originalFile }}</a>
+          <a href="#" @click="fnDownload">{{ board.originalFile }}</a>
         </div>
         <div class="my-3">
           <button class="btn btn-sm btn-outline-secondary" v-on:click="fnCheckUpdate"
-                  v-if="memberId === this.$store.state.user">수정
+                  v-if="board.memberId === this.$store.state.user">수정
           </button>
           <button class="btn btn-sm btn-outline-secondary" v-on:click="fnDelete"
-                  v-if="memberId === this.$store.state.user">삭제
+                  v-if="board.memberId === this.$store.state.user">삭제
           </button>
           <button class="btn btn-sm btn-outline-secondary" v-on:click="fnList">목록</button>
         </div>
@@ -41,7 +41,8 @@
 <script>
 import Comment from "@/components/Comment.vue";
 import {handleErrorWithAlert, consoleError, handleAnonymousError} from "@/utils/errorHandling";
-import {GetBoardDetail} from "./api/boardDetail"
+// import {GetBoardDetail} from "./api/boardDetail"
+import api from "@/views/Board/api";
 
 
 export default {
@@ -54,29 +55,62 @@ export default {
       // idx: this.$route.query.idx,
       // id: '', //
       board: {
-        title: '', // 제목
-        contents: '', // 내용
-        createdAt: '', // 작성일
-        updatedAt: '', // 수정일
-        memberId: '', // 작성자
-        originalFile: '', // 첨부파일명
-        fileUrl: null
+        // title: '', // 제목
+        // contents: '', // 내용
+        // createdAt: '', // 작성일
+        // updatedAt: '', // 수정일
+        // memberId: '', // 작성자
+        // originalFile: '', // 첨부파일명
+        // fileUrl: null
       },
     }
   },
-   created() {
+  mounted() {
     this.fetchBoardDetail()
     this.fnGetImgfile();
+    console.log(this.$store.state.user);
   },
   methods: {
-    fetchBoardDetail(){
-      // this.board = await fetchBoardDetail(this.id);
-      GetBoardDetail(this.id)
-          .then(res=>{
-            console.log(res);
-            this.board = res;
-          });
+    // 잘 동작함
+    // fetchBoardDetail() {
+    //   this.$axios.get(this.$serverUrl + '/board/detail/' + this.id)
+    //       .then((res) => {
+    //         if (res.data.state.statusCode === 200) {
+    //           this.board = res.data.data;
+    //         }
+    //
+    //         // 상태 코드가 200 이 아닐 경우, 에러 메시지 alert ex) 게시글 부재
+    //         else if (res.data.state !== 200) {
+    //           alert(res.data.state.message);
+    //           this.fnList();
+    //         }
+    //
+    //         // 그 외,
+    //         else {
+    //           // console.log('Unhandled status code:', res.status);
+    //           alert("게시글 조회에 실패했습니다.");
+    //           this.fnList();
+    //         }
+    //       })
+    //
+    //       .catch((err) => {
+    //         alert("알 수 없는 에러가 발생했습니다.")
+    //         console.log(err)
+    //         this.fnList();
+    //       })
+    // },
+
+    fetchBoardDetail() {
+      api.fetchBoardDetail(this.id)
+          .then((board) => {
+            this.board = board;
+          })
+          .catch((err) => {
+            alert(err.message);
+            this.fnList();
+          })
     },
+
 
 // 이미지 파일 출력
     fnGetImgfile() {
