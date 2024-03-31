@@ -40,6 +40,7 @@
 
 <script>
 import {handleErrorWithAlert, consoleError, handleAnonymousError} from "@/utils/errorHandling";
+import api from "@/views/Board/api";
 
 export default {
   data() { //변수생성
@@ -66,6 +67,45 @@ export default {
   },
 
   methods: {
+    // 게시글 저장 (생성 또는 수정)
+    fnSave() {
+      if (this.isEditing === false) {
+        this.createBoard();
+      } else {
+        this.fnUdpate();
+      }
+    },
+
+    // 게시글 생성
+    createBoard() {
+      const formData = new FormData();
+
+      formData.append("title", this.title);
+      formData.append("contents", this.contents);
+
+      if (this.fileInput) {
+        formData.append("file", this.fileInput);
+      }
+
+      const blankPattern = /^\s*$/ // 공백 유효성 검사
+
+      if (blankPattern.test(this.title)) {
+        alert("빈 제목은 사용할 수 없습니다.");
+      } else if (blankPattern.test(this.contents)) {
+        alert("빈 내용은 입력할 수 없습니다.");
+      } else {
+        api.createBoard(formData)
+            .then((id) => {
+              alert("게시글이 저장됐습니다.");
+              const boardId = parseInt(id);
+              this.$router.push(`/board/` + boardId);
+            })
+            .catch((err) => {
+              alert(err.message);
+            })
+      }
+    },
+
     fnGetView() {
       // 게시글 수정일 경우 해당 게시글 불러오고 그 외는 빈칸으로
       if (this.isEditing === true) {
@@ -76,12 +116,10 @@ export default {
               if (res.status === 200) {
 
                 // 게시글 작성자와 memberId가 다를경우 강제 push
-                if (this.$store.state.user !== res.data.memberId){
+                if (this.$store.state.user !== res.data.memberId) {
                   alert("수정 권한이 없습니다.")
                   this.$router.push('/board/' + this.idx);
-                }
-
-                else {
+                } else {
                   this.title = res.data.title;
                   this.contents = res.data.contents;
                   this.originalFile = res.data.originalFile;
@@ -110,14 +148,6 @@ export default {
             this.fnList();
           }
         });
-      }
-    },
-
-    fnSave() {
-      if (this.isEditing === false) {
-        this.fnCreate();
-      } else {
-        this.fnUdpate();
       }
     },
 
@@ -196,55 +226,6 @@ export default {
       }
     },
 
-    fnCreate() {
-      // const apiUrl = this.$serverUrl + '/board'
-      const formData = new FormData();
-
-      formData.append("title", this.title);
-      formData.append("contents", this.contents);
-
-      if (this.fileInput) {
-        formData.append("file", this.fileInput);
-      }
-
-      const blankPattern = /^\s*$/ // 공백 유효성 검사
-
-      if (blankPattern.test(this.title)) {
-        alert("빈 제목은 사용할 수 없습니다.");
-      } else if (blankPattern.test(this.contents)) {
-        alert("빈 내용은 입력할 수 없습니다.");
-      } else {
-
-        this.$axios.post(this.$serverUrl + '/board', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          }
-        }).then((res) => {
-          // 게시글 작성 성공시
-          if (res.status === 200) {
-            alert('글이 저장됐습니다.');
-            const boardId = parseInt(res.data.id);
-            this.$router.push('' + boardId);
-          }
-
-          // 그 외, 분기 처리
-          else {
-            console.log('Unhandled status code:', res.status);
-            alert("게시글 저장에 실패했습니다.");
-          }
-        }).catch((err) => {
-          const _status = err.response.data.status;
-          // IllegalArgumentException(유효성 검사, 500), UsernameNotFoundException(계정 실패, 404), IoException(입출력 실패, 500)
-          if (_status === 404 || _status === 500) {
-            handleErrorWithAlert(err);
-          }
-          // 알 수 없는 에러 발생 시
-          else {
-            handleAnonymousError(err);
-          }
-        })
-      }
-    },
 
 // 파일 다운로드
     fnDownload() {

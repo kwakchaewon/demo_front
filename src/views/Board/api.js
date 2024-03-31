@@ -3,6 +3,27 @@ import {serverUrl} from "@/main";
 // import router from "@/router";
 
 export default {
+
+    // 게시글 등록
+    createBoard(formData) {
+        return axios.post(serverUrl + '/board', formData, {
+            headers: {'Content-Type': 'multipart/form-data'}
+        })
+            .then((res) => {
+                if (res.data.state.statusCode === 200) {
+                    return res.data.data.id;
+                } else if (res.data.state.statusCode !== 200 && res.data.state.statusCode) {
+                    throw new Error(res.data.state.message);
+                } else {
+                    throw new Error("Unhandled status code: " + res.status);
+                }
+            })
+            .catch((err) => {
+                throw err;
+            })
+    },
+
+
     // 게시글 상세 조회
     fetchBoardDetail(id) {
         return axios.get(serverUrl + '/board/' + id)
@@ -20,16 +41,16 @@ export default {
             });
     },
 
+    // 게시글 리스트 조회
     fetchBoardList(requestBody) {
         return axios.get(serverUrl + "/board", {
             params: requestBody
             // headers: {}
         })
-            .then((res)=>{
-                if (res.data.state.statusCode === 200){
+            .then((res) => {
+                if (res.data.state.statusCode === 200) {
                     return res.data;
-                }
-                else {
+                } else {
                     throw new Error("Unhandled status code: " + res.status);
                 }
             })
