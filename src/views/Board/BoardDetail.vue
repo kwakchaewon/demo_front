@@ -54,8 +54,12 @@ export default {
       board: {},
     }
   },
-  mounted() {
+
+  created() {
     this.fetchBoardDetail()
+  },
+
+  mounted() {
     this.fnGetImgfile();
   },
   methods: {
