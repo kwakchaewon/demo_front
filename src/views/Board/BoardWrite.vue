@@ -115,24 +115,28 @@ export default {
               // 수정 게시글 불러오기 성공시
               if (res.status === 200) {
 
-                // 게시글 작성자와 memberId가 다를경우 강제 push
-                if (this.$store.state.user !== res.data.memberId) {
+                console.log(res.data);
+
+                // data 가 존재하고 user 와 memberId 가 같을 경우 수정권한
+                if (res.data.state.statusCode === 200 && this.$store.state.user === res.data.data.memberId) {
+                  this.title = res.data.data.title;
+                  this.contents = res.data.data.contents;
+                  this.originalFile = res.data.data.originalFile;
+                }
+                else if (res.data.state.statusCode === 200 && this.$store.state.user !== res.data.data.memberId){
                   alert("수정 권한이 없습니다.")
                   this.$router.push('/board/' + this.idx);
+                }
+
+                else if (res.data.state.statusCode === 400) {
+                  alert("게시글이 존재하지 않습니다.");
+                  this.fnList();
                 } else {
-                  this.title = res.data.title;
-                  this.contents = res.data.contents;
-                  this.originalFile = res.data.originalFile;
+                  console.log('Unhandled status code:', res.status);
+                  alert("해당 게시글을 불러올 수 없습니다.");
+                  this.fnList();
                 }
               }
-
-              // 그 외, 분기 처리
-              else {
-                console.log('Unhandled status code:', res.status);
-                alert("해당 게시글을 불러올 수 없습니다.");
-                this.fnList();
-              }
-
             }).catch(err => {
           const _status = err.response.data.status;
 
