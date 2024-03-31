@@ -3,7 +3,7 @@
     <h2 class="border-bottom py-2">{{ board.title }}</h2>
     <div class="card my-3">
       <div class="card-body">
-        <img :src="fileUrl" width="80%" style="margin: auto; display: block" v-if="fileUrl">
+        <img :src="this.fileUrl" width="80%" style="margin: auto; display: block" v-if="this.fileUrl !== null">
         <div class="card-text" style="white-space: pre-line;">{{ board.contents }}</div>
         <div class="d-flex justify-content-end">
           <div class="badge bg-light text-dark p-2 text-start mx-3">
@@ -52,15 +52,16 @@ export default {
     return {
       id: this.$route.params.id,
       board: {},
+      fileUrl: null
     }
   },
 
   created() {
-    this.fetchBoardDetail()
+    this.fetchBoardDetail();
   },
 
   mounted() {
-    this.fnGetImgfile();
+    this.fetchBoardImage();
   },
   methods: {
     // 게시글 상세 조회 (완료)
@@ -75,37 +76,18 @@ export default {
           })
     },
 
-
-// 이미지 파일 출력
-    fnGetImgfile() {
+    // 게시글 이미지 출력
+    fetchBoardImage(){
       const id = this.$route.params.id;
-      this.$axios.get(this.$serverUrl + '/board/' + id + '/image', {responseType: 'blob'})
-          .then((res) => {
-            // 이미지 파일 출력 성공시
-            if (res.status === 200) {
-              // 1. Blob 으로 받아온 데이터로 ULR 생성 후 fileUrl 에 바인딩
-              const url = URL.createObjectURL(new Blob([res.data]));
-              this.fileUrl = url;
-            }
-            // 그 외 분기 처리
-            else {
-              console.log('Unhandled status code:', res.status);
-              alert("이미지 파일을 불러올 수 없습니다.");
-            }
-          }).catch((err) => {
-        const _status = err.response.status;
 
-        // FileNotFoundException (게시글 / 이미지 파일 부재 / 파일 부재, 404), IoException (파일 입출력 실패, 500)
-        if (_status === 404 || _status === 500) {
-          // response 타입을 blob 으로 받을 경우 exception 메시지가 출력되지 않음
-          console.log("이미지 파일을 출력할 수 없습니다.");
-        }
-
-        // 그 외 Exception 발생시 log 출력
-        else {
-          consoleError(err);
-        }
-      })
+      api.fetchBoardImage(id)
+          .then((imageUrl) =>{
+            this.fileUrl = imageUrl;
+          })
+          .catch((err)=>{
+            // 이미지 파일 추출에 실패 할경우 alert 메시지
+            alert(err.message);
+          })
     },
 
 // 파일 다운로드

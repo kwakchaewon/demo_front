@@ -41,11 +41,38 @@ export default {
             });
     },
 
+    // 게시글 이미지 조회
+    fetchBoardImage(id){
+        return axios.get(serverUrl + '/board/' + id + '/image', {responseType: 'blob'})
+            .then((res) => {
+                
+                // 이미지 파일 출력 성공
+                if (res.status === 200 && res.data.size !== 0) {
+                    return URL.createObjectURL(new Blob([res.data]));
+                }
+
+                // 파일이 존재하지 않을 시
+                else if(res.status === 200 && res.data.size === 0){
+                    return null;
+                }
+                
+                // 그외 분기 처리
+                else {
+                    throw new Error("Unhandled status code: " + res.status);
+                }
+            })
+            .catch((err) => {
+                // IoException 발생 시
+                if (err.response.status === 500){
+                    throw new Error("이미지 파일을 출력할 수 없습니다.");
+                }
+            });
+    },
+
     // 게시글 리스트 조회
     fetchBoardList(requestBody) {
         return axios.get(serverUrl + "/board", {
             params: requestBody
-            // headers: {}
         })
             .then((res) => {
                 if (res.data.state.statusCode === 200) {
