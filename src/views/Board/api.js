@@ -117,7 +117,7 @@ export default {
     },
 
     // 게시글 수정 권한 검증
-    getWriteView(id){
+    getWriteView(id) {
         return axios.get(serverUrl + '/board/' + id + '/check')
             .then((res) => {
                 if (res.data.state.statusCode === 200) {
@@ -132,36 +132,35 @@ export default {
                     throw new Error("Unhandled status code: " + res.status);
                 }
             })
-            .catch((err)=>{
-                if (err.response.data.status === 403){
+            .catch((err) => {
+                if (err.response.data.status === 403) {
                     throw new Error("수정 권한이 없습니다.");
-                }
-                else {
+                } else {
                     throw err;
                 }
             })
     },
 
-    DeleteBoard(id){
+    DeleteBoard(id) {
         return axios.delete(serverUrl + '/board/' + id)
-            .then((res)=>{
+            .then((res) => {
 
-                if( res.data.state.statusCode === 200 ){
+                if (res.data.state.statusCode === 200) {
                     const message = "삭제되었습니다."
                     return message;
                 }
-                
-                // 게시글 부재
-                else if(res.data.state.statusCode === 404) {
-                    throw new Error("삭제된 게시글입니다.")
-                }
 
-                else {
+                // 게시글 부재
+                else if (res.data.state.statusCode === 404) {
+                    throw new Error("삭제된 게시글입니다.")
+                } else {
                     throw new Error("Unhandled status code: " + res.status);
                 }
             })
-            .catch((err)=>{
-                throw err;
+            .catch((err) => {
+                if (err.response.data.status === 403) {
+                    throw new Error("삭제 권한이 없습니다.");
+                } else throw err;
             })
     }
 }
