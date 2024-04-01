@@ -24,7 +24,7 @@
           <a href="#" @click="fnDownload">{{ board.originalFile }}</a>
         </div>
         <div class="my-3">
-          <button class="btn btn-sm btn-outline-secondary" v-on:click="goUpdate">
+          <button class="btn btn-sm btn-outline-secondary" v-on:click="goUpdate"
                   v-if="board.memberId === this.$store.state.user">수정
           </button>
           <button class="btn btn-sm btn-outline-secondary" v-on:click="fnDelete"
