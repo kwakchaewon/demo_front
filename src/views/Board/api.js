@@ -1,6 +1,5 @@
 import axios from "@/utils/axios";
 import {serverUrl} from "@/main";
-// import router from "@/router";
 
 export default {
 
@@ -42,20 +41,20 @@ export default {
     },
 
     // 게시글 이미지 조회
-    fetchBoardImage(id){
+    fetchBoardImage(id) {
         return axios.get(serverUrl + '/board/' + id + '/image', {responseType: 'blob'})
             .then((res) => {
-                
+
                 // 이미지 파일 출력 성공
                 if (res.status === 200 && res.data.size !== 0) {
                     return URL.createObjectURL(new Blob([res.data]));
                 }
 
                 // 파일이 존재하지 않을 시
-                else if(res.status === 200 && res.data.size === 0){
+                else if (res.status === 200 && res.data.size === 0) {
                     return null;
                 }
-                
+
                 // 그외 분기 처리
                 else {
                     throw new Error("Unhandled status code: " + res.status);
@@ -63,7 +62,7 @@ export default {
             })
             .catch((err) => {
                 // IoException 발생 시
-                if (err.response.status === 500){
+                if (err.response.status === 500) {
                     throw new Error("이미지 파일을 출력할 수 없습니다.");
                 }
             });
@@ -85,5 +84,34 @@ export default {
                 throw err;
             })
     },
+
+    updateBoard(id, formData) {
+        return axios.put(serverUrl + "/board/" + id, formData)
+            .then((res) => {
+                if (res.data.state.statusCode === 200) {
+                    console.log(1);
+                    const message = "게시글이 수정됐습니다.";
+                    return message;
+                }
+                // 삭제된 게시글
+                else if (res.data.state.statusCode === 400) {
+                    throw new Error("삭제된 게시글입니다.")
+                }
+                // 그외
+                else {
+                    throw new Error("Unhandled status code: " + res.status);
+                }
+            })
+            .catch((err) => {
+                // AccessDeniedException,
+                if (err.status === 403) {
+                    throw err;
+                }
+                // 삭제된 게시글, 그외
+                else {
+                    throw err;
+                }
+            })
+    }
 }
 

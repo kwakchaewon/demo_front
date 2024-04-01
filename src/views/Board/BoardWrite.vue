@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import {handleErrorWithAlert, consoleError, handleAnonymousError} from "@/utils/errorHandling";
+import {handleErrorWithAlert} from "@/utils/errorHandling";
 import api from "@/views/Board/api";
 
 export default {
@@ -72,7 +72,7 @@ export default {
       if (this.isEditing === false) {
         this.createBoard();
       } else {
-        this.fnUdpate();
+        this.updateBoard();
       }
     },
 
@@ -114,21 +114,15 @@ export default {
 
               // 수정 게시글 불러오기 성공시
               if (res.status === 200) {
-
-                console.log(res.data);
-
                 // data 가 존재하고 user 와 memberId 가 같을 경우 수정권한
                 if (res.data.state.statusCode === 200 && this.$store.state.user === res.data.data.memberId) {
                   this.title = res.data.data.title;
                   this.contents = res.data.data.contents;
                   this.originalFile = res.data.data.originalFile;
-                }
-                else if (res.data.state.statusCode === 200 && this.$store.state.user !== res.data.data.memberId){
+                } else if (res.data.state.statusCode === 200 && this.$store.state.user !== res.data.data.memberId) {
                   alert("수정 권한이 없습니다.")
                   this.$router.push('/board/' + this.idx);
-                }
-
-                else if (res.data.state.statusCode === 400) {
+                } else if (res.data.state.statusCode === 400) {
                   alert("게시글이 존재하지 않습니다.");
                   this.fnList();
                 } else {
@@ -155,7 +149,7 @@ export default {
       }
     },
 
-    fnUdpate() {
+    updateBoard() {
       // 1. 파일 변경 사항이 없다면 (isUpdatedFile == false)
       // 2. 파일 변경 사항이 있다면 (isUpdatedFile == true)
       // 2.1 삭제: 백단에서 null 일 경우 파일 삭제 처리
@@ -187,49 +181,30 @@ export default {
         }
       }
 
-      const blankPattern = /^\s*$/; // 공백 유효성 검사
+      const blankPattern = /^\s*$/ // 공백 유효성 검사
 
       if (blankPattern.test(this.title)) {
         alert("빈 제목은 사용할 수 없습니다.");
       } else if (blankPattern.test(this.contents)) {
         alert("빈 내용은 입력할 수 없습니다.");
       } else {
-        this.$axios.put(this.$serverUrl + `/board/` + this.idx, formData)
-            .then((res) => {
-
-              // 게시글 수정 성공시
-              if (res.status === 200) {
-                alert('글이 수정되었습니다.');
+        api.updateBoard(this.idx, formData)
+            .then((message) => {
+              // 이 부분이 뭔가 이상하다... 억지로 리턴값을 만든 느낌
+              alert(message);
+              this.$router.push(`/board/` + this.idx);
+            })
+            .catch((err) => {
+              if (err.message === "삭제된 게시글입니다.") {
+                alert(err.message)
+                this.fnList();
+              } else {
+                alert(err.message);
                 this.$router.push(`/board/` + this.idx);
               }
-
-              // 그 외 분기처리
-              else {
-                console.log('Unhandled status code:', res.status);
-                alert("게시글을 수정할 수 없습니다.");
-              }
-            }).catch((err) => {
-          const _status = err.response.status;
-
-          // AccessDeniedException(수정 권한 없음)
-          if (_status === 403) {
-            handleErrorWithAlert(err);
-          }
-
-          // ResponseStatusException (게시글 부재)
-          else if (_status === 404) {
-            handleErrorWithAlert(err);
-            this.fnList();
-          }
-          // 기타
-          else {
-            alert("게시글을 수정할 수 없습니다.");
-            consoleError(err);
-          }
-        })
+            })
       }
     },
-
 
 // 파일 다운로드
     fnDownload() {
