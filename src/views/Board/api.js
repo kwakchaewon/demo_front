@@ -124,7 +124,7 @@ export default {
                     return res
                 }
                 // 삭제된 게시글
-                else if (res.data.state.statusCode === 404) {
+                if (res.data.state.statusCode === 404) {
                     throw new Error("삭제된 게시글입니다.")
                 }
                 // 그외
@@ -139,6 +139,29 @@ export default {
                 else {
                     throw err;
                 }
+            })
+    },
+
+    DeleteBoard(id){
+        return axios.delete(serverUrl + '/board/' + id)
+            .then((res)=>{
+
+                if( res.data.state.statusCode === 200 ){
+                    const message = "삭제되었습니다."
+                    return message;
+                }
+                
+                // 게시글 부재
+                else if(res.data.state.statusCode === 404) {
+                    throw new Error("삭제된 게시글입니다.")
+                }
+
+                else {
+                    throw new Error("Unhandled status code: " + res.status);
+                }
+            })
+            .catch((err)=>{
+                throw err;
             })
     }
 }

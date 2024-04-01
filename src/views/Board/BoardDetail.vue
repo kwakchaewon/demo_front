@@ -27,7 +27,7 @@
           <button class="btn btn-sm btn-outline-secondary" v-on:click="goUpdate"
                   v-if="board.memberId === this.$store.state.user">수정
           </button>
-          <button class="btn btn-sm btn-outline-secondary" v-on:click="fnDelete"
+          <button class="btn btn-sm btn-outline-secondary" v-on:click="DeleteBoard"
                   v-if="board.memberId === this.$store.state.user">삭제
           </button>
           <button class="btn btn-sm btn-outline-secondary" v-on:click="fnList">목록</button>
@@ -40,7 +40,7 @@
 
 <script>
 import Comment from "@/components/Comment.vue";
-import {handleErrorWithAlert, consoleError, handleAnonymousError} from "@/utils/errorHandling";
+import {handleErrorWithAlert, consoleError} from "@/utils/errorHandling";
 import api from "@/views/Board/api";
 
 
@@ -77,14 +77,14 @@ export default {
     },
 
     // 게시글 이미지 출력
-    fetchBoardImage(){
+    fetchBoardImage() {
       const id = this.$route.params.id;
 
       api.fetchBoardImage(id)
-          .then((imageUrl) =>{
+          .then((imageUrl) => {
             this.fileUrl = imageUrl;
           })
-          .catch((err)=>{
+          .catch((err) => {
             // 이미지 파일 추출에 실패 할경우 alert 메시지
             alert(err.message);
           })
@@ -152,38 +152,22 @@ export default {
       this.$router.push('./write/' + this.$route.params.id);
     },
 
-// 게시글 삭제
-    fnDelete() {
+    // 게시글 삭제
+    DeleteBoard() {
       if (!confirm("삭제하시겠습니까?")) return
-      const id = this.$route.params.id;
-      this.$axios.delete(this.$serverUrl + '/board/' + id)
-          .then((res) => {
-            // 이미지 파일 출력 성공시
-            if (res.status === 200) {
-              alert('삭제되었습니다.');
+      api.DeleteBoard(this.$route.params.id)
+          .then((message) => {
+            alert(message);
+            this.fnList();
+          })
+          .catch((err) => {
+            alert(err.message);
+
+            // 삭제된 게시글일 경우 리스트로 이동
+            if (err.message === "삭제된 게시글입니다.") {
               this.fnList();
             }
-            // 그 외 분기 처리
-            else {
-              console.log('Unhandled status code:', res.status);
-              alert("게시글 삭제에 실패했습니다.");
-            }
-          }).catch((err) => {
-        const _status = err.response.status;
-
-        // AccessDeniedException(삭제 권한 없음)
-        if (_status === 403) {
-          handleErrorWithAlert(err);
-        }
-        // ResponseStatusException (게시글 부재)
-        else if (_status === 404) {
-          handleErrorWithAlert(err);
-          this.fnList();
-        } else {
-          alert("삭제에 실패했습니다.")
-          handleAnonymousError(err);
-        }
-      })
+          })
     },
   }
 }
