@@ -24,7 +24,7 @@
           <a href="#" @click="fnDownload">{{ board.originalFile }}</a>
         </div>
         <div class="my-3">
-          <button class="btn btn-sm btn-outline-secondary" v-on:click="fnCheckUpdate"
+          <button class="btn btn-sm btn-outline-secondary" v-on:click="goUpdate">
                   v-if="board.memberId === this.$store.state.user">수정
           </button>
           <button class="btn btn-sm btn-outline-secondary" v-on:click="fnDelete"
@@ -147,40 +147,9 @@ export default {
       });
     },
 
-// 게시글 수정 권한 확인
-    fnCheckUpdate() {
-      const id = this.$route.params.id;
-      this.$axios.get(this.$serverUrl + '/board/' + id + '/check')
-          .then((res) => {
-            // 게시글 수정 권한 확인 성공시
-            if (res.status === 200) {
-              this.$router.push({path: './write/' + id,});
-            }
-            // 그외 분기 처리
-            else {
-              console.log('Unhandled status code:', res.status);
-              alert("게시글을 수정할 수 없습니다.");
-            }
-          }).catch((err) => {
-
-        const _status = err.response.status;
-
-        // AccessDeniedException(삭제 권한 없음)
-        if (_status === 403) {
-          handleErrorWithAlert(err);
-        }
-
-        // ResponseStatusException (게시글 부재)
-        else if (_status === 404) {
-          handleErrorWithAlert(err);
-          this.fnList();
-        }
-        // 기타
-        else {
-          alert("수정할 수 없는 게시글입니다.");
-          consoleError(err);
-        }
-      })
+    // 수정 페이지 이동
+    goUpdate() {
+      this.$router.push('./write/' + this.$route.params.id);
     },
 
 // 게시글 삭제

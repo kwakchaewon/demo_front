@@ -39,7 +39,6 @@
 </template>
 
 <script>
-import {handleErrorWithAlert} from "@/utils/errorHandling";
 import api from "@/views/Board/api";
 
 export default {
@@ -47,6 +46,7 @@ export default {
     return {
       idx: this.$route.params.id,
       isEditing: false,
+      // board: {},
       title: '',
       contents: '',
       originalFile: null, // 기존 파일
@@ -63,7 +63,7 @@ export default {
   },
 
   mounted() {
-    this.fnGetView();
+    this.getWriteView();
   },
 
   methods: {
@@ -106,46 +106,25 @@ export default {
       }
     },
 
-    fnGetView() {
+    // 게시글 등록, 수정 폼
+    getWriteView() {
       // 게시글 수정일 경우 해당 게시글 불러오고 그 외는 빈칸으로
       if (this.isEditing === true) {
-        this.$axios.get(this.$serverUrl + `/board/` + this.idx)
+        api.getWriteView(this.idx)
             .then((res) => {
-
-              // 수정 게시글 불러오기 성공시
-              if (res.status === 200) {
-                // data 가 존재하고 user 와 memberId 가 같을 경우 수정권한
-                if (res.data.state.statusCode === 200 && this.$store.state.user === res.data.data.memberId) {
-                  this.title = res.data.data.title;
-                  this.contents = res.data.data.contents;
-                  this.originalFile = res.data.data.originalFile;
-                } else if (res.data.state.statusCode === 200 && this.$store.state.user !== res.data.data.memberId) {
-                  alert("수정 권한이 없습니다.")
-                  this.$router.push('/board/' + this.idx);
-                } else if (res.data.state.statusCode === 400) {
-                  alert("게시글이 존재하지 않습니다.");
-                  this.fnList();
-                } else {
-                  console.log('Unhandled status code:', res.status);
-                  alert("해당 게시글을 불러올 수 없습니다.");
-                  this.fnList();
-                }
+              this.title = res.data.data.title;
+              this.contents = res.data.data.contents;
+              this.originalFile = res.data.data.originalFile;
+            })
+            .catch((err) => {
+              if (err.message === "삭제된 게시글입니다.") {
+                alert(err.message);
+                this.fnList();
+              } else {
+                alert(err.message);
+                this.$router.push('/board/' + this.idx);
               }
-            }).catch(err => {
-          const _status = err.response.data.status;
-
-          // ResponseStatusException (게시글 부재, 404)
-          if (_status === 404) {
-            handleErrorWithAlert(err);
-            this.fnList();
-          }
-
-          // 알 수 없는 예외 발생시
-          else {
-            alert('알 수 없는 오류가 발생했습니다.');
-            this.fnList();
-          }
-        });
+            })
       }
     },
 
@@ -219,7 +198,6 @@ export default {
         // content-disposition 으로 파일명을 설정하려 했으나 UTF8 인코딩 문제 발생
         let fileName = res.headers['content-disposition'].split('filename=')[1];
         fileName = fileName.replace(/[""]/g, '');
-        console.log(fileName)
 
         // UTF-8 디코딩
         const decodeFileName = decodeURI(fileName);
@@ -235,22 +213,19 @@ export default {
 
     fnList() {
       this.$router.push({path: '/board',});
-    }
-    ,
+    },
 
 // 업데이트 첨부파일 삭졔: 클릭시 input 내 첨부파일 삭제
     resetFileInput() {
       if (!confirm("파일을 삭제하시겠습니까?")) return
       this.$refs.fileInput.value = null;
       this.fileInput = null;
-    }
-    ,
+    },
 
 // 기존 첨부파일 삭제 버튼: 클릭시 isUpdatedFile true 설정. 기존 첨부파일 숨김
     deleteOriginalFile() {
       if (!confirm("파일을 삭제하시겠습니까?")) return
       this.isUpdatedFile = true;
-      console.log(this.isUpdatedFile);
     }
     ,
 
@@ -270,7 +245,6 @@ export default {
         alert("1024kb 이상은 첨부할 수 없습니다.");
         event.target.value = '';
       } else {
-        console.log(event.target.files)
         this.fileInput = event.target.files[0];
         this.isUpdatedFile = true;
       }

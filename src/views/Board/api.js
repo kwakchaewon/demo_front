@@ -29,7 +29,9 @@ export default {
             .then((res) => {
                 if (res.data.state.statusCode === 200) {
                     return res.data.data;
-                } else if (res.data.state.statusCode !== 200) {
+                }
+                // boardnotfound(404)
+                else if (res.data.state.statusCode !== 200) {
                     throw new Error(res.data.state.message);
                 } else {
                     throw new Error("Unhandled status code: " + res.status);
@@ -85,16 +87,16 @@ export default {
             })
     },
 
+    // 게시글 수정
     updateBoard(id, formData) {
         return axios.put(serverUrl + "/board/" + id, formData)
             .then((res) => {
                 if (res.data.state.statusCode === 200) {
-                    console.log(1);
                     const message = "게시글이 수정됐습니다.";
                     return message;
                 }
                 // 삭제된 게시글
-                else if (res.data.state.statusCode === 400) {
+                else if (res.data.state.statusCode === 404) {
                     throw new Error("삭제된 게시글입니다.")
                 }
                 // 그외
@@ -108,6 +110,32 @@ export default {
                     throw err;
                 }
                 // 삭제된 게시글, 그외
+                else {
+                    throw err;
+                }
+            })
+    },
+
+    // 게시글 수정 권한 검증
+    getWriteView(id){
+        return axios.get(serverUrl + '/board/' + id + '/check')
+            .then((res) => {
+                if (res.data.state.statusCode === 200) {
+                    return res
+                }
+                // 삭제된 게시글
+                else if (res.data.state.statusCode === 404) {
+                    throw new Error("삭제된 게시글입니다.")
+                }
+                // 그외
+                else {
+                    throw new Error("Unhandled status code: " + res.status);
+                }
+            })
+            .catch((err)=>{
+                if (err.response.data.status === 403){
+                    throw new Error("수정 권한이 없습니다.");
+                }
                 else {
                     throw err;
                 }
