@@ -45,15 +45,13 @@
       </textarea>
       </div>
       <div class="common-buttons">
-        <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnSave">저장</button>&nbsp;
+        <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="saveComment">저장</button>&nbsp;
       </div>
     </div>
   </div>
   <br>
 </template>
 <script>
-import Cookies from "js-cookie";
-import {consoleError} from "@/utils/errorHandling";
 import commentApi from "@/components/Comment/commentApi";
 
 export default {
@@ -139,9 +137,10 @@ export default {
           })
     },
 
-    // 댓글 저장
-    fnSave() {
+    saveComment(){
       const blankPattern = /^\s*$/ // 공백 유효성 검사
+      const boardId = this.$route.params.id;
+
       this.form = {
         "contents": this.contents
       };
@@ -149,41 +148,20 @@ export default {
       if (blankPattern.test(this.contents)) {
         alert("빈 내용은 입력할 수 없습니다.");
       } else {
-        const id = this.$route.params.id;
-        const apiUrl = this.$serverUrl + '/board/' + id + '/comment';
-        const token = Cookies.get('ACCESS_TOKEN');
-        this.$axios.post(apiUrl, this.form, {
-          headers: {
-            'ACCESS_TOKEN': `Bearer ${token}` // JWT를 헤더에 포함하여 전송
-          }
-        })
-            .then((res) => {
-              // 댓글 저장 성공시
-              if (res.status === 200) {
-                alert('댓글이 저장되었습니다.');
-                this.contents = '';
-                this.fetchCommentList();
-              }
-
-              // 그외 분기 처리
-              else {
-                console.log('Unhandled status code:', res.status);
+        commentApi.saveComment(boardId, this.form)
+            .then(()=>{
+              alert('댓글이 저장되었습니다.');
+              this.contents = '';
+              this.fetchCommentList();
+            })
+            .catch((err)=>{
+              if (err.message === "게시글을 찾을 수 없습니다."){
+                alert("게시글이 존재하지 않습니다. 게시글 리스트로 이동합니다.");
+                this.$router.push({path: '/board'});
+              } else {
                 alert("댓글 저장에 실패했습니다.");
               }
-            }).catch((err) => {
-
-          const _status = err.response.data.status;
-
-          // ResponseStatusException, UsernameNotFoundException (게시글 부재, 404)
-          if (_status === 404) {
-            consoleError(err);
-          }
-
-          // 알 수 없는 예외 발생시
-          else {
-            consoleError(err);
-          }
-        })
+            })
       }
     },
 
