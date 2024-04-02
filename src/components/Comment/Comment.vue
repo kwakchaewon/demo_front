@@ -165,53 +165,53 @@ export default {
       }
     },
 
-    // 댓글 수정 권한 확인
-    fnCheckUpdate(id) {
-      this.$axios.get(this.$serverUrl + '/comment/' + id + '/check')
-          .then(() => {
-            this.$router.push({
-              path: '/comment/' + id + '/update',
-            });
-          }).catch((err) => {
-
-        if (err.response.data.status === 403) {
-          console.log(err.message);
-          alert("수정 권한이 없습니다.");
-        }
-
-        // COMMENT_NOTFOUND: 댓글 부재시, 댓글 리스트 리로딩
-        else if (err.response.data.status === "404" && err.response.data.message) {
-          console.log(err.response.data.message);
-          alert(err.response.data.message);
-          this.fetchCommentList();
-        }
-
-        // 그 외 Custom Exception 발생시 alert 반환
-        else if (err.response.data.status && err.response.data.message) {
-          console.log(err.response.data.message);
-          alert(err.response.data.message);
-        }
-
-        // 기타
-        else {
-          console.log('알 수 없는 오류가 발생했습니다.');
-          alert('알 수 없는 오류가 발생했습니다.');
-        }
-      })
-    },
+    // // 댓글 수정 권한 확인
+    // fnCheckUpdate(id) {
+    //   this.$axios.get(this.$serverUrl + '/comment/' + id + '/check')
+    //       .then(() => {
+    //         this.$router.push({
+    //           path: '/comment/' + id + '/update',
+    //         });
+    //       }).catch((err) => {
+    //
+    //     if (err.response.data.status === 403) {
+    //       console.log(err.message);
+    //       alert("수정 권한이 없습니다.");
+    //     }
+    //
+    //     // COMMENT_NOTFOUND: 댓글 부재시, 댓글 리스트 리로딩
+    //     else if (err.response.data.status === "404" && err.response.data.message) {
+    //       console.log(err.response.data.message);
+    //       alert(err.response.data.message);
+    //       this.fetchCommentList();
+    //     }
+    //
+    //     // 그 외 Custom Exception 발생시 alert 반환
+    //     else if (err.response.data.status && err.response.data.message) {
+    //       console.log(err.response.data.message);
+    //       alert(err.response.data.message);
+    //     }
+    //
+    //     // 기타
+    //     else {
+    //       console.log('알 수 없는 오류가 발생했습니다.');
+    //       alert('알 수 없는 오류가 발생했습니다.');
+    //     }
+    //   })
+    // },
 
     DeleteComment(id) {
       if (!confirm("삭제하시겠습니까?")) return
       commentApi.deleteComment(id)
-          .then(()=>{
+          .then(() => {
             alert('삭제되었습니다.');
             this.fetchCommentList();
           })
-          .catch((err)=>{
+          .catch((err) => {
             alert(err.message);
           })
     },
-}
+  }
 }
 </script>
 <style scoped>
