@@ -79,8 +79,6 @@ export default {
     },
 
     updateComment(row) {
-      const commentId = row.id;
-
       this.form = {
         "contents": row.editContent
       };
@@ -88,42 +86,58 @@ export default {
       const blankPattern = /^\s*$/ // 공백 유효성 검사
 
       if (blankPattern.test(row.editContent)) {
-        alert("빈 내용은 입력할 수 없습니다.")
-      } else {
-        this.$axios.put(this.$serverUrl + `/comment/${commentId}`, this.form)
-            .then((res) => {
+        alert("빈 내용은 입력할 수 없습니다.")}
+      else {
+        return commentApi.updateComment(row, this.form)
+            .then((res)=>{
               alert('댓글이 수정되었습니다.');
-              row.editContent = res.data.contents; // editContent 에 res.data.contents 업데이트
+              row.editContent = res.contents; // editContent 에 res.data.contents 업데이트, 이 부분 필요 없어보이기도...
               row.contents = row.editContent; // 수정된 내용을 표시 중인 내용으로 업데이트
               row.editing = false; // 수정 모드 종료
-              this.fetchCommentList();
-            }).catch((err) => {
-
-          // COMMENT_NOTFOUND: 댓글 부재시, alert 반환
-          if (err.response.data.status === "404" && err.response.data.message) {
-            console.log(err.response.data.message);
-            alert(err.response.data.message);
-          }
-
-          // 403 권한없음 예외 처리
-          else if (err.response.data.status === 403) {
-            console.log(err.message);
-            alert("수정 권한이 없습니다.")
-          }
-
-          // 그 외 Custom Exception 발생시 alert 반환
-          else if (err.response.data.status && err.response.data.message) {
-            console.log(err.response.data.message);
-            alert(err.response.data.message);
-          }
-
-          // 기타
-          else {
-            console.log('댓글 수정에 실패했습니다.');
-            alert('댓글 수정에 실패했습니다.');
-          }
-        })
+              // this.fetchCommentList(); // 기존의 수정한 것들은 남겨두기 위해 주석처리
+            })
+            .catch((err)=>{
+              alert(err.message);
+              row.editing = !row.editing;
+            })
       }
+
+
+      // } else {
+      //   this.$axios.put(this.$serverUrl + `/comment/${commentId}`, this.form)
+      //       .then((res) => {
+      //         alert('댓글이 수정되었습니다.');
+      //         row.editContent = res.data.contents; // editContent 에 res.data.contents 업데이트
+      //         row.contents = row.editContent; // 수정된 내용을 표시 중인 내용으로 업데이트
+      //         row.editing = false; // 수정 모드 종료
+      //         this.fetchCommentList();
+      //       }).catch((err) => {
+      //
+      //     // COMMENT_NOTFOUND: 댓글 부재시, alert 반환
+      //     if (err.response.data.status === "404" && err.response.data.message) {
+      //       console.log(err.response.data.message);
+      //       alert(err.response.data.message);
+      //     }
+      //
+      //     // 403 권한없음 예외 처리
+      //     else if (err.response.data.status === 403) {
+      //       console.log(err.message);
+      //       alert("수정 권한이 없습니다.")
+      //     }
+      //
+      //     // 그 외 Custom Exception 발생시 alert 반환
+      //     else if (err.response.data.status && err.response.data.message) {
+      //       console.log(err.response.data.message);
+      //       alert(err.response.data.message);
+      //     }
+      //
+      //     // 기타
+      //     else {
+      //       console.log('댓글 수정에 실패했습니다.');
+      //       alert('댓글 수정에 실패했습니다.');
+      //     }
+      //   })
+      // }
     },
 
     // 댓글 리스트
@@ -164,41 +178,6 @@ export default {
             })
       }
     },
-
-    // // 댓글 수정 권한 확인
-    // fnCheckUpdate(id) {
-    //   this.$axios.get(this.$serverUrl + '/comment/' + id + '/check')
-    //       .then(() => {
-    //         this.$router.push({
-    //           path: '/comment/' + id + '/update',
-    //         });
-    //       }).catch((err) => {
-    //
-    //     if (err.response.data.status === 403) {
-    //       console.log(err.message);
-    //       alert("수정 권한이 없습니다.");
-    //     }
-    //
-    //     // COMMENT_NOTFOUND: 댓글 부재시, 댓글 리스트 리로딩
-    //     else if (err.response.data.status === "404" && err.response.data.message) {
-    //       console.log(err.response.data.message);
-    //       alert(err.response.data.message);
-    //       this.fetchCommentList();
-    //     }
-    //
-    //     // 그 외 Custom Exception 발생시 alert 반환
-    //     else if (err.response.data.status && err.response.data.message) {
-    //       console.log(err.response.data.message);
-    //       alert(err.response.data.message);
-    //     }
-    //
-    //     // 기타
-    //     else {
-    //       console.log('알 수 없는 오류가 발생했습니다.');
-    //       alert('알 수 없는 오류가 발생했습니다.');
-    //     }
-    //   })
-    // },
 
     DeleteComment(id) {
       if (!confirm("삭제하시겠습니까?")) return
