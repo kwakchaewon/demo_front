@@ -2,7 +2,6 @@ import {createRouter, createWebHistory} from 'vue-router'
 import BoardList from '@/views/Board/BoardList.vue'
 import BoardDetail from '@/views/Board/BoardDetail.vue'
 import BoardWrite from '@/views/Board/BoardWrite.vue'
-import CommentUpdate from '@/views/Board/CommentUpdate.vue'
 import Login from '@/views/common/Login'
 import store from '@/vuex/store'
 import SignUp from "@/views/common/SignUp.vue";
@@ -95,12 +94,6 @@ const routes = [
         path: '/board/write/:id?',
         name: 'BoardWrite',
         component: BoardWrite,
-        beforeEnter: requireAuth()
-    },
-    {
-        path: '/comment/:id/update',
-        name: 'CommentUpdate',
-        component: CommentUpdate,
         beforeEnter: requireAuth()
     },
     {
