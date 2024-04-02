@@ -50,5 +50,26 @@ export default {
                 throw err;
             })
     },
+
+    deleteComment(commmentId){
+        return axios.delete(serverUrl + '/comment/' + commmentId)
+            .then((res)=>{
+                
+                // 성공시
+                if(res.data.state.statusCode === 200){
+                }
+                
+                // 댓글 부재시
+                else if(res.data.state.statusCode === 404){
+                    throw new Error("댓글을 찾을 수 없습니다.");
+                }
+                else {
+                    throw new Error("Unhandled status code: " + res.status);
+                }
+            })
+            .catch((err)=>{
+                throw err;
+            })
+    }
 }
 

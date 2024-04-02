@@ -32,7 +32,7 @@
           <button class="btn btn-sm btn-outline-secondary" v-on:click="toggleEditCancel(row)"
                   v-if="row.memberId == this.$store.state.user && row.editing">취소
           </button>
-          <button class="delete btn btn-sm btn-outline-secondary" v-on:click="fnDelete(`${row.id}`)"
+          <button class="delete btn btn-sm btn-outline-secondary" v-on:click="DeleteComment(`${row.id}`)"
                   v-if="row.memberId == this.$store.state.user && !row.editing">삭제
           </button>
         </div>
@@ -78,7 +78,7 @@ export default {
       row.editing = !row.editing; // 수정 모드 토클
     },
 
-    updateComment(row){
+    updateComment(row) {
       const commentId = row.id;
 
       this.form = {
@@ -127,17 +127,17 @@ export default {
     },
 
     // 댓글 리스트
-    fetchCommentList(){
+    fetchCommentList() {
       commentApi.fetchCommentList(this.$route.params.id)
-          .then((res)=>{
+          .then((res) => {
             this.list = res;
           })
-          .catch((err)=>{
+          .catch((err) => {
             alert(err.message);
           })
     },
 
-    saveComment(){
+    saveComment() {
       const blankPattern = /^\s*$/ // 공백 유효성 검사
       const boardId = this.$route.params.id;
 
@@ -149,13 +149,13 @@ export default {
         alert("빈 내용은 입력할 수 없습니다.");
       } else {
         commentApi.saveComment(boardId, this.form)
-            .then(()=>{
+            .then(() => {
               alert('댓글이 저장되었습니다.');
               this.contents = '';
               this.fetchCommentList();
             })
-            .catch((err)=>{
-              if (err.message === "게시글을 찾을 수 없습니다."){
+            .catch((err) => {
+              if (err.message === "게시글을 찾을 수 없습니다.") {
                 alert("게시글이 존재하지 않습니다. 게시글 리스트로 이동합니다.");
                 this.$router.push({path: '/board'});
               } else {
@@ -200,53 +200,23 @@ export default {
       })
     },
 
-    // 댓글 삭제
-    fnDelete(id) {
+    DeleteComment(id) {
       if (!confirm("삭제하시겠습니까?")) return
-      this.$axios.delete(this.$serverUrl + '/comment/' + id)
-          .then(() => {
+      commentApi.deleteComment(id)
+          .then(()=>{
             alert('삭제되었습니다.');
             this.fetchCommentList();
-          }).catch((err) => {
-
-        // UNKNOWN_ERROR: 댓글 삭제 실패시, alert 반환
-        if (err.response.data.status === "400" && err.response.data.message) {
-          console.log(err.response.data.message);
-          alert(err.response.data.message);
-        }
-
-        // 403 권한없음 예외 처리
-        else if (err.response.data.status === 403) {
-          alert("권한이 없습니다.");
-          console.log("권한이 없습니다.");
-        }
-
-        // COMMENT_NOTFOUND: 댓글 부재시, alert 반환 및 댓글 리스트 reload
-        else if (err.response.data.status === "404" && err.response.data.message) {
-          console.log(err.response.data.message);
-          alert(err.response.data.message);
-          this.fetchCommentList();
-        }
-
-        // 그 외 Custom Exception 발생시 alert 반환
-        else if (err.response.data.status && err.response.data.message) {
-          console.log(err.response.data.message);
-          alert(err.response.data.message);
-        }
-
-        // 기타
-        else {
-          console.log("게시글 삭제에 실패했습니다.");
-          alert("게시글 삭제에 실패했습니다.");
-        }
-      })
-    }
-  }
+          })
+          .catch((err)=>{
+            alert(err.message);
+          })
+    },
+}
 }
 </script>
 <style scoped>
 textarea {
-  resize:none;
+  resize: none;
   width: 100%;
 }
 </style>
