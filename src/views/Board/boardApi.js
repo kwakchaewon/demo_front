@@ -22,7 +22,6 @@ export default {
             })
     },
 
-
     // 게시글 상세 조회
     fetchBoardDetail(id) {
         return axios.get(serverUrl + '/board/' + id)
@@ -149,7 +148,6 @@ export default {
                     const message = "삭제되었습니다."
                     return message;
                 }
-
                 // 게시글 부재
                 else if (res.data.state.statusCode === 404) {
                     throw new Error("삭제된 게시글입니다.")

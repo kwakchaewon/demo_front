@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import api from "@/views/Board/api";
+import api from "@/views/Board/boardApi";
 
 export default {
   data() { //변수생성

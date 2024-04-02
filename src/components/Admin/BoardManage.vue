@@ -49,7 +49,7 @@
   <br>
 </template>
 <script>
-import api from "@/views/Board/api";
+import api from "@/views/Board/boardApi";
 export default {
   name: 'BoardManage',
 

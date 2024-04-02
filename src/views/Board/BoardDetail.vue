@@ -39,9 +39,9 @@
 </template>
 
 <script>
-import Comment from "@/components/Comment.vue";
+import Comment from "@/components/Comment/Comment.vue";
 import {handleErrorWithAlert, consoleError} from "@/utils/errorHandling";
-import api from "@/views/Board/api";
+import api from "@/views/Board/boardApi";
 
 
 export default {
