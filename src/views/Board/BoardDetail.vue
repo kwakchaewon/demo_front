@@ -21,7 +21,7 @@
         </div>
         <div class="my-3" v-if="board.originalFile">
           <text>첨부파일(클릭시 다운) :</text>
-          <a href="#" @click="fnDownload">{{ board.originalFile }}</a>
+          <a href="#" @click="fileDownload">{{ board.originalFile }}</a>
         </div>
         <div class="my-3">
           <button class="btn btn-sm btn-outline-secondary" v-on:click="goUpdate"
@@ -90,55 +90,45 @@ export default {
           })
     },
 
-// 파일 다운로드
-    fnDownload() {
-      const id = this.id
-      this.$axios.get(this.$serverUrl + '/board/' + id + '/file',
-          {responseType: 'blob'}
-      ).then((res) => {
+    // 파일 다운로드
+    fileDownload() {
+      const id = this.$route.params.id;
 
-        // 파일 다운로드 성공시
-        if (res.status === 200) {
-          const url = window.URL.createObjectURL(new Blob([res.data]));
-          const link = document.createElement('a');
+      api.fileDownload(id)
+          .then((res) => {
+            const url = window.URL.createObjectURL(new Blob([res.data]));
+            const link = document.createElement('a');
 
-          // content-disposition 으로 파일명을 설정
-          let fileName = res.headers['content-disposition'].split('filename=')[1];
-          fileName = fileName.replace(/[""]/g, '');
-          console.log(fileName)
+            // content-disposition 으로 파일명을 설정
+            let fileName = res.headers['content-disposition'].split('filename=')[1];
+            fileName = fileName.replace(/[""]/g, '');
+            console.log(fileName)
 
-          // UTF-8 디코딩
-          const decodeFileName = decodeURI(fileName);
+            // UTF-8 디코딩
+            const decodeFileName = decodeURI(fileName);
 
-          // 파일 다운로드시 다른이름으로 저장
-          link.href = url;
-          link.setAttribute('download', decodeFileName);
-          document.body.appendChild(link);
-          link.click();
-        }
-        // 파일 다운로드 실패시 분기처리
-        else {
-          console.log('Unhandled status code:', res.status);
-          alert("파일 다운로드에 실패했습니다.")
-        }
-        // 파일 다운로드 실패시, alert 경고문
-      }).catch((err) => {
+            // 파일 다운로드시 다른이름으로 저장
+            link.href = url;
+            link.setAttribute('download', decodeFileName);
+            document.body.appendChild(link);
+            link.click();
+          })
+          .catch((err) => {
+            // IOException, UnsupportedEncodingException
+            if (err.response.status === 500) {
+              consoleError(err);
+              alert("파일 다운로드에 실패했습니다.");
+            }
 
-        // IOException, UnsupportedEncodingException
-        if (err.response.status === 500) {
-          consoleError(err);
-          alert("파일 다운로드에 실패했습니다.");
-        }
-
-        // ResponseStatusException 파일 부재시
-        else if (err.response.status === 404) {
-          alert("게시글이 존재하지 않습니다. 게시글 리스트로 돌아갑니다.");
-          consoleError(err);
-          this.fnList();
-        } else {
-          handleErrorWithAlert(err);
-        }
-      })
+            // ResponseStatusException 파일 부재시
+            else if (err.response.status === 404) {
+              alert("게시글이 존재하지 않습니다. 게시글 리스트로 돌아갑니다.");
+              consoleError(err);
+              this.fnList();
+            } else {
+              alert("파일 다운로드에 실패했습니다.");
+            }
+          })
     },
 
     fnList() {

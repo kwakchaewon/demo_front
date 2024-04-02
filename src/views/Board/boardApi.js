@@ -160,6 +160,23 @@ export default {
                     throw new Error("삭제 권한이 없습니다.");
                 } else throw err;
             })
+    },
+
+    fileDownload(id) {
+        return axios.get(serverUrl + '/board/' + id + '/file', {responseType: 'blob'})
+            .then((res)=>{
+
+                if (res.status === 200) {
+                    return res
+                }
+
+                else {
+                    throw new Error('Unhandled status code:', res.status);
+                }
+            })
+            .catch((err)=>{
+                throw err;
+            })
     }
 }
 
